@@ -1,8 +1,24 @@
 # Powerlevel10k theme configuration
 
 # Context-aware prompt
-typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir vcs node_version virtualenv kubecontext aws)
-typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status command_execution_time)
+typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir vcs node_version virtualenv)
+typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
+  status                  # exit code of the last command
+  command_execution_time  # duration of the last command
+  background_jobs         # presence of background jobs
+  direnv                  # direnv status
+  asdf                    # asdf version manager
+  virtualenv              # python virtual environment
+  pyenv                   # python environment
+  goenv                   # go environment
+  nodenv                  # node.js version from nodenv
+  nvm                     # node.js version from nvm
+  kubecontext             # current kubernetes context
+  terraform               # terraform workspace
+  aws                     # aws profile
+  azure                   # azure account name
+  gcloud                  # google cloud cli account and project
+)
 
 # Show Node.js version only when package.json or node_modules exists
 typeset -g POWERLEVEL9K_NODE_VERSION_PROJECT_ONLY=true
@@ -35,18 +51,30 @@ typeset -g POWERLEVEL9K_AWS_DEFAULT_FOREGROUND=white
 
 # Status settings - show green tick for success, red cross with code for failure
 typeset -g POWERLEVEL9K_STATUS_OK=true
-typeset -g POWERLEVEL9K_STATUS_OK_VISUAL_IDENTIFIER_EXPANSION='✓'
-typeset -g POWERLEVEL9K_STATUS_OK_FOREGROUND=green
+typeset -g POWERLEVEL9K_STATUS_OK_VISUAL_IDENTIFIER_EXPANSION='✔'
+typeset -g POWERLEVEL9K_STATUS_OK_FOREGROUND=2
 typeset -g POWERLEVEL9K_STATUS_OK_BACKGROUND=0
 
 typeset -g POWERLEVEL9K_STATUS_ERROR=true
-typeset -g POWERLEVEL9K_STATUS_ERROR_VISUAL_IDENTIFIER_EXPANSION='✗'
-typeset -g POWERLEVEL9K_STATUS_ERROR_FOREGROUND=red
-typeset -g POWERLEVEL9K_STATUS_ERROR_BACKGROUND=0
+typeset -g POWERLEVEL9K_STATUS_ERROR_VISUAL_IDENTIFIER_EXPANSION='✘'
+typeset -g POWERLEVEL9K_STATUS_ERROR_FOREGROUND=3
+typeset -g POWERLEVEL9K_STATUS_ERROR_BACKGROUND=1
 
 typeset -g POWERLEVEL9K_STATUS_VERBOSE=true
 typeset -g POWERLEVEL9K_STATUS_CROSS=true
 typeset -g POWERLEVEL9K_STATUS_SHOW_PIPESTATUS=true
+
+# Background jobs settings
+typeset -g POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND=6
+typeset -g POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND=0
+typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VERBOSE=false
+
+# Command execution time settings
+typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND=0
+typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND=3
+typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=3
+typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_PRECISION=0
+typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FORMAT='d h m s'
 
 # Customize prompt appearance
 typeset -g POWERLEVEL9K_MODE=nerdfont-complete
@@ -62,7 +90,3 @@ typeset -g POWERLEVEL9K_SHORTEN_STRATEGY=truncate_from_right
 # VCS settings
 typeset -g POWERLEVEL9K_VCS_SHOW_SUBMODULE_DIRTY=false
 typeset -g POWERLEVEL9K_VCS_GIT_HOOKS=(vcs-detect-changes git-untracked git-aheadbehind git-stash git-remotebranch git-tagname)
-
-# Command execution time settings
-typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=3
-typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_PRECISION=2
