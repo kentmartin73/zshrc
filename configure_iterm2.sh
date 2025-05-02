@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script to use the complete iTerm2 profile from the repository
+# Script to configure iTerm2 with the complete profile from the repository
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -13,7 +13,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROFILE_PATH="$SCRIPT_DIR/iterm2_profile.json"
 
 echo -e "${GREEN}=========================================${NC}"
-echo -e "${GREEN}  iTerm2 Complete Profile Installer     ${NC}"
+echo -e "${GREEN}  iTerm2 Configuration Tool            ${NC}"
 echo -e "${GREEN}=========================================${NC}"
 echo
 
@@ -62,10 +62,10 @@ rm -f "$TEMP_PROFILE"
 
 echo
 echo -e "${GREEN}=========================================${NC}"
-echo -e "${GREEN}  Installation Complete!               ${NC}"
+echo -e "${GREEN}  iTerm2 Configuration Complete!        ${NC}"
 echo -e "${GREEN}=========================================${NC}"
 echo
-echo -e "The complete iTerm2 profile has been installed from $PROFILE_PATH."
+echo -e "The iTerm2 profile has been installed with the correct font and color settings."
 echo -e "The profile has been set as the default with GUID: ${YELLOW}$PROFILE_GUID${NC}"
 echo
 echo -e "Please restart iTerm2 for the changes to take effect."
