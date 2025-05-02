@@ -1,8 +1,8 @@
 # Powerlevel10k theme configuration
 
 # Context-aware prompt
-typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir vcs node_version virtualenv)
-typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status command_execution_time time)
+typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir vcs node_version virtualenv kubecontext)
+typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status command_execution_time)
 
 # Show Node.js version only when package.json or node_modules exists
 typeset -g POWERLEVEL9K_NODE_VERSION_PROJECT_ONLY=true
@@ -11,9 +11,21 @@ typeset -g POWERLEVEL9K_NODE_VERSION_PROJECT_ONLY=true
 typeset -g POWERLEVEL9K_VIRTUALENV_SHOW_PYTHON_VERSION=true
 typeset -g POWERLEVEL9K_VIRTUALENV_GENERIC_NAMES=(virtualenv venv .venv env)
 
+# Kubernetes context settings
+typeset -g POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND='kubectl|helm|kubens|kubectx|oc|istioctl|kogito|k9s|helmfile|flux|fluxctl|stern|kubeseal|skaffold'
+typeset -g POWERLEVEL9K_KUBECONTEXT_CLASSES=(
+  '*prod*'  PROD
+  '*'       DEFAULT
+)
+typeset -g POWERLEVEL9K_KUBECONTEXT_PROD_BACKGROUND=red
+typeset -g POWERLEVEL9K_KUBECONTEXT_PROD_FOREGROUND=white
+typeset -g POWERLEVEL9K_KUBECONTEXT_DEFAULT_BACKGROUND=blue
+typeset -g POWERLEVEL9K_KUBECONTEXT_DEFAULT_FOREGROUND=white
+
 # Customize prompt appearance
 typeset -g POWERLEVEL9K_MODE=nerdfont-complete
-typeset -g POWERLEVEL9K_PROMPT_ON_NEWLINE=true
+typeset -g POWERLEVEL9K_PROMPT_ON_NEWLINE=false
+typeset -g POWERLEVEL9K_PROMPT_ADD_NEWLINE=false
 typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=''
 typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX='%F{blue}❯%f '
 
