@@ -22,8 +22,9 @@ if command -v bat &>/dev/null; then
 fi
 
 # Initialize fd (find replacement) if it's installed
+# We install fd but don't alias it to find to maintain compatibility
 if command -v fd &>/dev/null; then
-  alias find="fd"
+  # fd is available as 'fd' command
 fi
 
 # Initialize duf (df replacement) if it's installed

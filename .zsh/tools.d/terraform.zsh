@@ -3,7 +3,10 @@
 
 # Initialize Terraform completion if it's installed
 if command -v terraform &>/dev/null; then
-  complete -o nospace -C $(which terraform) terraform
+  # Use zsh's built-in completion system instead of bash's complete command
+  autoload -U +X bashcompinit && bashcompinit
+  autoload -U +X compinit && compinit
+  terraform -install-autocomplete
   
   # Add some useful Terraform aliases
   alias tf="terraform"
