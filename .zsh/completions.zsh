@@ -1,8 +1,12 @@
 # Completion system configuration
 
 # Initialize the completion system
-autoload -Uz compinit
-compinit
+# Note: This should be called after zsh-completions is loaded by Antigen
+# but we'll check if compinit has already been called
+if ! type _antigen_compinit_done > /dev/null 2>&1; then
+  autoload -Uz compinit
+  compinit
+fi
 
 # Cache completion to speed things up
 zstyle ':completion:*' use-cache on
@@ -51,39 +55,46 @@ zstyle ':completion:*:history-words' list false
 zstyle ':completion:*:history-words' menu yes
 
 # Setup lazy loading for various completions
+# Note: Moved to a function to avoid duplication and improve maintainability
+function setup_completion() {
+  local command=$1
+  local url=$2
+  local output_file=~/.zsh/lazy/_$command
+  
+  if command -v $command &>/dev/null; then
+    mkdir -p ~/.zsh/lazy
+    if [[ ! -f $output_file ]]; then
+      echo "Downloading completion for $command..."
+      curl -s -L "$url" > "$output_file" 2>/dev/null
+    fi
+    lazy_load_completion $command "$output_file"
+  fi
+}
+
 # Git completions
-if command -v git &>/dev/null; then
-  mkdir -p ~/.zsh/lazy
-  curl -o ~/.zsh/lazy/git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash 2>/dev/null
-  curl -o ~/.zsh/lazy/_git https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.zsh 2>/dev/null
-  lazy_load_completion git "~/.zsh/lazy/_git"
-fi
+setup_completion git "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.zsh"
 
 # Docker completions
-if command -v docker &>/dev/null; then
-  mkdir -p ~/.zsh/lazy
-  curl -L https://raw.githubusercontent.com/docker/cli/master/contrib/completion/zsh/_docker > ~/.zsh/lazy/_docker 2>/dev/null
-  lazy_load_completion docker "~/.zsh/lazy/_docker"
-fi
+setup_completion docker "https://raw.githubusercontent.com/docker/cli/master/contrib/completion/zsh/_docker"
 
 # Docker Compose completions
-if command -v docker-compose &>/dev/null; then
-  mkdir -p ~/.zsh/lazy
-  curl -L https://raw.githubusercontent.com/docker/compose/master/contrib/completion/zsh/_docker-compose > ~/.zsh/lazy/_docker-compose 2>/dev/null
-  lazy_load_completion docker-compose "~/.zsh/lazy/_docker-compose"
-fi
+setup_completion docker-compose "https://raw.githubusercontent.com/docker/compose/master/contrib/completion/zsh/_docker-compose"
 
 # npm completions
 if command -v npm &>/dev/null; then
   mkdir -p ~/.zsh/lazy
-  npm completion > ~/.zsh/lazy/_npm 2>/dev/null
+  if [[ ! -f ~/.zsh/lazy/_npm ]]; then
+    npm completion > ~/.zsh/lazy/_npm 2>/dev/null
+  fi
   lazy_load_completion npm "~/.zsh/lazy/_npm"
 fi
 
 # pip completions
 if command -v pip &>/dev/null; then
   mkdir -p ~/.zsh/lazy
-  pip completion --zsh > ~/.zsh/lazy/_pip 2>/dev/null
+  if [[ ! -f ~/.zsh/lazy/_pip ]]; then
+    pip completion --zsh > ~/.zsh/lazy/_pip 2>/dev/null
+  fi
   lazy_load_completion pip "~/.zsh/lazy/_pip"
 fi
 
@@ -104,28 +115,31 @@ fi
 # Kubectl completions
 if command -v kubectl &>/dev/null; then
   mkdir -p ~/.zsh/lazy
-  kubectl completion zsh > ~/.zsh/lazy/_kubectl 2>/dev/null
+  if [[ ! -f ~/.zsh/lazy/_kubectl ]]; then
+    kubectl completion zsh > ~/.zsh/lazy/_kubectl 2>/dev/null
+  fi
   lazy_load_completion kubectl "~/.zsh/lazy/_kubectl"
 fi
 
 # AWS CLI completions
 if command -v aws &>/dev/null; then
   mkdir -p ~/.zsh/lazy
-  # Use zsh-specific AWS completion instead of the bash 'complete' command
-  if [[ -d "$(brew --prefix)/share/zsh/site-functions" ]]; then
-    # For Homebrew installations
-    ln -sf "$(brew --prefix)/bin/aws_zsh_completer.sh" ~/.zsh/lazy/_aws 2>/dev/null
-  elif [[ -f /usr/local/bin/aws_zsh_completer.sh ]]; then
-    # For standard installations
-    ln -sf /usr/local/bin/aws_zsh_completer.sh ~/.zsh/lazy/_aws 2>/dev/null
-  elif [[ -f /usr/bin/aws_zsh_completer.sh ]]; then
-    # For system-wide installations
-    ln -sf /usr/bin/aws_zsh_completer.sh ~/.zsh/lazy/_aws 2>/dev/null
-  else
-    # Generate completion script if available
-    aws_completer=$(which aws_completer 2>/dev/null)
-    if [[ -n "$aws_completer" ]]; then
-      echo '#compdef aws
+  if [[ ! -f ~/.zsh/lazy/_aws ]]; then
+    # Use zsh-specific AWS completion instead of the bash 'complete' command
+    if [[ -d "$(brew --prefix 2>/dev/null)/share/zsh/site-functions" ]]; then
+      # For Homebrew installations
+      ln -sf "$(brew --prefix)/bin/aws_zsh_completer.sh" ~/.zsh/lazy/_aws 2>/dev/null
+    elif [[ -f /usr/local/bin/aws_zsh_completer.sh ]]; then
+      # For standard installations
+      ln -sf /usr/local/bin/aws_zsh_completer.sh ~/.zsh/lazy/_aws 2>/dev/null
+    elif [[ -f /usr/bin/aws_zsh_completer.sh ]]; then
+      # For system-wide installations
+      ln -sf /usr/bin/aws_zsh_completer.sh ~/.zsh/lazy/_aws 2>/dev/null
+    else
+      # Generate completion script if available
+      aws_completer=$(which aws_completer 2>/dev/null)
+      if [[ -n "$aws_completer" ]]; then
+        echo '#compdef aws
 _aws() {
   local -a args
   args=(
@@ -139,6 +153,7 @@ _aws() {
   _describe "options" completions
 }
 _aws' > ~/.zsh/lazy/_aws
+      fi
     fi
   fi
   lazy_load_completion aws "~/.zsh/lazy/_aws"

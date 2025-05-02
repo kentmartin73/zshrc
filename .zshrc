@@ -4,32 +4,12 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Ensure Antigen is installed via Homebrew
-if ! brew list antigen &>/dev/null; then
-  echo "Installing Antigen with Homebrew..."
-  brew install antigen
-fi
+# Source the main configuration file
+source ~/.zsh/.zshrc
 
-# Load Antigen
-source /opt/homebrew/share/antigen/antigen.zsh
+# Source aliases if they exist
+[[ -f ~/.alias ]] && source ~/.alias
 
-# Antigen plugins
-antigen bundle command-not-found
-antigen bundle z-shell/F-Sy-H --branch=main
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern regexp cursor root line)
-antigen bundle zsh-users/zsh-autosuggestions
-antigen bundle zsh-users/zsh-completions
-antigen bundle colored-man-pages
-antigen bundle colorize
-antigen bundle dirpersist
-antigen bundle history-substring-search
-antigen bundle agkozak/zsh-z
-antigen bundle trystan2k/zsh-tab-title
-antigen theme romkatv/powerlevel10k
-antigen bundle marlonrichert/zsh-autocomplete@22.02.21
-antigen bundle zdharma-continuum/history-search-multi-word
-antigen apply
-
-# Prompt helpers
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-source ~/.alias
+# Source p10k configuration if it exists (symlinked to ~/.zsh/p10k.zsh)
+# This line is needed for p10k configure to work properly
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh

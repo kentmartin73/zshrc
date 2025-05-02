@@ -15,34 +15,42 @@ fi
 
 # Only load plugins if Antigen is available
 if type antigen > /dev/null 2>&1; then
-  # Load history-substring-search first
+  # === Core Plugins (Load First) ===
+  # History substring search - provides better history navigation
   antigen bundle history-substring-search
   
-  # Antigen plugins
+  # === Utility Plugins ===
+  # Command not found - suggests package to install when command not found
   antigen bundle command-not-found
-  antigen bundle zsh-users/zsh-autosuggestions
-  antigen bundle zsh-users/zsh-completions
-  antigen bundle colored-man-pages
-  antigen bundle colorize
+  # Directory persistence - automatically creates directory bookmarks
   antigen bundle dirpersist
-  
-  # Replace zsh-z with zoxide
+  # Colored man pages - adds color to man pages
+  antigen bundle colored-man-pages
+  # Colorize - syntax highlighting for cat/less
+  antigen bundle colorize
+  # URL tools - URL encoding/decoding functions
+  antigen bundle ohmyzsh/ohmyzsh plugins/urltools
+  # Tab title - sets terminal tab title based on current directory/command
+  antigen bundle trystan2k/zsh-tab-title --branch=main
+  # Directory navigation - fast directory jumping
   antigen bundle ajeetdsouza/zoxide
   
-  # Add urltools plugin
-  antigen bundle ohmyzsh/ohmyzsh plugins/urltools
+  # === Completion Plugins ===
+  # ZSH completions - additional completion definitions
+  antigen bundle zsh-users/zsh-completions
   
-  # Specify main branch for zsh-tab-title
-  antigen bundle trystan2k/zsh-tab-title --branch=main
+  # === Interactive Plugins ===
+  # Auto suggestions - suggests commands as you type based on history
+  antigen bundle zsh-users/zsh-autosuggestions
   
-  # Theme
+  # === Theme ===
   antigen theme romkatv/powerlevel10k
   
-  # Other plugins
-  antigen bundle marlonrichert/zsh-autocomplete@22.02.21
-  antigen bundle zdharma-continuum/history-search-multi-word
+  # Note: We're removing zsh-autocomplete as it conflicts with other completion systems
+  # and history-search-multi-word as it's redundant with history-substring-search
   
-  # Load syntax highlighting last
+  # === Syntax Highlighting (Load Last) ===
+  # Fast syntax highlighting - syntax highlighting for ZSH
   antigen bundle z-shell/F-Sy-H --branch=main
   ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern regexp cursor root line)
   
