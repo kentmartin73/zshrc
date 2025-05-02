@@ -16,12 +16,20 @@ if ! brew list --cask font-meslo-lg-nerd-font &>/dev/null; then
   brew install --cask font-meslo-lg-nerd-font
 fi
 
-# Get the directory of the script
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
+# Get the directory of the zsh configuration
+ZSH_DIR="${0:a:h}"
+REPO_DIR="${ZSH_DIR:h}"
+FIX_ITERM2_SCRIPT="${REPO_DIR}/fix_iterm2.sh"
 
-# Run the fix_iterm2.sh script to configure iTerm2
-echo "Configuring iTerm2..."
-"$SCRIPT_DIR/fix_iterm2.sh"
-
-echo "iTerm2 has been configured with the correct font and theme."
-echo "Please restart iTerm2 for changes to take effect."
+# Check if the script exists
+if [[ -f "$FIX_ITERM2_SCRIPT" ]]; then
+  # Run the fix_iterm2.sh script to configure iTerm2
+  echo "Configuring iTerm2..."
+  "$FIX_ITERM2_SCRIPT"
+  
+  echo "iTerm2 has been configured with the correct font and theme."
+  echo "Please restart iTerm2 for changes to take effect."
+else
+  echo "Warning: Could not find fix_iterm2.sh script at $FIX_ITERM2_SCRIPT"
+  echo "iTerm2 configuration skipped."
+fi
