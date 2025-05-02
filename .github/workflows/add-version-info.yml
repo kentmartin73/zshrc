@@ -1,9 +1,11 @@
-name: Add Version Info
+name: Add Version Info to Release Assets
 
 on:
+  release:
+    types: [published]
   push:
-    branches: [ main ]
-    tags: [ 'v*' ]
+    tags:
+      - 'v*'
 
 jobs:
   add-version-info:
@@ -41,10 +43,17 @@ jobs:
         run: |
           sed -i "s|# Main zsh configuration file|# Main zsh configuration file\n# Version: ${{ env.VERSION_INFO }}|" .zsh/.zshrc
 
-      - name: Commit changes
+      - name: Create versioned archive
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add install.sh .zsh/setup.sh .zsh/.zshrc
-          git commit -m "Add version info [skip ci]" || echo "No changes to commit"
-          git push
+          zip -r zshrc-${{ github.ref_name }}.zip .
+
+      - name: Upload versioned archive to release
+        if: github.event_name == 'release'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./zshrc-${{ github.ref_name }}.zip
+          asset_name: zshrc-${{ github.ref_name }}.zip
+          asset_content_type: application/zip
