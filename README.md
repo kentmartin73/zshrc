@@ -66,6 +66,7 @@ zshrc/
 ├── .gitignore           # Git ignore file
 ├── .zshrc               # Original zshrc file (for reference)
 ├── install.sh           # One-line installation script
+├── fix_iterm2.sh        # Script to fix iTerm2 font configuration
 └── README.md            # This documentation file
 ```
 
@@ -91,6 +92,23 @@ The configuration will attempt to install these tools on first run:
 - bat (modern replacement for cat)
 - fd (modern replacement for find)
 - duf (modern replacement for df)
+
+## Troubleshooting
+
+### iTerm2 Font Issues
+
+If you're using iTerm2 and the Powerlevel10k theme doesn't display correctly (missing icons or incorrect font), run the included fix script:
+
+```bash
+./fix_iterm2.sh
+```
+
+This script will:
+1. Install the Meslo Nerd Font if it's not already installed
+2. Create a new iTerm2 profile with the correct font settings
+3. Set this profile as the default
+
+After running the script, restart iTerm2 for the changes to take effect.
 
 ## License
 
