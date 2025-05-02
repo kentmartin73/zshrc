@@ -23,7 +23,7 @@ The configuration is organized into modular files, each responsible for a specif
 Install with a single command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/zshrc/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/main/install.sh | bash
 ```
 
 This will:
@@ -35,7 +35,7 @@ This will:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/zshrc.git
+   git clone https://github.com/kentmartin73/zshrc.git
    ```
 2. Run the setup script:
    ```bash
