@@ -40,12 +40,39 @@ cat > "$ITERM_CONFIG_SCRIPT" << 'EOL'
 
 # Script to configure iTerm2 with Homebrew theme and Meslo font
 
-# Set the default profile to use Homebrew theme
-defaults write com.googlecode.iterm2 "Default Bookmark Guid" -string "Homebrew"
+# Make sure the preferences are loaded
+defaults read com.googlecode.iterm2 > /dev/null
 
-# Set the font to Meslo Nerd Font
+# Get the GUID of the Default profile
+DEFAULT_PROFILE_GUID=$(defaults read com.googlecode.iterm2 "Default Bookmark Guid")
+
+# Set the font for the Default profile
 /usr/libexec/PlistBuddy -c "Set 'New Bookmarks':0:'Normal Font' 'MesloLGSNerdFontComplete-Regular 12'" ~/Library/Preferences/com.googlecode.iterm2.plist
 /usr/libexec/PlistBuddy -c "Set 'New Bookmarks':0:'Non Ascii Font' 'MesloLGSNerdFontComplete-Regular 12'" ~/Library/Preferences/com.googlecode.iterm2.plist
+
+# Set the color preset for the Default profile
+# First, get the name of the Default profile
+DEFAULT_PROFILE_NAME=$(/usr/libexec/PlistBuddy -c "Print 'New Bookmarks':0:'Name'" ~/Library/Preferences/com.googlecode.iterm2.plist)
+
+# Use osascript to set the color preset
+osascript <<EOF
+tell application "iTerm2"
+    tell current terminal
+        tell session id "Default"
+            set profile name to "$DEFAULT_PROFILE_NAME"
+            set background color to {0, 0, 0}
+            set normal text color to {255, 255, 255}
+            set bold color to {255, 255, 255}
+            set selection color to {64, 64, 64}
+            set cursor color to {255, 255, 255}
+            set cursor text color to {0, 0, 0}
+        end tell
+    end tell
+end tell
+EOF
+
+# Force iTerm2 to save its preferences
+killall cfprefsd
 
 echo "iTerm2 configured with Homebrew theme and Meslo Nerd Font."
 echo "Please restart iTerm2 for changes to take effect."
@@ -65,3 +92,31 @@ rm -rf "$TEMP_DIR"
 
 echo "iTerm2 has been configured with Homebrew theme and Meslo Nerd Font."
 echo "Please restart iTerm2 for changes to take effect."
+
+# Create a more direct approach to set the font
+cat > ~/set_iterm_font.sh << 'EOL'
+#!/bin/bash
+
+# This script sets the font for iTerm2 to MesloLGSNerdFontComplete-Regular
+# Run this script if the font is not set correctly after installation
+
+# Kill iTerm2 if it's running
+killall iTerm2 2>/dev/null
+
+# Wait a moment for iTerm2 to fully close
+sleep 1
+
+# Set the font for the Default profile
+/usr/libexec/PlistBuddy -c "Set 'New Bookmarks':0:'Normal Font' 'MesloLGSNerdFontComplete-Regular 12'" ~/Library/Preferences/com.googlecode.iterm2.plist
+/usr/libexec/PlistBuddy -c "Set 'New Bookmarks':0:'Non Ascii Font' 'MesloLGSNerdFontComplete-Regular 12'" ~/Library/Preferences/com.googlecode.iterm2.plist
+
+# Force iTerm2 to reload its preferences
+killall cfprefsd
+
+echo "Font set to MesloLGSNerdFontComplete-Regular."
+echo "Please start iTerm2 again."
+EOL
+
+chmod +x ~/set_iterm_font.sh
+
+echo "If the font is not set correctly after installation, run ~/set_iterm_font.sh"
