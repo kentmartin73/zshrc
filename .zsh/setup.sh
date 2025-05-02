@@ -101,5 +101,5 @@ echo -e "  2. Customize your local settings in: ${YELLOW}~/.zsh/local.zsh${NC}"
 echo
 echo -e "Your previous configuration has been backed up to: ${YELLOW}$BACKUP_DIR${NC}"
 echo
-echo -e "${YELLOW}Note: In any application that you use a shell (e.g. VS Code), you shoukd change the fond to \"MesloLGS Nerd Font\"${NC}"
+echo -e "${YELLOW}Note: In any application that you use a shell (e.g. VS Code), you shoukd change the font to \"MesloLGS Nerd Font\"${NC}"
 echo
