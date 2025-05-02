@@ -1,7 +1,7 @@
 # Powerlevel10k theme configuration
 
 # Context-aware prompt
-typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir vcs node_version virtualenv)
+typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir vcs node_version)
 typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
   status                  # exit code of the last command
   command_execution_time  # duration of the last command
