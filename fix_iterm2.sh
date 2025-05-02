@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Script to fix iTerm2 configuration and set Meslo Nerd Font
+# Script to fix iTerm2 font configuration
+# This creates a profile file that can be manually imported into iTerm2
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -19,24 +20,18 @@ if ! [ -d "/Applications/iTerm.app" ]; then
     exit 1
 fi
 
-# Check if Meslo Nerd Font is installed
+# Install Meslo Nerd Font if not already installed
 if ! ls ~/Library/Fonts/Meslo*Nerd*Font* &>/dev/null; then
     echo -e "${YELLOW}Installing Meslo Nerd Font...${NC}"
     brew tap homebrew/cask-fonts
     brew install --cask font-meslo-lg-nerd-font
 fi
 
-echo -e "${YELLOW}Closing iTerm2 if it's running...${NC}"
-osascript -e 'tell application "iTerm" to quit' 2>/dev/null || true
-sleep 2
+# Create the profile file
+PROFILE_FILE=~/Desktop/ZshModular.itermprofile
+echo -e "${YELLOW}Creating iTerm2 profile file at ${PROFILE_FILE}...${NC}"
 
-echo -e "${YELLOW}Setting up iTerm2 configuration...${NC}"
-
-# Create a direct configuration file for iTerm2
-ITERM_CONFIG_DIR=~/Library/Application\ Support/iTerm2/DynamicProfiles
-mkdir -p "$ITERM_CONFIG_DIR"
-
-cat > "$ITERM_CONFIG_DIR/zsh-modular.json" << 'EOL'
+cat > "$PROFILE_FILE" << 'EOL'
 {
   "Profiles": [
     {
@@ -84,68 +79,116 @@ cat > "$ITERM_CONFIG_DIR/zsh-modular.json" << 'EOL'
         "Red Component": 0.73333334922790527,
         "Green Component": 0.73333334922790527,
         "Blue Component": 0.73333334922790527
-      },
-      "Dynamic Profile Filename": "~/Library/Application Support/iTerm2/DynamicProfiles/zsh-modular.json"
+      }
     }
   ]
 }
 EOL
 
-# Set the Zsh Modular profile as the default
-defaults write com.googlecode.iterm2 "Default Bookmark Guid" -string "zsh-modular-profile"
+# Create a simple HTML file with instructions
+INSTRUCTIONS_FILE=~/Desktop/iTerm2_Instructions.html
+echo -e "${YELLOW}Creating instructions file at ${INSTRUCTIONS_FILE}...${NC}"
 
-# Create a script to directly modify the iTerm2 preferences
-DIRECT_SCRIPT=$(mktemp)
-cat > "$DIRECT_SCRIPT" << 'EOL'
-#!/usr/bin/osascript
-
-tell application "iTerm"
-  create window with default profile
-  tell current session of current window
-    set font name to "MesloLGSNerdFontComplete-Regular"
-    set font size to 12
-    set non ascii font to "MesloLGSNerdFontComplete-Regular"
-    set non ascii font size to 12
-  end tell
-end tell
+cat > "$INSTRUCTIONS_FILE" << 'EOL'
+<!DOCTYPE html>
+<html>
+<head>
+    <title>iTerm2 Configuration Instructions</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .step {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .step h2 {
+            margin-top: 0;
+        }
+        img {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        code {
+            background-color: #f1f1f1;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>iTerm2 Configuration Instructions</h1>
+    
+    <div class="step">
+        <h2>Step 1: Import the Profile</h2>
+        <p>Open iTerm2 and go to <code>Preferences</code> (⌘,)</p>
+        <p>Click on the <code>Profiles</code> tab</p>
+        <p>Click the <code>Other Actions...</code> button at the bottom of the profile list</p>
+        <p>Select <code>Import JSON Profiles...</code></p>
+        <p>Navigate to your Desktop and select the <code>ZshModular.itermprofile</code> file</p>
+    </div>
+    
+    <div class="step">
+        <h2>Step 2: Set as Default Profile</h2>
+        <p>In the profile list, select the newly imported <code>Zsh Modular</code> profile</p>
+        <p>Click the <code>Other Actions...</code> button again</p>
+        <p>Select <code>Set as Default</code></p>
+    </div>
+    
+    <div class="step">
+        <h2>Step 3: Verify Font Settings</h2>
+        <p>With the <code>Zsh Modular</code> profile selected, click on the <code>Text</code> tab</p>
+        <p>Verify that both the font and non-ASCII font are set to <code>MesloLGSNerdFontComplete-Regular</code></p>
+        <p>If not, manually select this font for both settings</p>
+    </div>
+    
+    <div class="step">
+        <h2>Step 4: Restart iTerm2</h2>
+        <p>Close iTerm2 completely</p>
+        <p>Reopen iTerm2 - it should now use the new profile with the correct font</p>
+    </div>
+    
+    <div class="step">
+        <h2>Troubleshooting</h2>
+        <p>If you still don't see the correct font or Powerlevel10k icons:</p>
+        <ol>
+            <li>Make sure the Meslo Nerd Font is installed (it should be in <code>~/Library/Fonts/</code>)</li>
+            <li>Try manually setting the font in Preferences > Profiles > Text</li>
+            <li>Run <code>p10k configure</code> to reconfigure Powerlevel10k</li>
+        </ol>
+    </div>
+</body>
+</html>
 EOL
 
-chmod +x "$DIRECT_SCRIPT"
-
-# Force iTerm2 to reload its preferences
-killall cfprefsd
+# Open the instructions file
+open "$INSTRUCTIONS_FILE"
 
 echo
 echo -e "${GREEN}=========================================${NC}"
-echo -e "${GREEN}  iTerm2 Configuration Complete!        ${NC}"
+echo -e "${GREEN}  iTerm2 Profile Created!              ${NC}"
 echo -e "${GREEN}=========================================${NC}"
 echo
-echo -e "A new profile called ${YELLOW}Zsh Modular${NC} has been created with the correct font."
-echo -e "This profile has been set as the default profile."
+echo -e "A new iTerm2 profile has been created at: ${YELLOW}${PROFILE_FILE}${NC}"
+echo -e "Instructions have been opened in your browser."
 echo
-echo -e "To verify the changes:"
-echo -e "1. Start iTerm2"
-echo -e "2. Go to Preferences > Profiles"
-echo -e "3. You should see 'Zsh Modular' profile selected as default"
-echo -e "4. Check that the font is set to 'MesloLGSNerdFontComplete-Regular'"
+echo -e "Please follow the instructions to:"
+echo -e "1. Import the profile into iTerm2"
+echo -e "2. Set it as the default profile"
+echo -e "3. Restart iTerm2"
 echo
-echo -e "If the font is still not set correctly, you can run this script again."
-echo -e "Alternatively, you can manually set the font in iTerm2 preferences:"
-echo -e "1. Go to Preferences > Profiles > Text"
-echo -e "2. Change the font to 'MesloLGSNerdFontComplete-Regular'"
+echo -e "If you still have issues, you can manually set the font in iTerm2:"
+echo -e "Preferences > Profiles > Text > Font: ${YELLOW}MesloLGSNerdFontComplete-Regular${NC}"
 echo
-
-# Create a direct AppleScript to set the font
-cat > ~/set_iterm_font.scpt << 'EOL'
-tell application "iTerm"
-  tell current session of current window
-    set font name to "MesloLGSNerdFontComplete-Regular"
-    set font size to 12
-    set non ascii font to "MesloLGSNerdFontComplete-Regular"
-    set non ascii font size to 12
-  end tell
-end tell
-EOL
-
-echo -e "You can also run this command to set the font for the current session:"
-echo -e "${YELLOW}osascript ~/set_iterm_font.scpt${NC}"
