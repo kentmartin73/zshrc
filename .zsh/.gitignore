@@ -1,0 +1,26 @@
+# Ignore machine-specific settings
+local.zsh
+
+# Ignore setup completion marker
+.setup_complete
+
+# Ignore lazy-loaded completions
+lazy/
+
+# Ignore cache directory
+cache/
+
+# Ignore any temporary files
+*.tmp
+*.temp
+*~
+
+# Ignore logs
+*.log
+
+# Ignore any sensitive or personal data
+*.key
+*.pem
+*.secret
+
+publish_to_repo.sh

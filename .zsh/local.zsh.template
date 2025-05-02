@@ -1,0 +1,35 @@
+# Machine-specific settings
+# Rename this file to local.zsh and customize it for your machine
+# This file is gitignored and won't be tracked in version control
+
+# Example: Custom environment variables
+# export CUSTOM_API_KEY="your-api-key-here"
+# export CUSTOM_SECRET="your-secret-here"
+
+# Example: Custom PATH additions
+# export PATH="$HOME/custom/bin:$PATH"
+
+# Example: Custom aliases
+# alias custom-command='command with parameters'
+
+# Example: Custom functions
+# custom-function() {
+#   echo "This is a custom function"
+# }
+
+# Example: Work-specific configurations
+# if [[ "$(hostname)" == "work-machine" ]]; then
+#   # Work-specific settings
+#   source ~/work/work-config.sh
+# fi
+
+# Example: OS-specific configurations
+# if [[ "$OSTYPE" == "darwin"* ]]; then
+#   # macOS-specific settings
+# elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+#   # Linux-specific settings
+# fi
+
+# Example: Custom Antigen path
+# If Antigen is installed in a non-standard location, specify it here
+# echo 'source /path/to/antigen.zsh' > ~/.zsh/antigen_path.zsh

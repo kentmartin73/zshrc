@@ -1,0 +1,28 @@
+
+# ~/.alias — streamlined alias definitions
+
+# === Disk usage (dust wrapper) ===
+du2dust() {
+  if ! command -v dust >/dev/null 2>&1; then
+    echo "Command \`dust\` not found." >&2
+    return 1
+  fi
+  case "$1" in
+    -sh)
+      dust --depth 1 "${@:2}"
+      ;;
+    *)
+      dust --depth 1 "$@"
+      ;;
+  esac
+}
+alias du='du2dust'
+
+# === Filesystem listing ===
+alias ls='lsd'
+
+# === Text editing and viewing ===
+alias vi='nvim'
+alias vim='nvim'
+alias cat='bat'
+alias less='bat'
