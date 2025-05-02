@@ -31,13 +31,13 @@ This will:
 2. Run the setup script
 3. Clean up temporary files
 
-#### VS Code Font Setup
+#### Other Application Font Setup
 
-After installation, you'll need to configure VS Code to use the MesloLGS Nerd Font for proper icon display:
+After installation, you'll need to configure VS Code and any other apps you run a shell in to use the MesloLGS Nerd Font for proper icon display:
 
 1. Open VS Code Settings (Cmd+, on macOS or Ctrl+, on Windows/Linux)
 2. Search for "Editor: Font Family"
-3. Add `MesloLGS NF` to the beginning of the font list
+3. Add `MesloLGS Nerd Font` to the beginning of the font list
 
 ![VS Code Font Setup](./images/vscode-font-setup.png)
 
@@ -110,7 +110,7 @@ The configuration will attempt to install these tools on first run:
 If you're using iTerm2 and the Powerlevel10k theme doesn't display correctly (missing icons or incorrect font), run the included fix script:
 
 ```bash
-./fix_iterm2.sh
+./configure_iterm2.sh
 ```
 
 This script will:
