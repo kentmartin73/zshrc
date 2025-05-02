@@ -93,7 +93,8 @@ if [[ -r ~/.ssh/config ]]; then
   h=($h ${${${(@M)${(f)"$(cat ~/.ssh/config)"}:#Host *}#Host }:#*[*?]*})
 fi
 if [[ -r ~/.ssh/known_hosts ]]; then
-  h=($h ${${${(f)"$(cat ~/.ssh/known_hosts{,2} || true)"}%%\ *}%%,*}) 
+  # Use command cat to bypass any cat alias (like bat)
+  h=($h ${${${(f)"$(command cat ~/.ssh/known_hosts{,2} 2>/dev/null || true)"}%%\ *}%%,*})
 fi
 if [[ $#h -gt 0 ]]; then
   zstyle ':completion:*:ssh:*' hosts $h
