@@ -65,6 +65,9 @@ cd "$TEMP_DIR/.zsh" || {
     exit 1
 }
 
+# Make the setup script executable
+chmod +x ./setup.sh
+
 ./setup.sh || {
     echo -e "${RED}Error: Failed to run the setup script.${NC}"
     rm -rf "$TEMP_DIR"
