@@ -120,6 +120,24 @@ This script will:
 
 After running the script, restart iTerm2 for the changes to take effect.
 
+### Git Hooks
+
+This repository includes a git pre-commit hook that automatically adds version information to key files. The hook adds:
+- A description of the project
+- The current tag (if available) or commit hash
+- A link to the commit on GitHub (if available)
+
+To install the git hooks, run:
+
+```bash
+./install-hooks.sh
+```
+
+After installation, whenever you make a commit, the following files will be automatically updated with version information:
+- install.sh
+- .zsh/setup.sh
+- .zsh/.zshrc
+
 ## License
 
 This configuration is available under the MIT License.

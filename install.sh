@@ -1,4 +1,6 @@
 #!/bin/bash
+# Zsh Modular Configuration - A comprehensive modular Zsh setup for improved performance and maintainability
+# Version: https://github.com/kentmartin73/zshrc/commit/84264bd
 
 # Zsh Modular Configuration Installer
 # This script installs the modular zsh configuration from GitHub
