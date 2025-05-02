@@ -39,13 +39,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     
     # Configure iTerm2
     echo -e "${YELLOW}Configuring iTerm2...${NC}"
-    # "$SCRIPT_DIR/configure_iterm2.sh"
+    "$SCRIPT_DIR/configure_iterm2.sh"
     
-    # Configure pyenv
-    echo -e "${YELLOW}Configuring pyenv...${NC}"
-    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
-    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
-    echo 'eval "$(pyenv init -)"' >> ~/.zshrc
   else
     echo -e "${RED}Homebrew not found. Please install manually: dust, lsd, neovim, bat, fd, duf, iTerm2, Meslo Nerd Font, and pyenv${NC}"
   fi
@@ -66,11 +61,6 @@ elif [[ -f /etc/debian_version ]]; then
     echo -e "${YELLOW}Installing pyenv...${NC}"
     curl https://pyenv.run | bash
     
-    # Configure pyenv
-    echo -e "${YELLOW}Configuring pyenv...${NC}"
-    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
-    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
-    echo 'eval "$(pyenv init -)"' >> ~/.zshrc
   else
     echo -e "${RED}Cannot install with apt. Please install manually: dust, lsd, neovim, bat, fd-find, duf, and pyenv${NC}"
   fi
@@ -89,11 +79,6 @@ elif [[ -f /etc/fedora-release ]]; then
     echo -e "${YELLOW}Installing pyenv...${NC}"
     curl https://pyenv.run | bash
     
-    # Configure pyenv
-    echo -e "${YELLOW}Configuring pyenv...${NC}"
-    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
-    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
-    echo 'eval "$(pyenv init -)"' >> ~/.zshrc
   else
     echo -e "${RED}Cannot install with dnf. Please install manually: dust, lsd, neovim, bat, fd, duf, and pyenv${NC}"
   fi
@@ -111,11 +96,6 @@ elif [[ -f /etc/arch-release ]]; then
     echo -e "${YELLOW}Installing pyenv...${NC}"
     curl https://pyenv.run | bash
     
-    # Configure pyenv
-    echo -e "${YELLOW}Configuring pyenv...${NC}"
-    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
-    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
-    echo 'eval "$(pyenv init -)"' >> ~/.zshrc
   else
     echo -e "${RED}Cannot install with pacman. Please install manually: dust, lsd, neovim, bat, fd, duf, and pyenv${NC}"
   fi

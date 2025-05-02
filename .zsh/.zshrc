@@ -16,6 +16,13 @@ for config_file (~/.zsh/*.zsh); do
   fi
 done
 
+# Source all tool-specific configuration files
+if [[ -d ~/.zsh/tools.d ]]; then
+  for tool_file (~/.zsh/tools.d/*.zsh); do
+    source $tool_file
+  done
+fi
+
 # Source local configuration if it exists (not in version control)
 if [[ -f ~/.zsh/local.zsh ]]; then
   source ~/.zsh/local.zsh
