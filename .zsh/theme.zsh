@@ -1,7 +1,7 @@
 # Powerlevel10k theme configuration
 
 # Context-aware prompt
-typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir vcs node_version virtualenv kubecontext)
+typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir vcs node_version virtualenv kubecontext aws)
 typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status command_execution_time)
 
 # Show Node.js version only when package.json or node_modules exists
@@ -21,6 +21,17 @@ typeset -g POWERLEVEL9K_KUBECONTEXT_PROD_BACKGROUND=red
 typeset -g POWERLEVEL9K_KUBECONTEXT_PROD_FOREGROUND=white
 typeset -g POWERLEVEL9K_KUBECONTEXT_DEFAULT_BACKGROUND=blue
 typeset -g POWERLEVEL9K_KUBECONTEXT_DEFAULT_FOREGROUND=white
+
+# AWS context settings
+typeset -g POWERLEVEL9K_AWS_SHOW_ON_COMMAND='aws|awless|terraform|pulumi|terragrunt'
+typeset -g POWERLEVEL9K_AWS_CLASSES=(
+  '*prod*'  PROD
+  '*'       DEFAULT
+)
+typeset -g POWERLEVEL9K_AWS_PROD_BACKGROUND=red
+typeset -g POWERLEVEL9K_AWS_PROD_FOREGROUND=white
+typeset -g POWERLEVEL9K_AWS_DEFAULT_BACKGROUND=208
+typeset -g POWERLEVEL9K_AWS_DEFAULT_FOREGROUND=white
 
 # Customize prompt appearance
 typeset -g POWERLEVEL9K_MODE=nerdfont-complete
