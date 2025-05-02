@@ -110,7 +110,37 @@ fi
 # AWS CLI completions
 if command -v aws &>/dev/null; then
   mkdir -p ~/.zsh/lazy
-  complete -C aws_completer aws
+  # Use zsh-specific AWS completion instead of the bash 'complete' command
+  if [[ -d "$(brew --prefix)/share/zsh/site-functions" ]]; then
+    # For Homebrew installations
+    ln -sf "$(brew --prefix)/bin/aws_zsh_completer.sh" ~/.zsh/lazy/_aws 2>/dev/null
+  elif [[ -f /usr/local/bin/aws_zsh_completer.sh ]]; then
+    # For standard installations
+    ln -sf /usr/local/bin/aws_zsh_completer.sh ~/.zsh/lazy/_aws 2>/dev/null
+  elif [[ -f /usr/bin/aws_zsh_completer.sh ]]; then
+    # For system-wide installations
+    ln -sf /usr/bin/aws_zsh_completer.sh ~/.zsh/lazy/_aws 2>/dev/null
+  else
+    # Generate completion script if available
+    aws_completer=$(which aws_completer 2>/dev/null)
+    if [[ -n "$aws_completer" ]]; then
+      echo '#compdef aws
+_aws() {
+  local -a args
+  args=(
+    "*: :->args"
+  )
+  local -a _comp_priv_prefix
+  _arguments $args
+  
+  local -a completions
+  completions=($('$aws_completer' --no-cli-auto-prompt))
+  _describe "options" completions
+}
+_aws' > ~/.zsh/lazy/_aws
+    fi
+  fi
+  lazy_load_completion aws "~/.zsh/lazy/_aws"
 fi
 
 # Homebrew completions
