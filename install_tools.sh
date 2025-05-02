@@ -22,7 +22,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   # macOS - use Homebrew if available
   if command -v brew &>/dev/null; then
     echo -e "${YELLOW}Installing utilities with Homebrew...${NC}"
-    brew install dust lsd neovim bat fd duf
+    brew install dust lsd neovim bat fd duf pyenv
     
     # Install iTerm2 if not already installed
     if ! brew list --cask iterm2 &>/dev/null; then
@@ -40,8 +40,14 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     # Configure iTerm2
     echo -e "${YELLOW}Configuring iTerm2...${NC}"
     "$SCRIPT_DIR/fix_iterm2.sh"
+    
+    # Configure pyenv
+    echo -e "${YELLOW}Configuring pyenv...${NC}"
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+    echo 'eval "$(pyenv init -)"' >> ~/.zshrc
   else
-    echo -e "${RED}Homebrew not found. Please install manually: dust, lsd, neovim, bat, fd, duf, iTerm2, and Meslo Nerd Font${NC}"
+    echo -e "${RED}Homebrew not found. Please install manually: dust, lsd, neovim, bat, fd, duf, iTerm2, Meslo Nerd Font, and pyenv${NC}"
   fi
 elif [[ -f /etc/debian_version ]]; then
   # Debian/Ubuntu
@@ -49,27 +55,72 @@ elif [[ -f /etc/debian_version ]]; then
     echo -e "${YELLOW}Installing utilities with apt...${NC}"
     sudo apt update
     sudo apt install -y dust lsd neovim bat fd-find duf
+    
+    # Install pyenv dependencies
+    echo -e "${YELLOW}Installing pyenv dependencies...${NC}"
+    sudo apt install -y make build-essential libssl-dev zlib1g-dev \
+    libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
+    libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+    
+    # Install pyenv
+    echo -e "${YELLOW}Installing pyenv...${NC}"
+    curl https://pyenv.run | bash
+    
+    # Configure pyenv
+    echo -e "${YELLOW}Configuring pyenv...${NC}"
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+    echo 'eval "$(pyenv init -)"' >> ~/.zshrc
   else
-    echo -e "${RED}Cannot install with apt. Please install manually: dust, lsd, neovim, bat, fd-find, duf${NC}"
+    echo -e "${RED}Cannot install with apt. Please install manually: dust, lsd, neovim, bat, fd-find, duf, and pyenv${NC}"
   fi
 elif [[ -f /etc/fedora-release ]]; then
   # Fedora
   if command -v dnf &>/dev/null && sudo -n true 2>/dev/null; then
     echo -e "${YELLOW}Installing utilities with dnf...${NC}"
     sudo dnf install -y dust lsd neovim bat fd duf
+    
+    # Install pyenv dependencies
+    echo -e "${YELLOW}Installing pyenv dependencies...${NC}"
+    sudo dnf install -y make gcc zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel \
+    openssl-devel tk-devel libffi-devel xz-devel
+    
+    # Install pyenv
+    echo -e "${YELLOW}Installing pyenv...${NC}"
+    curl https://pyenv.run | bash
+    
+    # Configure pyenv
+    echo -e "${YELLOW}Configuring pyenv...${NC}"
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+    echo 'eval "$(pyenv init -)"' >> ~/.zshrc
   else
-    echo -e "${RED}Cannot install with dnf. Please install manually: dust, lsd, neovim, bat, fd, duf${NC}"
+    echo -e "${RED}Cannot install with dnf. Please install manually: dust, lsd, neovim, bat, fd, duf, and pyenv${NC}"
   fi
 elif [[ -f /etc/arch-release ]]; then
   # Arch Linux
   if command -v pacman &>/dev/null && sudo -n true 2>/dev/null; then
     echo -e "${YELLOW}Installing utilities with pacman...${NC}"
     sudo pacman -S --noconfirm dust lsd neovim bat fd duf
+    
+    # Install pyenv dependencies
+    echo -e "${YELLOW}Installing pyenv dependencies...${NC}"
+    sudo pacman -S --noconfirm base-devel openssl zlib xz
+    
+    # Install pyenv
+    echo -e "${YELLOW}Installing pyenv...${NC}"
+    curl https://pyenv.run | bash
+    
+    # Configure pyenv
+    echo -e "${YELLOW}Configuring pyenv...${NC}"
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+    echo 'eval "$(pyenv init -)"' >> ~/.zshrc
   else
-    echo -e "${RED}Cannot install with pacman. Please install manually: dust, lsd, neovim, bat, fd, duf${NC}"
+    echo -e "${RED}Cannot install with pacman. Please install manually: dust, lsd, neovim, bat, fd, duf, and pyenv${NC}"
   fi
 else
-  echo -e "${RED}Unknown OS. Please install manually: dust, lsd, neovim, bat, fd, duf${NC}"
+  echo -e "${RED}Unknown OS. Please install manually: dust, lsd, neovim, bat, fd, duf, and pyenv${NC}"
 fi
 
 echo
