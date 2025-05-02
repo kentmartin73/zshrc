@@ -1,9 +1,9 @@
 # AWS CLI initialization
 # This file is sourced by .zshrc to initialize AWS CLI if it's installed
 
-# Initialize AWS CLI completion if it's installed
+# Initialize AWS CLI if it's installed
 if command -v aws &>/dev/null; then
-  complete -C aws_completer aws
+  # AWS completion is handled in completions.zsh
   
   # Add some useful AWS aliases
   alias awslocal="aws --endpoint-url=http://localhost:4566"
