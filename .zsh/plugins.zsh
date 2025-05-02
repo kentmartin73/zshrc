@@ -15,16 +15,16 @@ fi
 
 # Only load plugins if Antigen is available
 if type antigen > /dev/null 2>&1; then
+  # Load history-substring-search first
+  antigen bundle history-substring-search
+  
   # Antigen plugins
   antigen bundle command-not-found
-  antigen bundle z-shell/F-Sy-H --branch=main
-  ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern regexp cursor root line)
   antigen bundle zsh-users/zsh-autosuggestions
   antigen bundle zsh-users/zsh-completions
   antigen bundle colored-man-pages
   antigen bundle colorize
   antigen bundle dirpersist
-  antigen bundle history-substring-search
   
   # Replace zsh-z with zoxide
   antigen bundle ajeetdsouza/zoxide
@@ -32,11 +32,36 @@ if type antigen > /dev/null 2>&1; then
   # Add urltools plugin
   antigen bundle ohmyzsh/ohmyzsh plugins/urltools
   
-  antigen bundle trystan2k/zsh-tab-title
+  # Specify main branch for zsh-tab-title
+  antigen bundle trystan2k/zsh-tab-title --branch=main
+  
+  # Theme
   antigen theme romkatv/powerlevel10k
+  
+  # Other plugins
   antigen bundle marlonrichert/zsh-autocomplete@22.02.21
   antigen bundle zdharma-continuum/history-search-multi-word
   
+  # Load syntax highlighting last
+  antigen bundle z-shell/F-Sy-H --branch=main
+  ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern regexp cursor root line)
+  
   # Apply all plugins
   antigen apply
+  
+  # Set up history-substring-search keybindings after plugins are loaded
+  if [[ -n "${terminfo[kcuu1]}" ]]; then
+    bindkey "${terminfo[kcuu1]}" history-substring-search-up
+  fi
+  if [[ -n "${terminfo[kcud1]}" ]]; then
+    bindkey "${terminfo[kcud1]}" history-substring-search-down
+  fi
+  
+  # Bind up and down arrows for history substring search
+  bindkey '^[[A' history-substring-search-up
+  bindkey '^[[B' history-substring-search-down
+  
+  # Bind k and j for vi mode
+  bindkey -M vicmd 'k' history-substring-search-up
+  bindkey -M vicmd 'j' history-substring-search-down
 fi

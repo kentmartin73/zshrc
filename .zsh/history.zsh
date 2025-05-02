@@ -14,18 +14,5 @@ setopt hist_verify            # Show command with history expansion to user befo
 setopt inc_append_history     # Add commands to HISTFILE in order of execution
 setopt share_history          # Share command history data
 
-# History substring search configuration
-if [[ -n "${terminfo[kcuu1]}" ]]; then
-  bindkey "${terminfo[kcuu1]}" history-substring-search-up
-fi
-if [[ -n "${terminfo[kcud1]}" ]]; then
-  bindkey "${terminfo[kcud1]}" history-substring-search-down
-fi
-
-# Bind up and down arrows for history substring search
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
-
-# Bind k and j for vi mode
-bindkey -M vicmd 'k' history-substring-search-up
-bindkey -M vicmd 'j' history-substring-search-down
+# Note: History substring search keybindings are now set in plugins.zsh
+# after the plugins are loaded with antigen apply
