@@ -39,7 +39,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     
     # Configure iTerm2
     echo -e "${YELLOW}Configuring iTerm2...${NC}"
-    "$SCRIPT_DIR/configure_iterm2.sh"
+    # "$SCRIPT_DIR/configure_iterm2.sh"
     
     # Configure pyenv
     echo -e "${YELLOW}Configuring pyenv...${NC}"
