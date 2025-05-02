@@ -47,8 +47,8 @@ defaults read com.googlecode.iterm2 > /dev/null
 DEFAULT_PROFILE_GUID=$(defaults read com.googlecode.iterm2 "Default Bookmark Guid")
 
 # Set the font for the Default profile
-/usr/libexec/PlistBuddy -c "Set 'New Bookmarks':0:'Normal Font' 'MesloLGSNerdFont-Regular 12'" ~/Library/Preferences/com.googlecode.iterm2.plist
-/usr/libexec/PlistBuddy -c "Set 'New Bookmarks':0:'Non Ascii Font' 'MesloLGSNerdFont-Regular 12'" ~/Library/Preferences/com.googlecode.iterm2.plist
+/usr/libexec/PlistBuddy -c "Set 'New Bookmarks':0:'Normal Font' 'MesloLGS Nerd Font 12'" ~/Library/Preferences/com.googlecode.iterm2.plist
+/usr/libexec/PlistBuddy -c "Set 'New Bookmarks':0:'Non Ascii Font' 'MesloLGS Nerd Font 12'" ~/Library/Preferences/com.googlecode.iterm2.plist
 
 # Set the color preset for the Default profile
 # First, get the name of the Default profile
@@ -97,7 +97,7 @@ echo "Please restart iTerm2 for changes to take effect."
 cat > ~/set_iterm_font.sh << 'EOL'
 #!/bin/bash
 
-# This script sets the font for iTerm2 to MesloLGSNerdFont-Regular
+# This script sets the font for iTerm2 to MesloLGS Nerd Font
 # Run this script if the font is not set correctly after installation
 
 # Kill iTerm2 if it's running
@@ -107,13 +107,13 @@ killall iTerm2 2>/dev/null
 sleep 1
 
 # Set the font for the Default profile
-/usr/libexec/PlistBuddy -c "Set 'New Bookmarks':0:'Normal Font' 'MesloLGSNerdFont-Regular 12'" ~/Library/Preferences/com.googlecode.iterm2.plist
-/usr/libexec/PlistBuddy -c "Set 'New Bookmarks':0:'Non Ascii Font' 'MesloLGSNerdFont-Regular 12'" ~/Library/Preferences/com.googlecode.iterm2.plist
+/usr/libexec/PlistBuddy -c "Set 'New Bookmarks':0:'Normal Font' 'MesloLGS Nerd Font 12'" ~/Library/Preferences/com.googlecode.iterm2.plist
+/usr/libexec/PlistBuddy -c "Set 'New Bookmarks':0:'Non Ascii Font' 'MesloLGS Nerd Font 12'" ~/Library/Preferences/com.googlecode.iterm2.plist
 
 # Force iTerm2 to reload its preferences
 killall cfprefsd
 
-echo "Font set to MesloLGSNerdFont-Regular."
+echo "Font set to MesloLGS Nerd Font."
 echo "Please start iTerm2 again."
 EOL
 
@@ -129,8 +129,8 @@ cat > "$PROFILE_FILE" << 'EOL'
     {
       "Name": "Zsh Modular",
       "Guid": "zsh-modular-profile",
-      "Normal Font": "MesloLGSNerdFont-Regular 12",
-      "Non Ascii Font": "MesloLGSNerdFont-Regular 12",
+      "Normal Font": "MesloLGS Nerd Font 12",
+      "Non Ascii Font": "MesloLGS Nerd Font 12",
       "Use Non-ASCII Font": true,
       "Horizontal Spacing": 1,
       "Vertical Spacing": 1,
