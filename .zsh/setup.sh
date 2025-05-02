@@ -82,8 +82,8 @@ if command -v git &> /dev/null; then
     fi
 fi
 
-# Create marker file to indicate setup is complete
-touch "$USER_ZSH_DIR/.setup_complete"
+# Note: We're intentionally NOT creating the .setup_complete marker file here
+# so that the first-run installation will happen when the user starts a new shell
 
 # Final instructions
 echo
@@ -96,4 +96,6 @@ echo -e "  1. Start a new zsh session: ${YELLOW}exec zsh${NC}"
 echo -e "  2. Customize your local settings in: ${YELLOW}~/.zsh/local.zsh${NC}"
 echo
 echo -e "Your previous configuration has been backed up to: ${YELLOW}$BACKUP_DIR${NC}"
+echo
+echo -e "${YELLOW}Note: The first time you start a new shell, the configuration will install required utilities.${NC}"
 echo

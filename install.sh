@@ -68,3 +68,5 @@ echo -e "To start using your new zsh configuration:"
 echo -e "  1. Start a new zsh session: ${YELLOW}exec zsh${NC}"
 echo -e "  2. Customize your local settings in: ${YELLOW}~/.zsh/local.zsh${NC}"
 echo
+echo -e "${YELLOW}Note: The first time you start a new shell, the configuration will install required utilities like iTerm2, dust, lsd, etc.${NC}"
+echo
