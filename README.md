@@ -31,6 +31,16 @@ This will:
 2. Run the setup script
 3. Clean up temporary files
 
+#### VS Code Font Setup
+
+After installation, you'll need to configure VS Code to use the MesloLGS Nerd Font for proper icon display:
+
+1. Open VS Code Settings (Cmd+, on macOS or Ctrl+, on Windows/Linux)
+2. Search for "Editor: Font Family"
+3. Add `MesloLGS NF` to the beginning of the font list
+
+![VS Code Font Setup](./images/vscode-font-setup.png)
+
 ### Manual Installation
 
 1. Clone the repository:
