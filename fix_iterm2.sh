@@ -20,13 +20,6 @@ if ! [ -d "/Applications/iTerm.app" ]; then
     exit 1
 fi
 
-# Install Meslo Nerd Font if not already installed
-if ! ls ~/Library/Fonts/Meslo*Nerd*Font* &>/dev/null; then
-    echo -e "${YELLOW}Installing Meslo Nerd Font...${NC}"
-    brew tap homebrew/cask-fonts
-    brew install --cask font-meslo-lg-nerd-font
-fi
-
 # Create the profile file
 PROFILE_FILE=~/Desktop/ZshModular.itermprofile
 echo -e "${YELLOW}Creating iTerm2 profile file at ${PROFILE_FILE}...${NC}"
@@ -37,8 +30,8 @@ cat > "$PROFILE_FILE" << 'EOL'
     {
       "Name": "Zsh Modular",
       "Guid": "zsh-modular-profile",
-      "Normal Font": "MesloLGSNerdFontComplete-Regular 12",
-      "Non Ascii Font": "MesloLGSNerdFontComplete-Regular 12",
+      "Normal Font": "MesloLGSNerdFont-Regular 12",
+      "Non Ascii Font": "MesloLGSNerdFont-Regular 12",
       "Use Non-ASCII Font": true,
       "Horizontal Spacing": 1,
       "Vertical Spacing": 1,
@@ -150,7 +143,7 @@ cat > "$INSTRUCTIONS_FILE" << 'EOL'
     <div class="step">
         <h2>Step 3: Verify Font Settings</h2>
         <p>With the <code>Zsh Modular</code> profile selected, click on the <code>Text</code> tab</p>
-        <p>Verify that both the font and non-ASCII font are set to <code>MesloLGSNerdFontComplete-Regular</code></p>
+        <p>Verify that both the font and non-ASCII font are set to <code>MesloLGSNerdFont-Regular</code></p>
         <p>If not, manually select this font for both settings</p>
     </div>
     
@@ -164,8 +157,12 @@ cat > "$INSTRUCTIONS_FILE" << 'EOL'
         <h2>Troubleshooting</h2>
         <p>If you still don't see the correct font or Powerlevel10k icons:</p>
         <ol>
-            <li>Make sure the Meslo Nerd Font is installed (it should be in <code>~/Library/Fonts/</code>)</li>
-            <li>Try manually setting the font in Preferences > Profiles > Text</li>
+            <li>Try using one of these alternative fonts:
+                <ul>
+                    <li><code>MesloLGSNerdFontMono-Regular</code></li>
+                    <li><code>MesloLGSNerdFontPropo-Regular</code></li>
+                </ul>
+            </li>
             <li>Run <code>p10k configure</code> to reconfigure Powerlevel10k</li>
         </ol>
     </div>
@@ -189,6 +186,6 @@ echo -e "1. Import the profile into iTerm2"
 echo -e "2. Set it as the default profile"
 echo -e "3. Restart iTerm2"
 echo
-echo -e "If you still have issues, you can manually set the font in iTerm2:"
-echo -e "Preferences > Profiles > Text > Font: ${YELLOW}MesloLGSNerdFontComplete-Regular${NC}"
+echo -e "The font being used is: ${YELLOW}MesloLGSNerdFont-Regular${NC}"
+echo -e "If that doesn't work, try: ${YELLOW}MesloLGSNerdFontMono-Regular${NC}"
 echo
