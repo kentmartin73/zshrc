@@ -39,6 +39,20 @@ git clone https://github.com/kentmartin73/zshrc.git "$TEMP_DIR" || {
     exit 1
 }
 
+# Install required tools
+echo -e "${YELLOW}Installing required tools...${NC}"
+cd "$TEMP_DIR" || {
+    echo -e "${RED}Error: Failed to navigate to the cloned repository.${NC}"
+    rm -rf "$TEMP_DIR"
+    exit 1
+}
+
+./install_tools.sh || {
+    echo -e "${RED}Error: Failed to install required tools.${NC}"
+    rm -rf "$TEMP_DIR"
+    exit 1
+}
+
 # Run the setup script
 echo -e "${YELLOW}Running the setup script...${NC}"
 cd "$TEMP_DIR/.zsh" || {
@@ -52,6 +66,9 @@ cd "$TEMP_DIR/.zsh" || {
     rm -rf "$TEMP_DIR"
     exit 1
 }
+
+# Create marker file to indicate setup is complete
+touch ~/.zsh/.setup_complete
 
 # Clean up
 echo -e "${YELLOW}Cleaning up...${NC}"
@@ -67,6 +84,4 @@ echo
 echo -e "To start using your new zsh configuration:"
 echo -e "  1. Start a new zsh session: ${YELLOW}exec zsh${NC}"
 echo -e "  2. Customize your local settings in: ${YELLOW}~/.zsh/local.zsh${NC}"
-echo
-echo -e "${YELLOW}Note: The first time you start a new shell, the configuration will install required utilities like iTerm2, dust, lsd, etc.${NC}"
 echo
