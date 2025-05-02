@@ -107,3 +107,13 @@ typeset -g POWERLEVEL9K_SHORTEN_STRATEGY=truncate_from_right
 # VCS settings
 typeset -g POWERLEVEL9K_VCS_SHOW_SUBMODULE_DIRTY=false
 typeset -g POWERLEVEL9K_VCS_GIT_HOOKS=(vcs-detect-changes git-untracked git-aheadbehind git-stash git-remotebranch git-tagname)
+
+# Segment separator settings - round instead of pointy
+# The right end of left prompt (round)
+typeset -g POWERLEVEL9K_LEFT_PROMPT_LAST_SEGMENT_END_SYMBOL='\uE0B4'
+# The left end of right prompt (round)
+typeset -g POWERLEVEL9K_RIGHT_PROMPT_FIRST_SEGMENT_START_SYMBOL='\uE0B6'
+# The left end of left prompt (round)
+typeset -g POWERLEVEL9K_LEFT_PROMPT_FIRST_SEGMENT_START_SYMBOL='\uE0B6'
+# The right end of right prompt (round)
+typeset -g POWERLEVEL9K_RIGHT_PROMPT_LAST_SEGMENT_END_SYMBOL='\uE0B4'
