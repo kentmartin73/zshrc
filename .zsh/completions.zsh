@@ -50,6 +50,8 @@ zstyle ':completion:*:history-words' list false
 zstyle ':completion:*:history-words' menu yes
 
 # Setup lazy loading for various completions
+echo "Setting up ZSH completions system..."
+
 # Note: Moved to a function to avoid duplication and improve maintainability
 function setup_completion() {
   local command=$1
@@ -60,8 +62,11 @@ function setup_completion() {
     mkdir -p ~/.zsh/lazy
     if [[ ! -f $output_file ]]; then
       echo "Downloading completion for $command..."
-      curl -s -L "$url" > "$output_file" 2>/dev/null
+      curl -L "$url" > "$output_file" 2>/dev/null
+    else
+      echo "Using existing completion for $command"
     fi
+    echo "Setting up lazy loading for $command"
     lazy_load_completion $command "$output_file"
   fi
 }

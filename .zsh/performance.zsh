@@ -1,4 +1,5 @@
 # Performance optimizations for zsh
+echo "Loading ZSH performance optimizations..."
 
 # Profiling configuration
 # To use: run `zsh_profile_start` before commands you want to profile,
@@ -23,6 +24,7 @@ function lazy_load() {
 }
 
 # Lazy load version managers and other heavy tools
+echo "Setting up lazy loading for version managers..."
 # Node Version Manager
 if [ -d "$HOME/.nvm" ]; then
   lazy_load 'source ~/.nvm/nvm.sh' nvm
@@ -71,6 +73,7 @@ zstyle ':completion:*' cache-path ~/.zsh/cache
 zstyle ':completion:*' accept-exact '*(N)'
 
 # Optimize command execution
+echo "Optimizing ZSH completion system..."
 # Load compinit first
 autoload -Uz compinit
 

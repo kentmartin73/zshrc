@@ -1,7 +1,11 @@
 # Plugin management with Antigen
 
-# Disable Antigen debug logging to prevent errors
-export ANTIGEN_DEBUG_LOG=0
+# Set up Antigen logging properly
+export ANTIGEN_LOG_PATH="$HOME/.antigen/antigen.log"
+export ANTIGEN_DEBUG_LOG=false
+
+# Add descriptive echo statements to show what's happening
+echo "Loading ZSH plugins with Antigen..."
 
 # Load Antigen (OS-specific path)
 if [[ -f ~/.zsh/antigen_path.zsh ]]; then
