@@ -22,7 +22,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   # macOS - use Homebrew if available
   if command -v brew &>/dev/null; then
     echo -e "${YELLOW}Installing utilities with Homebrew...${NC}"
-    brew install dust lsd neovim bat fd duf pyenv
+    brew install dust lsd neovim bat fd duf pyenv zoxide
     
     # Install Antigen if not already installed
     if ! brew list antigen &>/dev/null; then
@@ -48,14 +48,14 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     "$SCRIPT_DIR/configure_iterm2.sh"
     
   else
-    echo -e "${RED}Homebrew not found. Please install manually: dust, lsd, neovim, bat, fd, duf, iTerm2, Meslo Nerd Font, pyenv, and antigen${NC}"
+    echo -e "${RED}Homebrew not found. Please install manually: dust, lsd, neovim, bat, fd, duf, iTerm2, Meslo Nerd Font, pyenv, zoxide, and antigen${NC}"
   fi
 elif [[ -f /etc/debian_version ]]; then
   # Debian/Ubuntu
   if command -v apt &>/dev/null && sudo -n true 2>/dev/null; then
     echo -e "${YELLOW}Installing utilities with apt...${NC}"
     sudo apt update
-    sudo apt install -y dust lsd neovim bat fd-find duf
+    sudo apt install -y dust lsd neovim bat fd-find duf zoxide
     
     # Install Antigen
     echo -e "${YELLOW}Installing Antigen...${NC}"
@@ -73,13 +73,13 @@ elif [[ -f /etc/debian_version ]]; then
     curl https://pyenv.run | bash
     
   else
-    echo -e "${RED}Cannot install with apt. Please install manually: dust, lsd, neovim, bat, fd-find, duf, pyenv, and antigen${NC}"
+    echo -e "${RED}Cannot install with apt. Please install manually: dust, lsd, neovim, bat, fd-find, duf, pyenv, zoxide, and antigen${NC}"
   fi
 elif [[ -f /etc/fedora-release ]]; then
   # Fedora
   if command -v dnf &>/dev/null && sudo -n true 2>/dev/null; then
     echo -e "${YELLOW}Installing utilities with dnf...${NC}"
-    sudo dnf install -y dust lsd neovim bat fd duf
+    sudo dnf install -y dust lsd neovim bat fd duf zoxide
     
     # Install Antigen
     echo -e "${YELLOW}Installing Antigen...${NC}"
@@ -96,13 +96,13 @@ elif [[ -f /etc/fedora-release ]]; then
     curl https://pyenv.run | bash
     
   else
-    echo -e "${RED}Cannot install with dnf. Please install manually: dust, lsd, neovim, bat, fd, duf, pyenv, and antigen${NC}"
+    echo -e "${RED}Cannot install with dnf. Please install manually: dust, lsd, neovim, bat, fd, duf, pyenv, zoxide, and antigen${NC}"
   fi
 elif [[ -f /etc/arch-release ]]; then
   # Arch Linux
   if command -v pacman &>/dev/null && sudo -n true 2>/dev/null; then
     echo -e "${YELLOW}Installing utilities with pacman...${NC}"
-    sudo pacman -S --noconfirm dust lsd neovim bat fd duf
+    sudo pacman -S --noconfirm dust lsd neovim bat fd duf zoxide
     
     # Install Antigen
     echo -e "${YELLOW}Installing Antigen...${NC}"
@@ -118,10 +118,10 @@ elif [[ -f /etc/arch-release ]]; then
     curl https://pyenv.run | bash
     
   else
-    echo -e "${RED}Cannot install with pacman. Please install manually: dust, lsd, neovim, bat, fd, duf, pyenv, and antigen${NC}"
+    echo -e "${RED}Cannot install with pacman. Please install manually: dust, lsd, neovim, bat, fd, duf, pyenv, zoxide, and antigen${NC}"
   fi
 else
-  echo -e "${RED}Unknown OS. Please install manually: dust, lsd, neovim, bat, fd, duf, pyenv, and antigen${NC}"
+  echo -e "${RED}Unknown OS. Please install manually: dust, lsd, neovim, bat, fd, duf, pyenv, zoxide, and antigen${NC}"
   echo -e "${YELLOW}For antigen, you can install it with:${NC}"
   echo -e "  mkdir -p /usr/local/share/antigen"
   echo -e "  curl -L git.io/antigen > /usr/local/share/antigen/antigen.zsh"
