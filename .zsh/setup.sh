@@ -55,6 +55,10 @@ echo -e "${YELLOW}Setting up .zsh directory...${NC}"
 mkdir -p "$USER_ZSH_DIR/lazy"
 mkdir -p "$USER_ZSH_DIR/cache"
 
+# Create .antigen directory if it doesn't exist
+echo -e "${YELLOW}Setting up .antigen directory...${NC}"
+mkdir -p "$HOME/.antigen"
+
 # Copy configuration files
 echo -e "${YELLOW}Copying configuration files...${NC}"
 cp -r "$ZSH_CONFIG_DIR"/* "$USER_ZSH_DIR/"
