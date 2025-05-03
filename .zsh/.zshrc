@@ -5,6 +5,10 @@
 # Main zsh configuration file
 # Sources all modular configuration files
 
+# Always output at least one line to ensure Powerlevel10k warning appears
+# This is intentional to keep the warning visible on all runs
+echo "ZSH modular configuration loading..."
+
 # Enable Powerlevel10k instant prompt
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
