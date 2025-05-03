@@ -126,12 +126,45 @@ if type antigen > /dev/null 2>&1; then
   else
     # After first run, just log errors silently
     {
-    echo "Loading Antigen plugins..." >> "$HOME/.antigen/antigen.log"
-    
-    # === Core Plugins (Load First) ===
-    # Plugin loading continues silently...
-    
-    echo "Antigen plugins loaded successfully" >> "$HOME/.antigen/antigen.log"
+      echo "Loading Antigen plugins..." >> "$HOME/.antigen/antigen.log"
+      
+      # === Core Plugins (Load First) ===
+      # History substring search - provides better history navigation
+      antigen bundle history-substring-search
+      
+      # === Utility Plugins ===
+      # Command not found - suggests package to install when command not found
+      antigen bundle command-not-found
+      # Directory persistence - automatically creates directory bookmarks
+      antigen bundle dirpersist
+      # Colored man pages - adds color to man pages
+      antigen bundle colored-man-pages
+      # Colorize - syntax highlighting for cat/less
+      antigen bundle colorize
+      # URL tools - URL encoding/decoding functions
+      antigen bundle ohmyzsh/ohmyzsh plugins/urltools
+      # Tab title - sets terminal tab title based on current directory/command
+      antigen bundle trystan2k/zsh-tab-title --branch=main
+      
+      # === Completion Plugins ===
+      # ZSH completions - additional completion definitions
+      antigen bundle zsh-users/zsh-completions
+      
+      # === Interactive Plugins ===
+      # Auto suggestions - suggests commands as you type based on history
+      antigen bundle zsh-users/zsh-autosuggestions
+      
+      # === Theme ===
+      antigen theme romkatv/powerlevel10k
+      
+      # === Syntax Highlighting (Load Last) ===
+      # Fast syntax highlighting - syntax highlighting for ZSH
+      antigen bundle z-shell/F-Sy-H --branch=main
+      ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern regexp cursor root line)
+      
+      # Apply all plugins
+      antigen apply
+      echo "Antigen plugins loaded successfully" >> "$HOME/.antigen/antigen.log"
     } 2>>"$HOME/.antigen/antigen.log"
   fi
   
