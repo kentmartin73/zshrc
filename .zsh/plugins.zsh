@@ -84,7 +84,7 @@ if type antigen > /dev/null 2>&1; then
     # Tab title - sets terminal tab title based on current directory/command
     antigen bundle trystan2k/zsh-tab-title --branch=main
     # Directory navigation - fast directory jumping
-    antigen bundle ajeetdsouza/zoxide
+    # Note: zoxide is not an antigen plugin, it's initialized in .zshrc after plugins are loaded
     
     # === Completion Plugins ===
     if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
