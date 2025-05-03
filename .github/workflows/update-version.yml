@@ -1,0 +1,48 @@
+name: Update Version Info
+
+on:
+  push:
+    branches:
+      - main  # or your default branch name
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for proper commit info
+      
+      - name: Set up Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+      
+      - name: Update version info in .zshrc
+        run: |
+          # Get the committer name and commit SHA
+          COMMITTER_NAME=$(git log -1 --pretty=format:'%an')
+          COMMIT_SHA=$(git rev-parse --short HEAD)
+          
+          # Create a temporary file with updated content
+          sed -i "2s|.*|# Version: https://github.com/kentmartin73/zshrc/commit/$COMMIT_SHA|" .zsh/.zshrc
+          
+          # Check if line 3 already contains "Last updated by", otherwise modify line 3
+          if grep -q "Last updated by" .zsh/.zshrc; then
+            sed -i "/Last updated by/s|.*|# Last updated by: $COMMITTER_NAME|" .zsh/.zshrc
+          else
+            sed -i "3s|.*|# Last updated by: $COMMITTER_NAME|" .zsh/.zshrc
+          fi
+          
+          # Check if there are changes
+          if git diff --quiet .zsh/.zshrc; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          
+          # Commit and push changes
+          git add .zsh/.zshrc
+          git commit -m "Update version info in .zshrc [skip ci]"
+          git push
