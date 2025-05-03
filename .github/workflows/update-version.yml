@@ -47,7 +47,7 @@ jobs:
             
             # Update the first line with the tag and date
             sed -i "1s|.*|# Kent Martin's Zsh Modular Configuration $TAG_NAME - A comprehensive modular Zsh setup|" .zshrc
-            sed -i "2s|.*|# Version: $TAG_NAME (https://github.com/kentmartin73/zshrc/releases/tag/v$TAG_NAME) - Updated: $CURRENT_DATE|" .zshrc
+            sed -i "2s|.*|# Version: $TAG_NAME (https://github.com/kentmartin73/zshrc/releases/tag/$TAG_NAME) - Updated: $CURRENT_DATE|" .zshrc
           else
             # Get the commit SHA
             COMMIT_SHA=$(git rev-parse --short HEAD)
