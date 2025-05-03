@@ -3,6 +3,7 @@
 # Version: https://github.com/kentmartin73/zshrc/commit/84264bd
 
 # Zsh Modular Configuration Installer
+# Version: GitHub Actions (7ccce6b)
 # This script installs the modular zsh configuration from GitHub
 
 # Colors for output
