@@ -1,5 +1,8 @@
 # Plugin management with Antigen
 
+# Disable Antigen debug logging to prevent errors
+export ANTIGEN_DEBUG_LOG=0
+
 # Load Antigen (OS-specific path)
 if [[ -f ~/.zsh/antigen_path.zsh ]]; then
   source ~/.zsh/antigen_path.zsh
