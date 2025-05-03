@@ -1,6 +1,6 @@
-# Kent Martin's Zsh Modular Configuration (commit eb59f3f) - A comprehensive modular Zsh setup
-# Version: https://github.com/kentmartin73/zshrc/commit/eb59f3f
-# Last updated by: Kent Martin
+# Kent Martin's Zsh Modular Configuration vv1.0.4 - A comprehensive modular Zsh setup
+# Version: v1.0.4 (https://github.com/kentmartin73/zshrc/releases/tag/v1.0.4)
+# Last updated by: GitHub Actions
 # Main zsh configuration file
 # Sources all modular configuration files
 
