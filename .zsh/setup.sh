@@ -1,12 +1,5 @@
 #!/bin/bash
-# Zsh Modular Configuration - A comprehensive modular Zsh setup for improved performance and maintainability
-# Version: https://github.com/kentmartin73/zshrc/commit/c901471
-# Zsh Modular Configuration - A comprehensive modular Zsh setup for improved performance and maintainability
-# Version: https://github.com/kentmartin73/zshrc/commit/84264bd
-
 # Setup script for modular zsh configuration
-# Version: GitHub Actions (895f170)
-# Version: GitHub Actions (7ccce6b)
 
 # Colors for output
 GREEN='\033[0;32m'
