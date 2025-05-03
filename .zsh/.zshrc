@@ -16,7 +16,7 @@ FIRST_RUN_MARKER="$HOME/.zsh/.first_run_complete"
 
 # Only show loading message on first run
 if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
-  echo "${GREEN}First initialization starting...${NC}"
+  echo -e "${GREEN}First initialization starting...${NC}"
 fi
 if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
   echo "ZSH modular configuration loading..."
@@ -52,7 +52,7 @@ fi
 # Display completion message and create marker file at the end of first run
 if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
   echo "ZSH configuration complete!"
-  echo "${GREEN}First initialization complete, you won't see these messages again...${NC}"
+  echo -e "${GREEN}First initialization complete, you won't see these messages again...${NC}"
   # Create the marker file to indicate first run is complete
   touch "$FIRST_RUN_MARKER"
 fi
