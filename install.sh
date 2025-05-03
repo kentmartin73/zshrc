@@ -101,6 +101,19 @@ elif [[ -f ~/.zsh/p10k.zsh && ! -e ~/.p10k.zsh ]]; then
     ln -sf ~/.zsh/p10k.zsh ~/.p10k.zsh
 fi
 
+# Handle existing .alias file
+echo -e "${YELLOW}Checking for existing .alias file...${NC}"
+if [[ -f ~/.alias ]]; then
+    echo -e "${YELLOW}Found existing .alias file. Integrating with modular setup...${NC}"
+    # Append to our aliases.zsh
+    echo -e "\n# Content integrated from ~/.alias during installation\n" >> ~/.zsh/aliases.zsh
+    cat ~/.alias >> ~/.zsh/aliases.zsh
+    # Backup original
+    mv ~/.alias ~/.alias.backup
+    echo -e "${GREEN}Successfully integrated existing aliases.${NC}"
+    echo -e "${GREEN}Original file backed up to ~/.alias.backup${NC}"
+fi
+
 # Clean up
 echo -e "${YELLOW}Cleaning up...${NC}"
 cd

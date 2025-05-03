@@ -61,6 +61,13 @@ fi
 if [ -f "$HOME/.alias" ]; then
     cp "$HOME/.alias" "$BACKUP_DIR/"
     echo -e "  - Backed up .alias to $BACKUP_DIR/.alias"
+    
+    # Integrate .alias content with our aliases.zsh
+    echo -e "${YELLOW}Integrating existing .alias file with modular setup...${NC}"
+    echo -e "\n# Content integrated from ~/.alias on $TIMESTAMP\n" >> "$USER_ZSH_DIR/aliases.zsh"
+    cat "$HOME/.alias" >> "$USER_ZSH_DIR/aliases.zsh"
+    echo -e "  - Integrated .alias content into ~/.zsh/aliases.zsh"
+    echo -e "  - Original file backed up to $BACKUP_DIR/.alias"
 fi
 
 # Create .zsh directory if it doesn't exist
