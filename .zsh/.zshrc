@@ -1,6 +1,3 @@
-# Kent Martin's Zsh Modular Configuration vv1.0.4 - A comprehensive modular Zsh setup
-# Version: v1.0.4 (https://github.com/kentmartin73/zshrc/releases/tag/v1.0.4)
-# Last updated by: GitHub Actions
 # Main zsh configuration file
 # Sources all modular configuration files
 
