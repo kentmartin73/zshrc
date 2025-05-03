@@ -150,26 +150,38 @@ fi
 p10k-setup() {
   echo "Setting up Powerlevel10k configuration..."
   
-  # Create .zsh/p10k.zsh if it doesn't exist
-  touch ~/.zsh/p10k.zsh
-  
-  # Create a symlink from ~/.p10k.zsh to ~/.zsh/p10k.zsh if it doesn't exist
-  if [[ ! -L ~/.p10k.zsh ]]; then
-    # Backup existing p10k.zsh if it exists and is not a symlink
-    if [[ -f ~/.p10k.zsh && ! -L ~/.p10k.zsh ]]; then
-      echo "Backing up existing ~/.p10k.zsh to ~/.p10k.zsh.backup"
-      cp ~/.p10k.zsh ~/.p10k.zsh.backup
-      cp ~/.p10k.zsh ~/.zsh/p10k.zsh
-      rm ~/.p10k.zsh
-    fi
+  # Handle existing configuration
+  if [[ -f ~/.p10k.zsh && ! -L ~/.p10k.zsh ]]; then
+    # User has a non-symlink p10k.zsh file
+    echo "Backing up existing ~/.p10k.zsh to ~/.p10k.zsh.backup"
+    cp ~/.p10k.zsh ~/.p10k.zsh.backup
     
+    # Copy to our directory
+    echo "Copying existing configuration to ~/.zsh/p10k.zsh"
+    cp ~/.p10k.zsh ~/.zsh/p10k.zsh
+    rm ~/.p10k.zsh
+    
+    # Create symlink
+    echo "Creating symlink from ~/.p10k.zsh to ~/.zsh/p10k.zsh"
+    ln -s ~/.zsh/p10k.zsh ~/.p10k.zsh
+  elif [[ ! -f ~/.zsh/p10k.zsh ]]; then
+    # No configuration exists yet
+    touch ~/.zsh/p10k.zsh
+    
+    # Create symlink if it doesn't exist
+    if [[ ! -L ~/.p10k.zsh ]]; then
+      echo "Creating symlink from ~/.p10k.zsh to ~/.zsh/p10k.zsh"
+      ln -s ~/.zsh/p10k.zsh ~/.p10k.zsh
+    fi
+  elif [[ ! -L ~/.p10k.zsh ]]; then
+    # We have a configuration in our directory but no symlink
     echo "Creating symlink from ~/.p10k.zsh to ~/.zsh/p10k.zsh"
     ln -s ~/.zsh/p10k.zsh ~/.p10k.zsh
   fi
   
   # Run the p10k configuration wizard
   echo "Running Powerlevel10k configuration wizard..."
-  p10k configure
+  command p10k configure
   
   # After configuration, remind the user about the symlink
   echo "Configuration complete! Your Powerlevel10k settings are in ~/.zsh/p10k.zsh"
@@ -177,7 +189,30 @@ p10k-setup() {
   echo "These settings will take precedence over any settings in ~/.zsh/theme.zsh"
 }
 
-# Check if we should source p10k.zsh from our .zsh directory
-if [[ -f ~/.zsh/p10k.zsh ]]; then
-  source ~/.zsh/p10k.zsh
+# Create a hook to intercept p10k configure command
+p10k() {
+  if [[ "$1" == "configure" ]]; then
+    echo "Using p10k-setup to ensure proper configuration with our modular setup..."
+    p10k-setup
+  else
+    command p10k "$@"
+  fi
+}
+
+# Check if p10k.zsh exists in home directory but is not a symlink to our version
+if [[ -f ~/.p10k.zsh && ! -L ~/.p10k.zsh && ! -f ~/.zsh/p10k.zsh ]]; then
+  # User ran p10k configure directly, copy the file to our directory
+  echo "Detected p10k.zsh in home directory, copying to ~/.zsh/p10k.zsh"
+  cp ~/.p10k.zsh ~/.zsh/p10k.zsh
+  # Create symlink back to ensure future updates work properly
+  mv ~/.p10k.zsh ~/.p10k.zsh.original
+  ln -s ~/.zsh/p10k.zsh ~/.p10k.zsh
+  echo "Created symlink from ~/.p10k.zsh to ~/.zsh/p10k.zsh for better organization"
+elif [[ -f ~/.zsh/p10k.zsh && ! -L ~/.p10k.zsh ]]; then
+  # We have our version but no symlink in home directory
+  echo "Creating symlink from ~/.p10k.zsh to ~/.zsh/p10k.zsh"
+  ln -s ~/.zsh/p10k.zsh ~/.p10k.zsh
 fi
+
+# Add an alias for p10k configure to ensure it works with our setup
+alias p10k-configure="p10k-setup"
