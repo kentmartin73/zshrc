@@ -1,5 +1,14 @@
 # Plugin management with Antigen
 
+# Create necessary directories and set up logging
+if [[ ! -d "$HOME/.antigen" ]]; then
+  echo "First-time setup: Creating Antigen directories..."
+  mkdir -p "$HOME/.antigen"
+  touch "$HOME/.antigen/antigen.log"
+  chmod 644 "$HOME/.antigen/antigen.log"
+  echo "Antigen log file created at ~/.antigen/antigen.log"
+fi
+
 # Set up Antigen logging properly
 export ANTIGEN_LOG_PATH="$HOME/.antigen/antigen.log"
 export ANTIGEN_DEBUG_LOG=false
