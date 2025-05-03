@@ -1,6 +1,6 @@
-# Zsh Modular Configuration - A comprehensive modular Zsh setup for improved performance and maintainability
-# Version: https://github.com/kentmartin73/zshrc/commit/7ccce6b
-# Last updated by: GitHub Actions
+# Zsh Modular Configuration vv1.0.3 - A comprehensive modular Zsh setup for improved performance and maintainability
+# Version: v1.0.3 (https://github.com/kentmartin73/zshrc/releases/tag/v1.0.3)
+# Last updated by: Kent Martin
 # Main zsh configuration file
 # Sources all modular configuration files
 
