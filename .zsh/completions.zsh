@@ -1,5 +1,8 @@
 # Completion system configuration
 
+# Check if this is the first run (marker file defined in performance.zsh)
+FIRST_RUN_MARKER="$HOME/.zsh/.first_run_complete"
+
 # Note: compinit is now initialized in performance.zsh
 # We don't need to initialize it again here
 
@@ -50,7 +53,9 @@ zstyle ':completion:*:history-words' list false
 zstyle ':completion:*:history-words' menu yes
 
 # Setup lazy loading for various completions
-echo "Setting up ZSH completions system..."
+if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+  echo "Setting up ZSH completions system..."
+fi
 
 # Note: Moved to a function to avoid duplication and improve maintainability
 function setup_completion() {
@@ -61,12 +66,18 @@ function setup_completion() {
   if command -v $command &>/dev/null; then
     mkdir -p ~/.zsh/lazy
     if [[ ! -f $output_file ]]; then
-      echo "Downloading completion for $command..."
+      if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+        echo "Downloading completion for $command..."
+      fi
       curl -L "$url" > "$output_file" 2>/dev/null
     else
-      echo "Using existing completion for $command"
+      if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+        echo "Using existing completion for $command"
+      fi
     fi
-    echo "Setting up lazy loading for $command"
+    if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+      echo "Setting up lazy loading for $command"
+    fi
     lazy_load_completion $command "$output_file"
   fi
 }

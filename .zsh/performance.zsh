@@ -1,5 +1,12 @@
 # Performance optimizations for zsh
-echo "Loading ZSH performance optimizations..."
+
+# Check if this is the first run
+FIRST_RUN_MARKER="$HOME/.zsh/.first_run_complete"
+
+# Only show echo statements on first run
+if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+  echo "Loading ZSH performance optimizations..."
+fi
 
 # Profiling configuration
 # To use: run `zsh_profile_start` before commands you want to profile,
@@ -24,7 +31,9 @@ function lazy_load() {
 }
 
 # Lazy load version managers and other heavy tools
-echo "Setting up lazy loading for version managers..."
+if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+  echo "Setting up lazy loading for version managers..."
+fi
 # Node Version Manager
 if [ -d "$HOME/.nvm" ]; then
   lazy_load 'source ~/.nvm/nvm.sh' nvm
@@ -73,7 +82,9 @@ zstyle ':completion:*' cache-path ~/.zsh/cache
 zstyle ':completion:*' accept-exact '*(N)'
 
 # Optimize command execution
-echo "Optimizing ZSH completion system..."
+if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+  echo "Optimizing ZSH completion system..."
+fi
 # Load compinit first
 autoload -Uz compinit
 
