@@ -103,30 +103,27 @@ fi
 
 # Handle existing .aliases file
 echo -e "${YELLOW}Checking for existing .aliases file...${NC}"
-if [[ -f ~/.aliases ]]; then
+if [[ -f ~/.aliases && ! -L ~/.aliases ]]; then
     # Backup existing .aliases file
     cp ~/.aliases ~/.aliases.backup
     echo -e "${GREEN}Backed up existing .aliases to ~/.aliases.backup${NC}"
     
-    # Check if it's not already a symlink
-    if [[ ! -L ~/.aliases ]]; then
-        # If it has content, integrate it first
-        if [[ -s ~/.aliases ]]; then
-            echo -e "${YELLOW}Integrating existing .aliases content with modular setup...${NC}"
-            echo -e "\n# Content integrated from ~/.aliases during installation\n" >> ~/.zsh/aliases.zsh
-            cat ~/.aliases >> ~/.zsh/aliases.zsh
-            echo -e "${GREEN}Integrated .aliases content into ~/.zsh/aliases.zsh${NC}"
-        fi
-        
-        # Remove the original file
-        rm ~/.aliases
-        
-        # Create symlink
-        echo -e "${YELLOW}Creating symlink from ~/.aliases to ~/.zsh/aliases.zsh...${NC}"
-        ln -sf ~/.zsh/aliases.zsh ~/.aliases
-        echo -e "${GREEN}Created symlink: ~/.aliases -> ~/.zsh/aliases.zsh${NC}"
+    # If it has content, integrate it first
+    if [[ -s ~/.aliases ]]; then
+        echo -e "${YELLOW}Integrating existing .aliases content with modular setup...${NC}"
+        echo -e "\n# Content integrated from ~/.aliases during installation\n" >> ~/.zsh/aliases.zsh
+        cat ~/.aliases >> ~/.zsh/aliases.zsh
+        echo -e "${GREEN}Integrated .aliases content into ~/.zsh/aliases.zsh${NC}"
     fi
+    
+    # Remove the original file
+    rm ~/.aliases
 fi
+
+# Create symlink (always do this, even if there was no existing .aliases file)
+echo -e "${YELLOW}Creating symlink from ~/.aliases to ~/.zsh/aliases.zsh...${NC}"
+ln -sf ~/.zsh/aliases.zsh ~/.aliases
+echo -e "${GREEN}Created symlink: ~/.aliases -> ~/.zsh/aliases.zsh${NC}"
 
 # Clean up
 echo -e "${YELLOW}Cleaning up...${NC}"

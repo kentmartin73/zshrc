@@ -58,30 +58,28 @@ if [ -f "$HOME/.p10k.zsh" ]; then
     fi
 fi
 
-if [ -f "$HOME/.aliases" ]; then
+# Handle existing .aliases file
+if [ -f "$HOME/.aliases" ] && [ ! -L "$HOME/.aliases" ]; then
     # Backup existing .aliases file
     cp "$HOME/.aliases" "$BACKUP_DIR/"
     echo -e "  - Backed up .aliases to $BACKUP_DIR/.aliases"
     
-    # Check if it's not already a symlink
-    if [ ! -L "$HOME/.aliases" ]; then
-        # If it has content, integrate it first
-        if [ -s "$HOME/.aliases" ]; then
-            echo -e "${YELLOW}Integrating existing .aliases content with modular setup...${NC}"
-            echo -e "\n# Content integrated from ~/.aliases on $TIMESTAMP\n" >> "$USER_ZSH_DIR/aliases.zsh"
-            cat "$HOME/.aliases" >> "$USER_ZSH_DIR/aliases.zsh"
-            echo -e "  - Integrated .aliases content into ~/.zsh/aliases.zsh"
-        fi
-        
-        # Remove the original file
-        rm "$HOME/.aliases"
-        
-        # Create symlink
-        echo -e "${YELLOW}Creating symlink from ~/.aliases to ~/.zsh/aliases.zsh...${NC}"
-        ln -sf "$USER_ZSH_DIR/aliases.zsh" "$HOME/.aliases"
-        echo -e "  - Created symlink: ~/.aliases -> ~/.zsh/aliases.zsh"
+    # If it has content, integrate it first
+    if [ -s "$HOME/.aliases" ]; then
+        echo -e "${YELLOW}Integrating existing .aliases content with modular setup...${NC}"
+        echo -e "\n# Content integrated from ~/.aliases on $TIMESTAMP\n" >> "$USER_ZSH_DIR/aliases.zsh"
+        cat "$HOME/.aliases" >> "$USER_ZSH_DIR/aliases.zsh"
+        echo -e "  - Integrated .aliases content into ~/.zsh/aliases.zsh"
     fi
+    
+    # Remove the original file
+    rm "$HOME/.aliases"
 fi
+
+# Always create the symlink, even if there was no existing .aliases file
+echo -e "${YELLOW}Creating symlink from ~/.aliases to ~/.zsh/aliases.zsh...${NC}"
+ln -sf "$USER_ZSH_DIR/aliases.zsh" "$HOME/.aliases"
+echo -e "  - Created symlink: ~/.aliases -> ~/.zsh/aliases.zsh"
 
 # Create .zsh directory if it doesn't exist
 echo -e "${YELLOW}Setting up .zsh directory...${NC}"
