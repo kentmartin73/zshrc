@@ -1,5 +1,7 @@
 # Reverting Zsh Modular Configuration
 
+> **⚠️ WARNING: These uninstallation instructions have never been tested. Use at your own risk and consider backing up your system before proceeding.**
+
 This document provides instructions on how to revert or uninstall the Zsh Modular Configuration from your system.
 
 ## Simple Reversion
