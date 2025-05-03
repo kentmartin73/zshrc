@@ -109,3 +109,7 @@ git push origin v1.0.0
 ```
 
 When you create a release with a tag, the workflow will use that tag in the version information instead of the commit SHA.
+
+## Uninstallation
+
+If you need to revert to your previous Zsh configuration or completely uninstall this setup, please refer to the [REVERT.md](REVERT.md) file for detailed instructions.
