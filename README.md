@@ -2,6 +2,16 @@
 
 A comprehensive modular Zsh setup for improved performance and maintainability.
 
+## Quick Installation
+
+Install with a single command:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/main/install.sh | bash
+```
+
+**Note:** Do not run the installation script from within iTerm2. The script will modify iTerm2 settings, so it should be run from another terminal like the built-in Terminal app.
+
 ## Features
 
 - **Performance Optimizations**: Lazy loading of commands and completions
@@ -12,7 +22,7 @@ A comprehensive modular Zsh setup for improved performance and maintainability.
 - **macOS Enhancements**: iTerm2 configuration with Homebrew theme and Meslo Nerd Font
 - **Modular Organization**: Each aspect of the configuration is in its own file
 
-## Installation
+## Installation (Manual)
 
 ```bash
 # Clone the repository
@@ -24,14 +34,6 @@ cd zshrc
 ```
 
 **Note:** Do not run the installation script from within iTerm2. The script will modify iTerm2 settings, so it should be run from another terminal like the built-in Terminal app.
-
-### Quick Installation (Alternative)
-
-Install with a single command:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/main/install.sh | bash
-```
 
 ## Directory Structure
 
