@@ -113,3 +113,40 @@ When you create a release with a tag, the workflow will use that tag in the vers
 ## Uninstallation
 
 If you need to revert to your previous Zsh configuration or completely uninstall this setup, please refer to the [REVERT.md](REVERT.md) file for detailed instructions.
+
+## Testing and Troubleshooting
+
+### Testing Performance
+
+You can test the startup performance of your Zsh configuration:
+
+```bash
+# Measure shell startup time
+time zsh -i -c exit
+```
+
+### Troubleshooting
+
+If you encounter issues with your Zsh configuration:
+
+1. **Plugin Loading Issues**
+   - Check if Antigen is properly installed
+   - Verify plugin paths in `plugins.zsh`
+
+2. **Completion Problems**
+   - Clear the completion cache: `rm -rf ~/.zsh/cache/*`
+   - Regenerate completions: `compinit -d ~/.zcompdump; zcompile ~/.zcompdump`
+
+3. **Performance Issues**
+   - Use the profiling functions to identify bottlenecks:
+     ```bash
+     # Add these lines to your .zshrc to enable profiling
+     zmodload zsh/zprof
+     # At the end of your session, run:
+     zprof
+     ```
+   - Consider disabling heavy plugins temporarily
+
+4. **Powerlevel10k Issues**
+   - Run `p10k configure` to set up the theme
+   - Verify that the theme is properly loaded in `plugins.zsh`
