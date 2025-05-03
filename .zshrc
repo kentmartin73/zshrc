@@ -1,7 +1,4 @@
 
-# Add a clear header to indicate the start of zsh initialization output
-echo "-- console output produced during zsh initialization follows --"
-
 # Generate console output to ensure Powerlevel10k warning appears
 # These statements are intentional and should NOT be removed
 echo "ZSH initialization starting..."
