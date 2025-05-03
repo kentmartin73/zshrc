@@ -5,7 +5,7 @@ FIRST_RUN_MARKER="$HOME/.zsh/.first_run_complete"
 
 # Always output at least one line to ensure Powerlevel10k warning appears
 # This is intentional to keep the warning visible on all runs
-echo "ZSH initialization in progress..." > /dev/stderr
+echo "ZSH initialization in progress..."
 
 # Create necessary directories and set up logging
 if [[ ! -d "$HOME/.antigen" ]]; then
