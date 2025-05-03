@@ -1,5 +1,5 @@
 # Zsh Modular Configuration - A comprehensive modular Zsh setup for improved performance and maintainability
-# Version: https://github.com/kentmartin73/zshrc/commit/afbe1d1
+# Version: https://github.com/kentmartin73/zshrc/commit/1bdd20b
 # Last updated by: Kent Martin
 # Main zsh configuration file
 # Sources all modular configuration files
