@@ -108,21 +108,7 @@ if [ ! -f "$USER_ZSH_DIR/local.zsh" ]; then
     echo -e "  - Created local.zsh from template"
 fi
 
-# Initialize git repository if git is available
-if command -v git &> /dev/null; then
-    echo -e "${YELLOW}Initializing git repository...${NC}"
-    cd "$USER_ZSH_DIR"
-    
-    # Check if it's already a git repository
-    if [ ! -d ".git" ]; then
-        git init
-        git add .
-        git commit -m "Initial commit of modular zsh configuration"
-        echo -e "  - Initialized git repository in $USER_ZSH_DIR"
-    else
-        echo -e "  - Git repository already exists in $USER_ZSH_DIR"
-    fi
-fi
+# Note: Git repository initialization removed to keep the installation minimal
 
 # Note: We're intentionally NOT creating the .setup_complete marker file here
 # so that the first-run installation will happen when the user starts a new shell
