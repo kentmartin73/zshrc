@@ -43,6 +43,19 @@ fi
 if [ -f "$HOME/.p10k.zsh" ]; then
     cp "$HOME/.p10k.zsh" "$BACKUP_DIR/"
     echo -e "  - Backed up .p10k.zsh to $BACKUP_DIR/.p10k.zsh"
+    
+    # If it's not a symlink, integrate it with our setup
+    if [ ! -L "$HOME/.p10k.zsh" ]; then
+        echo -e "${YELLOW}Integrating existing Powerlevel10k configuration...${NC}"
+        # Copy to our directory
+        mkdir -p "$USER_ZSH_DIR"
+        cp "$HOME/.p10k.zsh" "$USER_ZSH_DIR/p10k.zsh"
+        # Remove original
+        rm "$HOME/.p10k.zsh"
+        # Create symlink
+        ln -sf "$USER_ZSH_DIR/p10k.zsh" "$HOME/.p10k.zsh"
+        echo -e "  - Integrated Powerlevel10k configuration with modular setup"
+    fi
 fi
 
 if [ -f "$HOME/.alias" ]; then

@@ -83,6 +83,24 @@ chmod +x ./setup.sh
 # Create marker file to indicate setup is complete
 touch ~/.zsh/.setup_complete
 
+# Handle existing p10k.zsh file
+echo -e "${YELLOW}Checking for existing Powerlevel10k configuration...${NC}"
+if [[ -f ~/.p10k.zsh && ! -L ~/.p10k.zsh ]]; then
+    echo -e "${YELLOW}Found existing p10k.zsh file. Integrating with modular setup...${NC}"
+    # Copy to our directory
+    cp ~/.p10k.zsh ~/.zsh/p10k.zsh
+    # Backup original
+    mv ~/.p10k.zsh ~/.p10k.zsh.backup
+    # Create symlink
+    ln -sf ~/.zsh/p10k.zsh ~/.p10k.zsh
+    echo -e "${GREEN}Successfully integrated existing Powerlevel10k configuration.${NC}"
+    echo -e "${GREEN}Original file backed up to ~/.p10k.zsh.backup${NC}"
+elif [[ -f ~/.zsh/p10k.zsh && ! -e ~/.p10k.zsh ]]; then
+    # Our version exists but symlink is missing
+    echo -e "${YELLOW}Creating symlink for Powerlevel10k configuration...${NC}"
+    ln -sf ~/.zsh/p10k.zsh ~/.p10k.zsh
+fi
+
 # Clean up
 echo -e "${YELLOW}Cleaning up...${NC}"
 cd
