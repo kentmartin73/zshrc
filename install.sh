@@ -101,30 +101,30 @@ elif [[ -f ~/.zsh/p10k.zsh && ! -e ~/.p10k.zsh ]]; then
     ln -sf ~/.zsh/p10k.zsh ~/.p10k.zsh
 fi
 
-# Handle existing .alias file
-echo -e "${YELLOW}Checking for existing .alias file...${NC}"
-if [[ -f ~/.alias ]]; then
-    # Backup existing .alias file
-    cp ~/.alias ~/.alias.backup
-    echo -e "${GREEN}Backed up existing .alias to ~/.alias.backup${NC}"
+# Handle existing .aliases file
+echo -e "${YELLOW}Checking for existing .aliases file...${NC}"
+if [[ -f ~/.aliases ]]; then
+    # Backup existing .aliases file
+    cp ~/.aliases ~/.aliases.backup
+    echo -e "${GREEN}Backed up existing .aliases to ~/.aliases.backup${NC}"
     
     # Check if it's not already a symlink
-    if [[ ! -L ~/.alias ]]; then
+    if [[ ! -L ~/.aliases ]]; then
         # If it has content, integrate it first
-        if [[ -s ~/.alias ]]; then
-            echo -e "${YELLOW}Integrating existing .alias content with modular setup...${NC}"
-            echo -e "\n# Content integrated from ~/.alias during installation\n" >> ~/.zsh/aliases.zsh
-            cat ~/.alias >> ~/.zsh/aliases.zsh
-            echo -e "${GREEN}Integrated .alias content into ~/.zsh/aliases.zsh${NC}"
+        if [[ -s ~/.aliases ]]; then
+            echo -e "${YELLOW}Integrating existing .aliases content with modular setup...${NC}"
+            echo -e "\n# Content integrated from ~/.aliases during installation\n" >> ~/.zsh/aliases.zsh
+            cat ~/.aliases >> ~/.zsh/aliases.zsh
+            echo -e "${GREEN}Integrated .aliases content into ~/.zsh/aliases.zsh${NC}"
         fi
         
         # Remove the original file
-        rm ~/.alias
+        rm ~/.aliases
         
         # Create symlink
-        echo -e "${YELLOW}Creating symlink from ~/.alias to ~/.zsh/aliases.zsh...${NC}"
-        ln -sf ~/.zsh/aliases.zsh ~/.alias
-        echo -e "${GREEN}Created symlink: ~/.alias -> ~/.zsh/aliases.zsh${NC}"
+        echo -e "${YELLOW}Creating symlink from ~/.aliases to ~/.zsh/aliases.zsh...${NC}"
+        ln -sf ~/.zsh/aliases.zsh ~/.aliases
+        echo -e "${GREEN}Created symlink: ~/.aliases -> ~/.zsh/aliases.zsh${NC}"
     fi
 fi
 

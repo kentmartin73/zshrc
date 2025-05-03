@@ -58,28 +58,28 @@ if [ -f "$HOME/.p10k.zsh" ]; then
     fi
 fi
 
-if [ -f "$HOME/.alias" ]; then
-    # Backup existing .alias file
-    cp "$HOME/.alias" "$BACKUP_DIR/"
-    echo -e "  - Backed up .alias to $BACKUP_DIR/.alias"
+if [ -f "$HOME/.aliases" ]; then
+    # Backup existing .aliases file
+    cp "$HOME/.aliases" "$BACKUP_DIR/"
+    echo -e "  - Backed up .aliases to $BACKUP_DIR/.aliases"
     
     # Check if it's not already a symlink
-    if [ ! -L "$HOME/.alias" ]; then
+    if [ ! -L "$HOME/.aliases" ]; then
         # If it has content, integrate it first
-        if [ -s "$HOME/.alias" ]; then
-            echo -e "${YELLOW}Integrating existing .alias content with modular setup...${NC}"
-            echo -e "\n# Content integrated from ~/.alias on $TIMESTAMP\n" >> "$USER_ZSH_DIR/aliases.zsh"
-            cat "$HOME/.alias" >> "$USER_ZSH_DIR/aliases.zsh"
-            echo -e "  - Integrated .alias content into ~/.zsh/aliases.zsh"
+        if [ -s "$HOME/.aliases" ]; then
+            echo -e "${YELLOW}Integrating existing .aliases content with modular setup...${NC}"
+            echo -e "\n# Content integrated from ~/.aliases on $TIMESTAMP\n" >> "$USER_ZSH_DIR/aliases.zsh"
+            cat "$HOME/.aliases" >> "$USER_ZSH_DIR/aliases.zsh"
+            echo -e "  - Integrated .aliases content into ~/.zsh/aliases.zsh"
         fi
         
         # Remove the original file
-        rm "$HOME/.alias"
+        rm "$HOME/.aliases"
         
         # Create symlink
-        echo -e "${YELLOW}Creating symlink from ~/.alias to ~/.zsh/aliases.zsh...${NC}"
-        ln -sf "$USER_ZSH_DIR/aliases.zsh" "$HOME/.alias"
-        echo -e "  - Created symlink: ~/.alias -> ~/.zsh/aliases.zsh"
+        echo -e "${YELLOW}Creating symlink from ~/.aliases to ~/.zsh/aliases.zsh...${NC}"
+        ln -sf "$USER_ZSH_DIR/aliases.zsh" "$HOME/.aliases"
+        echo -e "  - Created symlink: ~/.aliases -> ~/.zsh/aliases.zsh"
     fi
 fi
 
