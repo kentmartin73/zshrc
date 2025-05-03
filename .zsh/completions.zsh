@@ -1,12 +1,7 @@
 # Completion system configuration
 
-# Initialize the completion system
-# Note: This should be called after zsh-completions is loaded by Antigen
-# but we'll check if compinit has already been called
-if ! type _antigen_compinit_done > /dev/null 2>&1; then
-  autoload -Uz compinit
-  compinit
-fi
+# Note: compinit is now initialized in performance.zsh
+# We don't need to initialize it again here
 
 # Cache completion to speed things up
 zstyle ':completion:*' use-cache on

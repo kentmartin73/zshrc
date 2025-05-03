@@ -71,6 +71,9 @@ zstyle ':completion:*' cache-path ~/.zsh/cache
 zstyle ':completion:*' accept-exact '*(N)'
 
 # Optimize command execution
+# Load compinit first
+autoload -Uz compinit
+
 # Compile zsh completion dump to speed up loading
 if [ -f ~/.zcompdump ]; then
   compinit -d ~/.zcompdump
