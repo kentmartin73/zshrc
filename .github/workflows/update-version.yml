@@ -58,12 +58,8 @@ jobs:
           # Get the original committer name
           COMMITTER_NAME=$(git log -1 --pretty=format:'%an')
           
-          # Check if line 3 already contains "Last updated by", otherwise modify line 3
-          if grep -q "Last updated by" .zshrc; then
-            sed -i "/Last updated by/s|.*|# Last updated by: $COMMITTER_NAME|" .zshrc
-          else
-            sed -i "3s|.*|# Last updated by: $COMMITTER_NAME|" .zshrc
-          fi
+          # Remove any "Last updated by" line if it exists
+          sed -i '/Last updated by/d' .zshrc
           
           # Check if there are changes
           if git diff --quiet .zshrc; then
