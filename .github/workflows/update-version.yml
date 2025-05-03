@@ -37,43 +37,26 @@ jobs:
             echo "Running on tag, checking out main branch..."
             git fetch origin
             git checkout main
-          fi
-          
-          # Get the original committer name (your name)
-          # This gets the name of the person who made the commit that triggered this workflow
-          COMMITTER_NAME=$(git log -1 --pretty=format:'%an')
-          
-          # Try to get the tag for the current commit, fall back to commit SHA if no tag exists
-          TAG=$(git describe --tags --exact-match 2>/dev/null || echo "")
-          COMMIT_SHA=$(git rev-parse --short HEAD)
-          
-          # Use tag if available, otherwise use commit SHA
-          if [ -n "$TAG" ]; then
-            VERSION_REF="$TAG"
-            echo "Using tag: $TAG"
+            
+            # Extract the tag name from the ref
+            TAG_NAME=${GITHUB_REF#refs/tags/}
+            echo "Using tag from trigger: $TAG_NAME"
+            
+            # Update the first line with the tag
+            sed -i "1s|.*|# Kent Martin's Zsh Modular Configuration v$TAG_NAME - A comprehensive modular Zsh setup|" .zsh/.zshrc
+            sed -i "2s|.*|# Version: $TAG_NAME (https://github.com/kentmartin73/zshrc/releases/tag/$TAG_NAME)|" .zsh/.zshrc
           else
-            VERSION_REF="$COMMIT_SHA"
-            echo "No tag found, using commit SHA: $COMMIT_SHA"
-          fi
-          
-          # Set VERSION_INFO for use in other steps
-          if [ -n "$TAG" ]; then
-            VERSION_INFO="$COMMITTER_NAME ($TAG, $COMMIT_SHA)"
-          else
-            VERSION_INFO="$COMMITTER_NAME ($COMMIT_SHA)"
-          fi
-          echo "VERSION_INFO=$VERSION_INFO" >> $GITHUB_ENV
-          
-          echo "Updating version info with committer: $COMMITTER_NAME and version: $VERSION_REF"
-          
-          # Update the first line to include the tag or commit SHA
-          if [ -n "$TAG" ]; then
-            sed -i "1s|.*|# Zsh Modular Configuration v$TAG - A comprehensive modular Zsh setup for improved performance and maintainability|" .zsh/.zshrc
-            sed -i "2s|.*|# Version: $TAG (https://github.com/kentmartin73/zshrc/releases/tag/$TAG)|" .zsh/.zshrc
-          else
-            sed -i "1s|.*|# Zsh Modular Configuration (commit $COMMIT_SHA) - A comprehensive modular Zsh setup for improved performance and maintainability|" .zsh/.zshrc
+            # Get the commit SHA
+            COMMIT_SHA=$(git rev-parse --short HEAD)
+            echo "Using commit SHA: $COMMIT_SHA"
+            
+            # Update the first line with the commit SHA
+            sed -i "1s|.*|# Kent Martin's Zsh Modular Configuration (commit $COMMIT_SHA) - A comprehensive modular Zsh setup|" .zsh/.zshrc
             sed -i "2s|.*|# Version: https://github.com/kentmartin73/zshrc/commit/$COMMIT_SHA|" .zsh/.zshrc
           fi
+          
+          # Get the original committer name
+          COMMITTER_NAME=$(git log -1 --pretty=format:'%an')
           
           # Check if line 3 already contains "Last updated by", otherwise modify line 3
           if grep -q "Last updated by" .zsh/.zshrc; then
@@ -98,27 +81,7 @@ jobs:
           # Note: If you encounter issues with pushing, you might need to use:
           # git push https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:${GITHUB_REF#refs/heads/}
       
-      # The following steps only run on releases or tags
-      - name: Update additional files on release
-        if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/')
-        run: |
-          # When running on a tag, we need to checkout the main branch first
-          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            echo "Running on tag, checking out main branch..."
-            git fetch origin
-            git checkout main
-          fi
-          
-          # Update install.sh
-          sed -i "s|# Zsh Modular Configuration Installer|# Zsh Modular Configuration Installer\n# Version: ${{ env.VERSION_INFO }}|" install.sh
-          
-          # Update setup.sh
-          sed -i "s|# Setup script for modular zsh configuration|# Setup script for modular zsh configuration\n# Version: ${{ env.VERSION_INFO }}|" .zsh/setup.sh
-          
-          # Commit and push changes
-          git add install.sh .zsh/setup.sh
-          git commit -m "Update version info in additional files [skip ci]"
-          git push origin main
+      # This step has been removed as we only need to update .zshrc
           
       - name: Update README.md with latest tag
         if: startsWith(github.ref, 'refs/tags/')
@@ -128,12 +91,12 @@ jobs:
           git fetch origin
           git checkout main
           
-          # Get the latest tag
-          LATEST_TAG=${GITHUB_REF#refs/tags/}
-          echo "Updating README.md to use latest tag: $LATEST_TAG"
+          # Extract the tag name from the ref
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          echo "Updating README.md to use tag: $TAG_NAME"
           
           # Update the Quick Installation command in README.md
-          sed -i "s|curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/.*/install.sh|curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/$LATEST_TAG/install.sh|" README.md
+          sed -i "s|curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/.*/install.sh|curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/$TAG_NAME/install.sh|" README.md
           
           # Check if there are changes
           if git diff --quiet README.md; then
@@ -143,7 +106,7 @@ jobs:
           
           # Commit and push changes
           git add README.md
-          git commit -m "Update Quick Installation command to use latest tag ($LATEST_TAG) [skip ci]"
+          git commit -m "Update Quick Installation command to use tag $TAG_NAME [skip ci]"
           git push origin main
       
       - name: Create versioned archive
