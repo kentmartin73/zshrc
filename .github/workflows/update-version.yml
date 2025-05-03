@@ -24,15 +24,31 @@ jobs:
       
       - name: Update version info in .zshrc
         run: |
-          # Get the original committer name (your name) and commit SHA
+          # Get the original committer name (your name)
           # This gets the name of the person who made the commit that triggered this workflow
           COMMITTER_NAME=$(git log -1 --pretty=format:'%an')
+          
+          # Try to get the tag for the current commit, fall back to commit SHA if no tag exists
+          TAG=$(git describe --tags --exact-match 2>/dev/null || echo "")
           COMMIT_SHA=$(git rev-parse --short HEAD)
           
-          echo "Updating version info with committer: $COMMITTER_NAME and SHA: $COMMIT_SHA"
+          # Use tag if available, otherwise use commit SHA
+          if [ -n "$TAG" ]; then
+            VERSION_REF="$TAG"
+            echo "Using tag: $TAG"
+          else
+            VERSION_REF="$COMMIT_SHA"
+            echo "No tag found, using commit SHA: $COMMIT_SHA"
+          fi
+          
+          echo "Updating version info with committer: $COMMITTER_NAME and version: $VERSION_REF"
           
           # Create a temporary file with updated content
-          sed -i "2s|.*|# Version: https://github.com/kentmartin73/zshrc/commit/$COMMIT_SHA|" .zsh/.zshrc
+          if [ -n "$TAG" ]; then
+            sed -i "2s|.*|# Version: $TAG (https://github.com/kentmartin73/zshrc/releases/tag/$TAG)|" .zsh/.zshrc
+          else
+            sed -i "2s|.*|# Version: https://github.com/kentmartin73/zshrc/commit/$COMMIT_SHA|" .zsh/.zshrc
+          fi
           
           # Check if line 3 already contains "Last updated by", otherwise modify line 3
           if grep -q "Last updated by" .zsh/.zshrc; then
