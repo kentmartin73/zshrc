@@ -13,6 +13,14 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+# Check if running in iTerm
+if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
+    echo -e "${RED}Error: This script cannot be run in iTerm.${NC}"
+    echo -e "${RED}iTerm needs to be shut down during the installation process.${NC}"
+    echo -e "${RED}Please use another terminal, such as Apple's built-in Terminal app.${NC}"
+    exit 1
+fi
+
 # Print header
 echo -e "${GREEN}=========================================${NC}"
 echo -e "${GREEN}  Zsh Modular Configuration Installer   ${NC}"
