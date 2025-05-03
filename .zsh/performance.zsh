@@ -1,7 +1,9 @@
 # Performance optimizations for zsh
 
-# Check if this is the first run
-FIRST_RUN_MARKER="$HOME/.zsh/.first_run_complete"
+# Source common variables if not already sourced
+if [[ -z "$FIRST_RUN_MARKER" ]]; then
+  source ~/.zsh/common.zsh
+fi
 
 # Only show echo statements on first run
 if [[ ! -f "$FIRST_RUN_MARKER" ]]; then

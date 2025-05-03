@@ -4,20 +4,12 @@
 # Main zsh configuration file
 # Sources all modular configuration files
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-NC='\033[0m' # No Color
-
-# Check if this is the first run
-FIRST_RUN_MARKER="$HOME/.zsh/.first_run_complete"
+# Source common variables and functions
+source ~/.zsh/common.zsh
 
 # Only show loading message on first run
 if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
   echo -e "${GREEN}First initialization starting...${NC}"
-fi
-if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
   echo "ZSH modular configuration loading..."
 fi
 

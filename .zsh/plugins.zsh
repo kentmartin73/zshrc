@@ -1,13 +1,9 @@
 # Plugin management with Antigen
 
-# Check if this is the first run (marker file defined in performance.zsh)
-FIRST_RUN_MARKER="$HOME/.zsh/.first_run_complete"
-
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-NC='\033[0m' # No Color
+# Source common variables if not already sourced
+if [[ -z "$FIRST_RUN_MARKER" ]]; then
+  source ~/.zsh/common.zsh
+fi
 
 # Only show initialization message on first run
 if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
@@ -65,12 +61,23 @@ fi
 
 # Only load plugins if Antigen is available
 if type antigen > /dev/null 2>&1; then
+  # Determine if we should show output or redirect to log
   if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
-    # During first run, show errors directly (no redirection)
+    # First run - show messages in console
+    log_file="/dev/stdout"
     echo "Loading Antigen plugins..."
-    
-    # === Core Plugins (Load First) ===
     echo "Loading core plugins..."
+  else
+    # Subsequent runs - log to file silently
+    log_file="$HOME/.antigen/antigen.log"
+    {
+      echo "Loading Antigen plugins..." >> "$log_file"
+    } 2>>"$HOME/.antigen/antigen.log"
+  fi
+  
+  # Use a function to load plugins with appropriate output redirection
+  load_plugins() {
+    # === Core Plugins (Load First) ===
     # History substring search - provides better history navigation
     antigen bundle history-substring-search
     
@@ -129,49 +136,23 @@ if type antigen > /dev/null 2>&1; then
       echo "Applying all plugins..."
     fi
     antigen apply
-    echo "Antigen plugins loaded successfully"
+    
+    # Show success message
+    if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+      echo "Antigen plugins loaded successfully"
+    else
+      echo "Antigen plugins loaded successfully" >> "$log_file"
+    fi
+  }
+  
+  # Load plugins with appropriate redirection
+  if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+    # First run - show output
+    load_plugins
   else
-    # After first run, just log errors silently
+    # Subsequent runs - redirect output
     {
-      echo "Loading Antigen plugins..." >> "$HOME/.antigen/antigen.log"
-      
-      # === Core Plugins (Load First) ===
-      # History substring search - provides better history navigation
-      antigen bundle history-substring-search
-      
-      # === Utility Plugins ===
-      # Command not found - suggests package to install when command not found
-      antigen bundle command-not-found
-      # Directory persistence - automatically creates directory bookmarks
-      antigen bundle dirpersist
-      # Colored man pages - adds color to man pages
-      antigen bundle colored-man-pages
-      # Colorize - syntax highlighting for cat/less
-      antigen bundle colorize
-      # URL tools - URL encoding/decoding functions
-      antigen bundle ohmyzsh/ohmyzsh plugins/urltools
-      # Tab title - sets terminal tab title based on current directory/command
-      antigen bundle trystan2k/zsh-tab-title --branch=main
-      
-      # === Completion Plugins ===
-      # ZSH completions - additional completion definitions
-      antigen bundle zsh-users/zsh-completions
-      
-      # === Interactive Plugins ===
-      # Auto suggestions - suggests commands as you type based on history
-      antigen bundle zsh-users/zsh-autosuggestions
-      
-      # === Theme ===
-      antigen theme romkatv/powerlevel10k
-      
-      # === Syntax Highlighting (Load Last) ===
-      # Fast syntax highlighting - syntax highlighting for ZSH
-      antigen bundle z-shell/F-Sy-H --branch=main
-      ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern regexp cursor root line)
-      
-      # Apply all plugins
-      antigen apply
-      echo "Antigen plugins loaded successfully" >> "$HOME/.antigen/antigen.log"
+      load_plugins
     } 2>>"$HOME/.antigen/antigen.log"
   fi
   
