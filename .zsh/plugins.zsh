@@ -3,6 +3,12 @@
 # Check if this is the first run (marker file defined in performance.zsh)
 FIRST_RUN_MARKER="$HOME/.zsh/.first_run_complete"
 
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
 # Only show initialization message on first run
 if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
   echo "ZSH initialization in progress..."
@@ -187,10 +193,6 @@ if type antigen > /dev/null 2>&1; then
   # Bind k and j for vi mode
   bindkey -M vicmd 'k' history-substring-search-up
   bindkey -M vicmd 'j' history-substring-search-down
-  
-  if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
-    echo "ZSH configuration complete!"
-    # Create the marker file to indicate first run is complete
-    touch "$FIRST_RUN_MARKER"
-  fi
 fi
+# Note: First run marker is now created in .zshrc after all configuration is complete
+
