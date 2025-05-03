@@ -1,7 +1,12 @@
 
-# Always output at least one line to ensure Powerlevel10k warning appears
-# This is intentional to keep the warning visible on all runs
+# Add a clear header to indicate the start of zsh initialization output
+echo "-- console output produced during zsh initialization follows --"
+
+# Generate console output to ensure Powerlevel10k warning appears
+# These statements are intentional and should NOT be removed
 echo "ZSH initialization starting..."
+echo "Loading shell configuration..."
+echo "Preparing environment..."
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
