@@ -7,7 +7,7 @@ A comprehensive modular Zsh setup for improved performance and maintainability.
 Install with a single command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/v1.0.6/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/latest/install.sh | bash
 ```
 
 **Note:** Do not run the installation script from within iTerm2. The script will modify iTerm2 settings, so it should be run from another terminal like the built-in Terminal app.
