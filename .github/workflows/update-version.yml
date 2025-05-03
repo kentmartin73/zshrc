@@ -5,6 +5,10 @@ on:
     branches:
       - main  # or your default branch name
 
+# Required permissions for pushing changes back to the repository
+permissions:
+  contents: write
+
 jobs:
   update-version:
     runs-on: ubuntu-latest
@@ -66,4 +70,9 @@ jobs:
           # Commit and push changes
           git add .zsh/.zshrc
           git commit -m "Update version info in .zshrc [skip ci]"
+          
+          # Push using the built-in GITHUB_TOKEN
           git push
+          
+          # Note: If you encounter issues with pushing, you might need to use:
+          # git push https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:${GITHUB_REF#refs/heads/}
