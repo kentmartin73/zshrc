@@ -25,32 +25,50 @@ if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
   echo "Loading ZSH plugins with Antigen..."
 fi
 
-# Redirect all error output to the log file for the Antigen section
-{
-  # Load Antigen (OS-specific path)
-  if [[ -f ~/.zsh/antigen_path.zsh ]]; then
-    source ~/.zsh/antigen_path.zsh
-  else
-    # Default macOS Homebrew path
-    source /opt/homebrew/share/antigen/antigen.zsh || \
-    # Alternative Homebrew path
-    source /usr/local/share/antigen/antigen.zsh || \
-    # Fallback to home directory
-    source $HOME/antigen.zsh || \
-    echo "Warning: Antigen not found. Plugin management disabled."
-  fi
-} 2>>"$HOME/.antigen/antigen.log"
+# Load Antigen (OS-specific path)
+if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+  # During first run, show errors but also log them
+  {
+    if [[ -f ~/.zsh/antigen_path.zsh ]]; then
+      source ~/.zsh/antigen_path.zsh
+    else
+      # Default macOS Homebrew path
+      source /opt/homebrew/share/antigen/antigen.zsh || \
+      # Alternative Homebrew path
+      source /usr/local/share/antigen/antigen.zsh || \
+      # Fallback to home directory
+      source $HOME/antigen.zsh || \
+      echo "Warning: Antigen not found. Plugin management disabled."
+    fi
+  } 2> >(tee -a "$HOME/.antigen/antigen.log" >&2)
+else
+  # After first run, just log errors silently
+  {
+    if [[ -f ~/.zsh/antigen_path.zsh ]]; then
+      source ~/.zsh/antigen_path.zsh
+    else
+      # Default macOS Homebrew path
+      source /opt/homebrew/share/antigen/antigen.zsh || \
+      # Alternative Homebrew path
+      source /usr/local/share/antigen/antigen.zsh || \
+      # Fallback to home directory
+      source $HOME/antigen.zsh || \
+      echo "Warning: Antigen not found. Plugin management disabled."
+    fi
+  } 2>>"$HOME/.antigen/antigen.log"
+fi
 
 # Only load plugins if Antigen is available
 if type antigen > /dev/null 2>&1; then
-  # Redirect all error output to the log file for the plugin loading section
-  {
-    echo "Loading Antigen plugins..." >> "$HOME/.antigen/antigen.log"
+  if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+    # During first run, show errors but also log them
+    echo "Loading Antigen plugins..." | tee -a "$HOME/.antigen/antigen.log"
     
     # === Core Plugins (Load First) ===
-    if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
-      echo "Loading core plugins..."
-    fi
+    echo "Loading core plugins..."
+    
+    # Use process substitution to both display and log errors
+    {
     # History substring search - provides better history navigation
     antigen bundle history-substring-search
     
@@ -109,8 +127,19 @@ if type antigen > /dev/null 2>&1; then
       echo "Applying all plugins..."
     fi
     antigen apply
+    echo "Antigen plugins loaded successfully" | tee -a "$HOME/.antigen/antigen.log"
+    } 2> >(tee -a "$HOME/.antigen/antigen.log" >&2)
+  else
+    # After first run, just log errors silently
+    {
+    echo "Loading Antigen plugins..." >> "$HOME/.antigen/antigen.log"
+    
+    # === Core Plugins (Load First) ===
+    # Plugin loading continues silently...
+    
     echo "Antigen plugins loaded successfully" >> "$HOME/.antigen/antigen.log"
-  } 2>>"$HOME/.antigen/antigen.log"
+    } 2>>"$HOME/.antigen/antigen.log"
+  fi
   
   # Set up history-substring-search keybindings after plugins are loaded
   if [[ ! -f "$FIRST_RUN_MARKER" ]]; then

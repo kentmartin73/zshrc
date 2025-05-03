@@ -69,7 +69,13 @@ function setup_completion() {
       if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
         echo "Downloading completion for $command..."
       fi
-      curl -L "$url" > "$output_file" 2>/dev/null
+      if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+        # Show errors during first run
+        curl -L "$url" > "$output_file"
+      else
+        # Suppress errors after first run
+        curl -L "$url" > "$output_file" 2>/dev/null
+      fi
     else
       if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
         echo "Using existing completion for $command"
@@ -95,7 +101,13 @@ setup_completion docker-compose "https://raw.githubusercontent.com/docker/compos
 if command -v npm &>/dev/null; then
   mkdir -p ~/.zsh/lazy
   if [[ ! -f ~/.zsh/lazy/_npm ]]; then
-    npm completion > ~/.zsh/lazy/_npm 2>/dev/null
+    if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+      # Show errors during first run
+      npm completion > ~/.zsh/lazy/_npm
+    else
+      # Suppress errors after first run
+      npm completion > ~/.zsh/lazy/_npm 2>/dev/null
+    fi
   fi
   lazy_load_completion npm "~/.zsh/lazy/_npm"
 fi
@@ -104,7 +116,13 @@ fi
 if command -v pip &>/dev/null; then
   mkdir -p ~/.zsh/lazy
   if [[ ! -f ~/.zsh/lazy/_pip ]]; then
-    pip completion --zsh > ~/.zsh/lazy/_pip 2>/dev/null
+    if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+      # Show errors during first run
+      pip completion --zsh > ~/.zsh/lazy/_pip
+    else
+      # Suppress errors after first run
+      pip completion --zsh > ~/.zsh/lazy/_pip 2>/dev/null
+    fi
   fi
   lazy_load_completion pip "~/.zsh/lazy/_pip"
 fi
@@ -127,7 +145,13 @@ fi
 if command -v kubectl &>/dev/null; then
   mkdir -p ~/.zsh/lazy
   if [[ ! -f ~/.zsh/lazy/_kubectl ]]; then
-    kubectl completion zsh > ~/.zsh/lazy/_kubectl 2>/dev/null
+    if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+      # Show errors during first run
+      kubectl completion zsh > ~/.zsh/lazy/_kubectl
+    else
+      # Suppress errors after first run
+      kubectl completion zsh > ~/.zsh/lazy/_kubectl 2>/dev/null
+    fi
   fi
   lazy_load_completion kubectl "~/.zsh/lazy/_kubectl"
 fi
@@ -137,18 +161,36 @@ if command -v aws &>/dev/null; then
   mkdir -p ~/.zsh/lazy
   if [[ ! -f ~/.zsh/lazy/_aws ]]; then
     # Use zsh-specific AWS completion instead of the bash 'complete' command
-    if [[ -d "$(brew --prefix 2>/dev/null)/share/zsh/site-functions" ]]; then
-      # For Homebrew installations
-      ln -sf "$(brew --prefix)/bin/aws_zsh_completer.sh" ~/.zsh/lazy/_aws 2>/dev/null
-    elif [[ -f /usr/local/bin/aws_zsh_completer.sh ]]; then
-      # For standard installations
-      ln -sf /usr/local/bin/aws_zsh_completer.sh ~/.zsh/lazy/_aws 2>/dev/null
-    elif [[ -f /usr/bin/aws_zsh_completer.sh ]]; then
-      # For system-wide installations
-      ln -sf /usr/bin/aws_zsh_completer.sh ~/.zsh/lazy/_aws 2>/dev/null
+    if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+      # Show errors during first run
+      if [[ -d "$(brew --prefix)/share/zsh/site-functions" ]]; then
+        # For Homebrew installations
+        ln -sf "$(brew --prefix)/bin/aws_zsh_completer.sh" ~/.zsh/lazy/_aws
+      elif [[ -f /usr/local/bin/aws_zsh_completer.sh ]]; then
+        # For standard installations
+        ln -sf /usr/local/bin/aws_zsh_completer.sh ~/.zsh/lazy/_aws
+      elif [[ -f /usr/bin/aws_zsh_completer.sh ]]; then
+        # For system-wide installations
+        ln -sf /usr/bin/aws_zsh_completer.sh ~/.zsh/lazy/_aws
+      else
+        # Generate completion script if available
+        aws_completer=$(which aws_completer)
+      fi
     else
-      # Generate completion script if available
-      aws_completer=$(which aws_completer 2>/dev/null)
+      # Suppress errors after first run
+      if [[ -d "$(brew --prefix 2>/dev/null)/share/zsh/site-functions" ]]; then
+        # For Homebrew installations
+        ln -sf "$(brew --prefix)/bin/aws_zsh_completer.sh" ~/.zsh/lazy/_aws 2>/dev/null
+      elif [[ -f /usr/local/bin/aws_zsh_completer.sh ]]; then
+        # For standard installations
+        ln -sf /usr/local/bin/aws_zsh_completer.sh ~/.zsh/lazy/_aws 2>/dev/null
+      elif [[ -f /usr/bin/aws_zsh_completer.sh ]]; then
+        # For system-wide installations
+        ln -sf /usr/bin/aws_zsh_completer.sh ~/.zsh/lazy/_aws 2>/dev/null
+      else
+        # Generate completion script if available
+        aws_completer=$(which aws_completer 2>/dev/null)
+      fi
       if [[ -n "$aws_completer" ]]; then
         echo '#compdef aws
 _aws() {
