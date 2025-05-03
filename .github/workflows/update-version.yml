@@ -66,10 +66,12 @@ jobs:
           
           echo "Updating version info with committer: $COMMITTER_NAME and version: $VERSION_REF"
           
-          # Create a temporary file with updated content
+          # Update the first line to include the tag or commit SHA
           if [ -n "$TAG" ]; then
+            sed -i "1s|.*|# Zsh Modular Configuration v$TAG - A comprehensive modular Zsh setup for improved performance and maintainability|" .zsh/.zshrc
             sed -i "2s|.*|# Version: $TAG (https://github.com/kentmartin73/zshrc/releases/tag/$TAG)|" .zsh/.zshrc
           else
+            sed -i "1s|.*|# Zsh Modular Configuration (commit $COMMIT_SHA) - A comprehensive modular Zsh setup for improved performance and maintainability|" .zsh/.zshrc
             sed -i "2s|.*|# Version: https://github.com/kentmartin73/zshrc/commit/$COMMIT_SHA|" .zsh/.zshrc
           fi
           
