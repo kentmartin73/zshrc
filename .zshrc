@@ -1,5 +1,5 @@
-# Kent Martin's Zsh Modular Configuration (commit e4b6182) - A comprehensive modular Zsh setup
-# Version: https://github.com/kentmartin73/zshrc/commit/e4b6182 - Updated: 2025-05-03 16:34:53 UTC
+# Kent Martin's Zsh Modular Configuration (commit aa9329e) - A comprehensive modular Zsh setup
+# Version: commit aa9329e (https://github.com/kentmartin73/zshrc/commit/aa9329e) - Updated: 2025-05-03 16:40:03 UTC
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
