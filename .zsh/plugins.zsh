@@ -27,20 +27,18 @@ fi
 
 # Load Antigen (OS-specific path)
 if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
-  # During first run, show errors but also log them
-  {
-    if [[ -f ~/.zsh/antigen_path.zsh ]]; then
-      source ~/.zsh/antigen_path.zsh
-    else
-      # Default macOS Homebrew path
-      source /opt/homebrew/share/antigen/antigen.zsh || \
-      # Alternative Homebrew path
-      source /usr/local/share/antigen/antigen.zsh || \
-      # Fallback to home directory
-      source $HOME/antigen.zsh || \
-      echo "Warning: Antigen not found. Plugin management disabled."
-    fi
-  } 2> >(tee -a "$HOME/.antigen/antigen.log" >&2)
+  # During first run, show errors directly (no redirection)
+  if [[ -f ~/.zsh/antigen_path.zsh ]]; then
+    source ~/.zsh/antigen_path.zsh
+  else
+    # Default macOS Homebrew path
+    source /opt/homebrew/share/antigen/antigen.zsh || \
+    # Alternative Homebrew path
+    source /usr/local/share/antigen/antigen.zsh || \
+    # Fallback to home directory
+    source $HOME/antigen.zsh || \
+    echo "Warning: Antigen not found. Plugin management disabled."
+  fi
 else
   # After first run, just log errors silently
   {
@@ -61,14 +59,11 @@ fi
 # Only load plugins if Antigen is available
 if type antigen > /dev/null 2>&1; then
   if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
-    # During first run, show errors but also log them
-    echo "Loading Antigen plugins..." | tee -a "$HOME/.antigen/antigen.log"
+    # During first run, show errors directly (no redirection)
+    echo "Loading Antigen plugins..."
     
     # === Core Plugins (Load First) ===
     echo "Loading core plugins..."
-    
-    # Use process substitution to both display and log errors
-    {
     # History substring search - provides better history navigation
     antigen bundle history-substring-search
     
@@ -127,8 +122,7 @@ if type antigen > /dev/null 2>&1; then
       echo "Applying all plugins..."
     fi
     antigen apply
-    echo "Antigen plugins loaded successfully" | tee -a "$HOME/.antigen/antigen.log"
-    } 2> >(tee -a "$HOME/.antigen/antigen.log" >&2)
+    echo "Antigen plugins loaded successfully"
   else
     # After first run, just log errors silently
     {
