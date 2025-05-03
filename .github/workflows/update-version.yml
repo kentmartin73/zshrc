@@ -85,7 +85,7 @@ jobs:
       
       # This step has been removed as we only need to update .zshrc
           
-      - name: Update README.md with latest tag
+      - name: Update latest tag and README.md
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           # When running on a tag, we need to checkout the main branch first
@@ -95,10 +95,20 @@ jobs:
           
           # Extract the tag name from the ref
           TAG_NAME=${GITHUB_REF#refs/tags/}
-          echo "Updating README.md to use tag: $TAG_NAME"
+          echo "Processing tag: $TAG_NAME"
           
-          # Update the Quick Installation command in README.md
-          sed -i "s|curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/.*/install.sh|curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/$TAG_NAME/install.sh|" README.md
+          # Delete the 'latest' tag if it exists (locally and remotely)
+          git tag -d latest 2>/dev/null || true
+          git push --delete origin latest 2>/dev/null || true
+          
+          # Create a new 'latest' tag pointing to the same commit as the version tag
+          git tag -a latest -m "Latest stable release (currently $TAG_NAME)"
+          git push origin latest
+          
+          echo "Created and pushed 'latest' tag pointing to $TAG_NAME"
+          
+          # Update the Quick Installation command in README.md to use 'latest' tag
+          sed -i "s|curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/.*/install.sh|curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/latest/install.sh|" README.md
           
           # Check if there are changes
           if git diff --quiet README.md; then
