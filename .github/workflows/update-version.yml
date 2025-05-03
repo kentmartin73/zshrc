@@ -43,36 +43,36 @@ jobs:
             echo "Using tag from trigger: $TAG_NAME"
             
             # Update the first line with the tag
-            sed -i "1s|.*|# Kent Martin's Zsh Modular Configuration v$TAG_NAME - A comprehensive modular Zsh setup|" .zsh/.zshrc
-            sed -i "2s|.*|# Version: $TAG_NAME (https://github.com/kentmartin73/zshrc/releases/tag/$TAG_NAME)|" .zsh/.zshrc
+            sed -i "1s|.*|# Kent Martin's Zsh Modular Configuration v$TAG_NAME - A comprehensive modular Zsh setup|" .zshrc
+            sed -i "2s|.*|# Version: $TAG_NAME (https://github.com/kentmartin73/zshrc/releases/tag/$TAG_NAME)|" .zshrc
           else
             # Get the commit SHA
             COMMIT_SHA=$(git rev-parse --short HEAD)
             echo "Using commit SHA: $COMMIT_SHA"
             
             # Update the first line with the commit SHA
-            sed -i "1s|.*|# Kent Martin's Zsh Modular Configuration (commit $COMMIT_SHA) - A comprehensive modular Zsh setup|" .zsh/.zshrc
-            sed -i "2s|.*|# Version: https://github.com/kentmartin73/zshrc/commit/$COMMIT_SHA|" .zsh/.zshrc
+            sed -i "1s|.*|# Kent Martin's Zsh Modular Configuration (commit $COMMIT_SHA) - A comprehensive modular Zsh setup|" .zshrc
+            sed -i "2s|.*|# Version: https://github.com/kentmartin73/zshrc/commit/$COMMIT_SHA|" .zshrc
           fi
           
           # Get the original committer name
           COMMITTER_NAME=$(git log -1 --pretty=format:'%an')
           
           # Check if line 3 already contains "Last updated by", otherwise modify line 3
-          if grep -q "Last updated by" .zsh/.zshrc; then
-            sed -i "/Last updated by/s|.*|# Last updated by: $COMMITTER_NAME|" .zsh/.zshrc
+          if grep -q "Last updated by" .zshrc; then
+            sed -i "/Last updated by/s|.*|# Last updated by: $COMMITTER_NAME|" .zshrc
           else
-            sed -i "3s|.*|# Last updated by: $COMMITTER_NAME|" .zsh/.zshrc
+            sed -i "3s|.*|# Last updated by: $COMMITTER_NAME|" .zshrc
           fi
           
           # Check if there are changes
-          if git diff --quiet .zsh/.zshrc; then
+          if git diff --quiet .zshrc; then
             echo "No changes to commit"
             exit 0
           fi
           
           # Commit and push changes
-          git add .zsh/.zshrc
+          git add .zshrc
           git commit -m "Update version info in .zshrc [skip ci]"
           
           # Push using the built-in GITHUB_TOKEN
