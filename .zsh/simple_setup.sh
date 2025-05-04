@@ -57,8 +57,6 @@ mkdir -p "$USER_ZSH_DIR/cache"
 # Create .antigen directory
 echo -e "${YELLOW}Setting up .antigen directory...${NC}"
 mkdir -p "$HOME/.antigen"
-touch "$HOME/.antigen/debug.log"
-touch "$HOME/.antigen/antigen.log"
 
 # Copy configuration files
 echo -e "${YELLOW}Copying configuration files...${NC}"
