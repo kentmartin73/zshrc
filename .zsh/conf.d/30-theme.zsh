@@ -3,20 +3,8 @@
 # When using p10k configure, settings will be saved to ~/.p10k.zsh and take precedence
 #
 # This file provides comprehensive default styling to ensure a consistent look
-# We include our custom exitcode segment to ensure error codes are always displayed
+# We configure the built-in status segment to always show error codes
 # Users can still customize their prompt using p10k configure which will take precedence
-
-# Define a custom segment to show exit code
-# This is defined outside the if block so it's always available
-# Note: This function captures the exit code of the last command run
-# Powerlevel10k will call this at the right time to capture the exit code
-# of the command you just ran, before any other commands are executed
-function prompt_exitcode() {
-  local exit_code=$?
-  if [[ $exit_code -ne 0 ]]; then
-    p10k segment -f red -t "↵ $exit_code"
-  fi
-}
 
 # Check if p10k.zsh exists and source it, otherwise use these default settings
 if [[ -f ~/.p10k.zsh ]]; then
@@ -29,8 +17,7 @@ else
   # Context-aware prompt
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir vcs)
   typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
-    exitcode                # custom segment to show exit code (our custom implementation)
-    status                  # built-in status segment (kept as backup)
+    status                  # built-in status segment (configured to always show error codes)
     command_execution_time  # duration of the last command
     background_jobs         # presence of background jobs
     direnv                  # direnv status
@@ -78,7 +65,7 @@ else
   typeset -g POWERLEVEL9K_AWS_DEFAULT_BACKGROUND=208
   typeset -g POWERLEVEL9K_AWS_DEFAULT_FOREGROUND=white
 
-  # Status segment configuration
+  # Status segment configuration - optimized to always show error codes
   
   # Success status
   typeset -g POWERLEVEL9K_STATUS_OK=true
@@ -93,7 +80,7 @@ else
   typeset -g POWERLEVEL9K_STATUS_ERROR_BACKGROUND=1
   typeset -g POWERLEVEL9K_STATUS_ERROR_CONTENT_EXPANSION='%F{1}${P9K_CONTENT}%f'
   
-  # Critical settings to ensure error codes are shown
+  # Critical settings to ensure error codes are always shown
   typeset -g POWERLEVEL9K_STATUS_VERBOSE=true
   typeset -g POWERLEVEL9K_STATUS_SHOW_PIPESTATUS=true
   typeset -g POWERLEVEL9K_STATUS_HIDE_SIGNAME=false
@@ -169,17 +156,8 @@ else
   typeset -g POWERLEVEL9K_EMPTY_LINE_LEFT_PROMPT_LAST_SEGMENT_END_SYMBOL=
 fi
 
-# Ensure exitcode segment is in the right prompt elements
-# This is done outside the if block so it works regardless of p10k.zsh existence
-# The exitcode segment provides a more reliable way to show exit codes than the built-in status segment
-# This is especially important for non-zero exit codes, which should always be visible
-# Add exitcode segment to right prompt elements if it's not already there
-if typeset -p POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS &>/dev/null &&
-   ! typeset -p POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS 2>/dev/null | grep -q exitcode; then
-  # Get the current right prompt elements and add exitcode to the beginning
-  eval "current_elements=(\${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]})"
-  typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(exitcode "${current_elements[@]}")
-fi
+# The status segment is configured to always show error codes
+# This is done by setting POWERLEVEL9K_STATUS_ALWAYS_SHOW=true and other critical settings
 
 # Add a function to run p10k configure and ensure it works with our setup
 p10k-setup() {
