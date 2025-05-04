@@ -9,7 +9,7 @@ A comprehensive modular Zsh setup for improved performance and maintainability.
 Install the latest HEAD with a single command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/latest/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/refs/heads/main/install.sh | bash
 ```
 
 
