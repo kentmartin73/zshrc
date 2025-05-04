@@ -31,6 +31,7 @@ typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
 
 # Make sure status is always shown with code
 typeset -g POWERLEVEL9K_STATUS_SHOW_PIPESTATUS=true
+typeset -g POWERLEVEL9K_STATUS_PIPE_SHOW_PIPESTATUS=true
   
 # Status settings are defined below in the status segment configuration section
 
@@ -79,6 +80,7 @@ typeset -g POWERLEVEL9K_STATUS_ERROR_BACKGROUND=1
 typeset -g POWERLEVEL9K_STATUS_ERROR_CONTENT_EXPANSION='%F{1}${P9K_CONTENT}%f'
   
 # Critical settings to ensure error codes are always shown
+# Critical settings to ensure error codes are always shown
 typeset -g POWERLEVEL9K_STATUS_VERBOSE=true
 typeset -g POWERLEVEL9K_STATUS_SHOW_PIPESTATUS=true
 typeset -g POWERLEVEL9K_STATUS_HIDE_SIGNAME=false
@@ -86,24 +88,27 @@ typeset -g POWERLEVEL9K_STATUS_EXTENDED_STATES=true
 typeset -g POWERLEVEL9K_STATUS_CROSS=true
 typeset -g POWERLEVEL9K_STATUS_ALWAYS_SHOW=true
 
-# Force status segment to show return codes only on failure
+# Force status segment to show return codes
 typeset -g POWERLEVEL9K_STATUS_OK_CONTENT_EXPANSION=''
 typeset -g POWERLEVEL9K_STATUS_ERROR_CONTENT_EXPANSION='%F{1}${P9K_CONTENT}%f'
-typeset -g POWERLEVEL9K_STATUS_OK_PIPE_CONTENT_EXPANSION='%F{1}${P9K_CONTENT}%f'
-typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_CONTENT_EXPANSION='%F{1}${P9K_CONTENT}%f'
 
-# Pipe status configuration
+# Pipe status configuration - ensure it shows the actual return codes
 typeset -g POWERLEVEL9K_STATUS_OK_PIPE=true
 typeset -g POWERLEVEL9K_STATUS_OK_PIPE_VISUAL_IDENTIFIER_EXPANSION='✗'
 typeset -g POWERLEVEL9K_STATUS_OK_PIPE_FOREGROUND=3
 typeset -g POWERLEVEL9K_STATUS_OK_PIPE_BACKGROUND=1
+# This is the key setting to show the actual pipe status values
 typeset -g POWERLEVEL9K_STATUS_OK_PIPE_CONTENT_EXPANSION='%F{1}${P9K_CONTENT}%f'
 
 typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE=true
 typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_VISUAL_IDENTIFIER_EXPANSION='✗'
 typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_FOREGROUND=3
 typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_BACKGROUND=1
+# This is the key setting to show the actual pipe status values
 typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_CONTENT_EXPANSION='%F{1}${P9K_CONTENT}%f'
+
+# Additional settings to ensure pipe status is shown correctly
+typeset -g POWERLEVEL9K_STATUS_PIPE_SHOW_PIPESTATUS=true
 
 # Background jobs settings
 typeset -g POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND=6
