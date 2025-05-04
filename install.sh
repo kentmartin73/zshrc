@@ -104,58 +104,42 @@ fi
 
 # Run the simplified setup script
 echo -e "${YELLOW}Running the setup script...${NC}"
-if ! cd "$TEMP_DIR/.zsh"; then
+cd "$TEMP_DIR/.zsh" || {
     echo -e "${RED}Error: Failed to navigate to the .zsh directory.${NC}"
     rm -rf "$TEMP_DIR"
     exit 1
-fi
-
-# Copy the simplified setup script
-cp "$TEMP_DIR/.zsh/simple_setup.sh" ./setup.sh 2>/dev/null || {
-    echo -e "${RED}Error: Failed to find simple_setup.sh.${NC}"
-    echo -e "${YELLOW}Using the standard setup script instead...${NC}"
 }
 
-# Make the setup script executable
-chmod +x ./setup.sh
+# Use simple_setup.sh if available, otherwise use setup.sh
+if [[ -f "$TEMP_DIR/.zsh/simple_setup.sh" ]]; then
+    cp "$TEMP_DIR/.zsh/simple_setup.sh" ./setup.sh
+else
+    echo -e "${YELLOW}Using standard setup script...${NC}"
+fi
 
-if ! ./setup.sh; then
-    echo -e "${RED}Error: Failed to run the setup script.${NC}"
+# Make the setup script executable and run it
+chmod +x ./setup.sh
+./setup.sh || {
+    echo -e "${RED}Error: Setup script failed.${NC}"
     rm -rf "$TEMP_DIR"
     exit 1
-fi
+}
 
 # Create marker file to indicate setup is complete
 touch ~/.zsh/.setup_complete
 
 # Run cleanup script to remove unnecessary files
 echo -e "${YELLOW}Running cleanup script to remove unnecessary files...${NC}"
-if [[ ! -f "$TEMP_DIR/cleanup.sh" ]]; then
-    echo -e "${RED}Error: cleanup.sh script not found in the cloned repository.${NC}"
-    echo -e "${YELLOW}This could be due to:${NC}"
-    echo -e "  - Repository structure has changed"
-    echo -e "  - Clone was incomplete"
-    echo -e "${YELLOW}Skipping cleanup step...${NC}"
-else
+if [[ -f "$TEMP_DIR/cleanup.sh" ]]; then
     chmod +x "$TEMP_DIR/cleanup.sh"
-    if ! (cd "$TEMP_DIR" && ./cleanup.sh); then
-        echo -e "${RED}Error: Failed to run cleanup script.${NC}"
-        echo -e "${YELLOW}This could be due to:${NC}"
-        echo -e "  - Script errors"
-        echo -e "  - Insufficient permissions"
-        echo -e "${YELLOW}Continuing with installation...${NC}"
-    fi
+    (cd "$TEMP_DIR" && ./cleanup.sh) || echo -e "${YELLOW}Cleanup script encountered issues, continuing anyway...${NC}"
+else
+    echo -e "${YELLOW}Cleanup script not found, continuing without cleanup...${NC}"
 fi
 
 # Clean up temporary directory
 echo -e "${YELLOW}Cleaning up temporary directory...${NC}"
-if ! rm -rf "$TEMP_DIR" 2>/dev/null; then
-    echo -e "${RED}Error: Failed to remove temporary directory.${NC}"
-    echo -e "${YELLOW}This could be due to:${NC}"
-    echo -e "  - Insufficient permissions"
-    echo -e "  - Files in use"
-    echo -e "${YELLOW}You may need to remove it manually: ${TEMP_DIR}${NC}"
-fi
+rm -rf "$TEMP_DIR" 2>/dev/null || echo -e "${YELLOW}Could not remove temporary directory: ${TEMP_DIR}${NC}"
 
 # Print success message
 echo

@@ -6,13 +6,8 @@
 # We configure the built-in status segment to always show error codes
 # Users can customize their prompt using p10k configure
 
-# Check if p10k.zsh exists and source it, otherwise use these default settings
-if [[ -f ~/.p10k.zsh ]]; then
-  # p10k.zsh exists and is already sourced in the main .zshrc
-  # No need to define settings here
-  :
-else
-  # Default Powerlevel10k settings if p10k.zsh doesn't exist
+# Default Powerlevel10k settings
+# These will be used when sourced directly or through the ~/.p10k.zsh symlink
 
   # Context-aware prompt
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir vcs)
@@ -154,39 +149,6 @@ else
   typeset -g POWERLEVEL9K_LEFT_PROMPT_FIRST_SEGMENT_START_SYMBOL='\uE0B6'
   typeset -g POWERLEVEL9K_RIGHT_PROMPT_LAST_SEGMENT_END_SYMBOL='\uE0B4'
   typeset -g POWERLEVEL9K_EMPTY_LINE_LEFT_PROMPT_LAST_SEGMENT_END_SYMBOL=
-fi
 
 # The status segment is configured to always show error codes
 # This is done by setting POWERLEVEL9K_STATUS_ALWAYS_SHOW=true and other critical settings
-
-# Function to run p10k configure with our modular setup - required for compatibility
-p10k-setup() { 
-  # Handle regular file vs symlink situation
-  if [[ -f ~/.p10k.zsh && ! -L ~/.p10k.zsh ]]; then
-    # Backup existing file if needed
-    [[ ! -f ~/.zsh/p10k.zsh ]] && cp ~/.p10k.zsh ~/.zsh/p10k.zsh 2>/dev/null
-    mv ~/.p10k.zsh ~/.p10k.zsh.backup 2>/dev/null
-  fi
-  
-  # Create empty config if needed
-  [[ ! -f ~/.zsh/p10k.zsh ]] && touch ~/.zsh/p10k.zsh 2>/dev/null
-  
-  # Ensure symlink exists
-  [[ ! -L ~/.p10k.zsh ]] && ln -sf ~/.zsh/p10k.zsh ~/.p10k.zsh 2>/dev/null
-  
-  # Run configuration if requested
-  if [[ "$1" == "configure" ]]; then
-    command p10k configure
-    echo "Configuration complete! Your Powerlevel10k settings are in ~/.zsh/p10k.zsh"
-    echo "(symlinked from ~/.p10k.zsh for compatibility)"
-  fi
-}
-
-# Hook to intercept p10k configure command - required for modular setup
-p10k() { [[ "$1" == "configure" ]] && p10k-setup configure || command p10k "$@"; }
-
-# Ensure proper symlinks on startup
-p10k-setup 2>/dev/null
-
-# Alias for backward compatibility
-alias p10k-configure="p10k-setup configure"
