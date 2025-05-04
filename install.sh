@@ -110,12 +110,11 @@ cd "$TEMP_DIR/.zsh" || {
     exit 1
 }
 
-# Use simple_setup.sh if available, otherwise use setup.sh
-if [[ -f "$TEMP_DIR/.zsh/simple_setup.sh" ]]; then
-    cp "$TEMP_DIR/.zsh/simple_setup.sh" ./setup.sh
-else
-    echo -e "${YELLOW}Using standard setup script...${NC}"
-fi
+# Use the setup script
+cp "$TEMP_DIR/.zsh/setup.sh" ./setup.sh 2>/dev/null || {
+    echo -e "${RED}Error: setup.sh not found.${NC}"
+    exit 1
+}
 
 # Make the setup script executable and run it
 chmod +x ./setup.sh
