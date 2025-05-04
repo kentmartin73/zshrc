@@ -28,6 +28,9 @@ typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
   azure                   # azure account name
   gcloud                  # google cloud cli account and project
 )
+
+# Make sure status is always shown with code
+typeset -g POWERLEVEL9K_STATUS_SHOW_PIPESTATUS=true
   
 # Status settings are defined below in the status segment configuration section
 
@@ -83,9 +86,11 @@ typeset -g POWERLEVEL9K_STATUS_EXTENDED_STATES=true
 typeset -g POWERLEVEL9K_STATUS_CROSS=true
 typeset -g POWERLEVEL9K_STATUS_ALWAYS_SHOW=true
 
-# Force status segment to always show
-typeset -g POWERLEVEL9K_STATUS_OK_PIPE_CONTENT_EXPANSION='%F{2}0%f'
+# Force status segment to always show with explicit content
+typeset -g POWERLEVEL9K_STATUS_OK_CONTENT_EXPANSION='%F{2}0%f'
 typeset -g POWERLEVEL9K_STATUS_ERROR_CONTENT_EXPANSION='%F{1}${P9K_CONTENT}%f'
+typeset -g POWERLEVEL9K_STATUS_OK_PIPE_CONTENT_EXPANSION='%F{2}0|%F{1}${P9K_CONTENT}%f'
+typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_CONTENT_EXPANSION='%F{1}${P9K_CONTENT}%f'
 
 # Pipe status configuration
 typeset -g POWERLEVEL9K_STATUS_OK_PIPE=true
