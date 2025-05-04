@@ -15,7 +15,7 @@ curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/latest/install.s
 Install the latest HEAD:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/install.sh | bash
+curl -fsSL hhttps://raw.githubusercontent.com/kentmartin73/zshrc/refs/heads/main/install.sh | bash
 ```
 
 
