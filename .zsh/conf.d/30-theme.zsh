@@ -161,9 +161,6 @@ fi
 
 # Function to run p10k configure with our modular setup - required for compatibility
 p10k-setup() {
-  # Create ~/.zsh directory and ensure proper symlinks
-  mkdir -p ~/.zsh 2>/dev/null
-  
   # Handle existing configuration
   if [[ -f ~/.p10k.zsh && ! -L ~/.p10k.zsh ]]; then
     [[ ! -f ~/.zsh/p10k.zsh ]] && cp ~/.p10k.zsh ~/.zsh/p10k.zsh 2>/dev/null
