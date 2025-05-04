@@ -93,8 +93,8 @@ fi
 # Source the main configuration file
 source ~/.zsh/zshrc
 
-# Source p10k configuration
-source ~/.p10k.zsh' > "$HOME/.zshrc"
+# p10k.zsh is already sourced by ~/.zsh/zshrc as ~/.zsh/conf.d/30-theme.zsh
+# No need to source it again' > "$HOME/.zshrc"
 
 # Create symlinks
 echo -e "${YELLOW}Creating symlinks...${NC}"
