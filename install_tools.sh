@@ -26,6 +26,10 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         echo -e "${YELLOW}Installing other tools...${NC}"
         brew install zoxide neovim bat fd
         
+        # Install GNU tools for better Linux compatibility
+        echo -e "${YELLOW}Installing GNU tools for better Linux compatibility...${NC}"
+        brew install coreutils findutils gnu-tar gnu-sed gawk gnutls gnu-indent gnu-getopt grep
+        
         # Install Meslo Nerd Font
         echo -e "${YELLOW}Installing Meslo Nerd Font...${NC}"
         brew tap homebrew/cask-fonts
