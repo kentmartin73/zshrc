@@ -10,9 +10,18 @@ if [[ -f ~/.p10k.zsh ]]; then
 else
   # Default Powerlevel10k settings if p10k.zsh doesn't exist
   
+  # Define a custom segment to show exit code
+  function prompt_exitcode() {
+    local exit_code=$?
+    if [[ $exit_code -ne 0 ]]; then
+      p10k segment -f red -t "↵ $exit_code"
+    fi
+  }
+
   # Context-aware prompt
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir vcs)
   typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
+    exitcode                # custom segment to show exit code
     status                  # exit code of the last command
     command_execution_time  # duration of the last command
     background_jobs         # presence of background jobs
@@ -29,6 +38,9 @@ else
     azure                   # azure account name
     gcloud                  # google cloud cli account and project
   )
+  
+  # Ensure status segment shows the exit code
+  typeset -g POWERLEVEL9K_STATUS_SHOW_PIPESTATUS=true
 
   # Show Node.js version only when package.json or node_modules exists
   typeset -g POWERLEVEL9K_NODE_VERSION_PROJECT_ONLY=true
@@ -59,41 +71,43 @@ else
   typeset -g POWERLEVEL9K_AWS_DEFAULT_BACKGROUND=208
   typeset -g POWERLEVEL9K_AWS_DEFAULT_FOREGROUND=white
 
-  # Status settings - show green tick for success, red cross with code for failure
+  # Status segment configuration
+  # Always show status
+  typeset -g POWERLEVEL9K_STATUS_VERBOSE=true
+  
+  # Success status
   typeset -g POWERLEVEL9K_STATUS_OK=true
   typeset -g POWERLEVEL9K_STATUS_OK_VISUAL_IDENTIFIER_EXPANSION='✔'
   typeset -g POWERLEVEL9K_STATUS_OK_FOREGROUND=2
   typeset -g POWERLEVEL9K_STATUS_OK_BACKGROUND=0
-
-  # Show error code and red cross for error
+  
+  # Error status - always show the error code
   typeset -g POWERLEVEL9K_STATUS_ERROR=true
   typeset -g POWERLEVEL9K_STATUS_ERROR_VISUAL_IDENTIFIER_EXPANSION='✘'
   typeset -g POWERLEVEL9K_STATUS_ERROR_FOREGROUND=3
   typeset -g POWERLEVEL9K_STATUS_ERROR_BACKGROUND=1
-  # Show error code before the error symbol
-  typeset -g POWERLEVEL9K_STATUS_ERROR_CONTENT_EXPANSION='%B%F{1}${P9K_CONTENT}%f%b'
-  typeset -g POWERLEVEL9K_STATUS_HIDE_SIGNAME=true
-  # Always show the error code
-  typeset -g POWERLEVEL9K_STATUS_ALWAYS_SHOW=true
-
-  # Enable extended status for pipelines
-  typeset -g POWERLEVEL9K_STATUS_EXTENDED_STATES=true
-  typeset -g POWERLEVEL9K_STATUS_VERBOSE=true
-  typeset -g POWERLEVEL9K_STATUS_CROSS=true
+  typeset -g POWERLEVEL9K_STATUS_ERROR_CONTENT_EXPANSION='%F{1}${P9K_CONTENT}%f'
+  
+  # Critical settings to ensure error codes are shown
   typeset -g POWERLEVEL9K_STATUS_SHOW_PIPESTATUS=true
-
-  # Configure pipe status
+  typeset -g POWERLEVEL9K_STATUS_HIDE_SIGNAME=false
+  typeset -g POWERLEVEL9K_STATUS_VERBOSE=true
+  typeset -g POWERLEVEL9K_STATUS_EXTENDED_STATES=true
+  typeset -g POWERLEVEL9K_STATUS_CROSS=true
+  typeset -g POWERLEVEL9K_STATUS_ALWAYS_SHOW=true
+  
+  # Pipe status configuration
   typeset -g POWERLEVEL9K_STATUS_OK_PIPE=true
   typeset -g POWERLEVEL9K_STATUS_OK_PIPE_VISUAL_IDENTIFIER_EXPANSION='✘'
   typeset -g POWERLEVEL9K_STATUS_OK_PIPE_FOREGROUND=3
   typeset -g POWERLEVEL9K_STATUS_OK_PIPE_BACKGROUND=1
-  typeset -g POWERLEVEL9K_STATUS_OK_PIPE_CONTENT_EXPANSION='%B%F{1}${P9K_CONTENT}%f%b'
-
+  typeset -g POWERLEVEL9K_STATUS_OK_PIPE_CONTENT_EXPANSION='%F{1}${P9K_CONTENT}%f'
+  
   typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE=true
   typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_VISUAL_IDENTIFIER_EXPANSION='✘'
   typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_FOREGROUND=3
   typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_BACKGROUND=1
-  typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_CONTENT_EXPANSION='%B%F{1}${P9K_CONTENT}%f%b'
+  typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_CONTENT_EXPANSION='%F{1}${P9K_CONTENT}%f'
 
   # Background jobs settings
   typeset -g POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND=6
