@@ -48,8 +48,9 @@ fi
 echo -e "${YELLOW}Setting up directory structure...${NC}"
 mkdir -p "$USER_ZSH_DIR/conf.d" "$USER_ZSH_DIR/lazy" "$USER_ZSH_DIR/cache"
 mkdir -p "$HOME/.antigen"
-touch "$HOME/.antigen/debug.log"
-touch "$HOME/.antigen/antigen.log"
+touch "$HOME/.antigen/debug.log" "$HOME/.antigen/antigen.log"
+chmod 644 "$HOME/.antigen/debug.log" "$HOME/.antigen/antigen.log"
+echo -e "  - Created Antigen log files"
 
 # Copy configuration files
 echo -e "${YELLOW}Copying configuration files...${NC}"
