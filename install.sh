@@ -66,9 +66,9 @@ else
     exit 1
 fi
 
-# Clean up
-echo -e "${YELLOW}Cleaning up...${NC}"
-rm -rf "$TEMP_DIR"
+# Clean up the repository
+echo -e "${YELLOW}Cleaning up repository...${NC}"
+rm -rf "$TEMP_DIR" && echo -e "${GREEN}Repository removed successfully.${NC}"
 
 # Print success message
 echo
