@@ -161,22 +161,28 @@ fi
 
 # Function to run p10k configure with our modular setup - required for compatibility
 p10k-setup() {
-  # Handle existing configuration
+  # Create ~/.zsh directory if needed
+  mkdir -p ~/.zsh 2>/dev/null
+  
+  # Handle regular file vs symlink situation
   if [[ -f ~/.p10k.zsh && ! -L ~/.p10k.zsh ]]; then
+    # Backup existing file if needed
     [[ ! -f ~/.zsh/p10k.zsh ]] && cp ~/.p10k.zsh ~/.zsh/p10k.zsh 2>/dev/null
     mv ~/.p10k.zsh ~/.p10k.zsh.backup 2>/dev/null
-  elif [[ ! -f ~/.zsh/p10k.zsh ]]; then
-    touch ~/.zsh/p10k.zsh 2>/dev/null
   fi
+  
+  # Create empty config if needed
+  [[ ! -f ~/.zsh/p10k.zsh ]] && touch ~/.zsh/p10k.zsh 2>/dev/null
   
   # Ensure symlink exists
   [[ ! -L ~/.p10k.zsh ]] && ln -sf ~/.zsh/p10k.zsh ~/.p10k.zsh 2>/dev/null
   
   # Run configuration if requested
-  [[ "$1" == "configure" ]] && command p10k configure && {
+  if [[ "$1" == "configure" ]]; then
+    command p10k configure
     echo "Configuration complete! Your Powerlevel10k settings are in ~/.zsh/p10k.zsh"
     echo "(symlinked from ~/.p10k.zsh for compatibility)"
-  }
+  fi
 }
 
 # Hook to intercept p10k configure command - required for modular setup
