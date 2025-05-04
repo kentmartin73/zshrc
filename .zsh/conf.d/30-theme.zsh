@@ -159,38 +159,34 @@ fi
 # The status segment is configured to always show error codes
 # This is done by setting POWERLEVEL9K_STATUS_ALWAYS_SHOW=true and other critical settings
 
-# Function to ensure proper symlinks for p10k.zsh - required for modular setup
-ensure_p10k_symlinks() {
-  mkdir -p ~/.zsh 2>/dev/null
-  
-  if [[ -f ~/.p10k.zsh && ! -L ~/.p10k.zsh ]]; then
-    # Regular file exists but is not a symlink
-    [[ ! -f ~/.zsh/p10k.zsh ]] && cp ~/.p10k.zsh ~/.zsh/p10k.zsh 2>/dev/null
-    mv ~/.p10k.zsh ~/.p10k.zsh.backup 2>/dev/null
-    ln -sf ~/.zsh/p10k.zsh ~/.p10k.zsh 2>/dev/null
-  elif [[ ! -f ~/.zsh/p10k.zsh ]]; then
-    # No configuration exists yet
-    touch ~/.zsh/p10k.zsh 2>/dev/null
-    [[ ! -L ~/.p10k.zsh ]] && ln -sf ~/.zsh/p10k.zsh ~/.p10k.zsh 2>/dev/null
-  elif [[ ! -L ~/.p10k.zsh ]]; then
-    # We have a configuration in our directory but no symlink
-    ln -sf ~/.zsh/p10k.zsh ~/.p10k.zsh 2>/dev/null
-  fi
-}
-
 # Function to run p10k configure with our modular setup - required for compatibility
 p10k-setup() {
-  ensure_p10k_symlinks
-  command p10k configure
-  echo "Configuration complete! Your Powerlevel10k settings are in ~/.zsh/p10k.zsh"
-  echo "(symlinked from ~/.p10k.zsh for compatibility)"
+  # Create ~/.zsh directory and ensure proper symlinks
+  mkdir -p ~/.zsh 2>/dev/null
+  
+  # Handle existing configuration
+  if [[ -f ~/.p10k.zsh && ! -L ~/.p10k.zsh ]]; then
+    [[ ! -f ~/.zsh/p10k.zsh ]] && cp ~/.p10k.zsh ~/.zsh/p10k.zsh 2>/dev/null
+    mv ~/.p10k.zsh ~/.p10k.zsh.backup 2>/dev/null
+  elif [[ ! -f ~/.zsh/p10k.zsh ]]; then
+    touch ~/.zsh/p10k.zsh 2>/dev/null
+  fi
+  
+  # Ensure symlink exists
+  [[ ! -L ~/.p10k.zsh ]] && ln -sf ~/.zsh/p10k.zsh ~/.p10k.zsh 2>/dev/null
+  
+  # Run configuration if requested
+  [[ "$1" == "configure" ]] && command p10k configure && {
+    echo "Configuration complete! Your Powerlevel10k settings are in ~/.zsh/p10k.zsh"
+    echo "(symlinked from ~/.p10k.zsh for compatibility)"
+  }
 }
 
 # Hook to intercept p10k configure command - required for modular setup
-p10k() { [[ "$1" == "configure" ]] && p10k-setup || command p10k "$@"; }
+p10k() { [[ "$1" == "configure" ]] && p10k-setup configure || command p10k "$@"; }
 
 # Ensure proper symlinks on startup
-ensure_p10k_symlinks 2>/dev/null
+p10k-setup 2>/dev/null
 
 # Alias for backward compatibility
-alias p10k-configure="p10k-setup"
+alias p10k-configure="p10k-setup configure"
