@@ -6,16 +6,10 @@ A comprehensive modular Zsh setup for improved performance and maintainability.
 
 ## Quick Installation
 
-Install the latest release with a single command:
+Install the latest HEAD with a single command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/latest/install.sh | bash
-```
-
-Install the latest HEAD:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/latest/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/kentmartin73/zshrc/refs/heads/main/install.sh | bash
 ```
 
 
