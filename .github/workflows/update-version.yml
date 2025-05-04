@@ -30,7 +30,7 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
       
-      - name: Update version info in .zshrc
+      - name: Update version info in .zshrc and .zsh/README.md
         run: |
           # When running on a tag, we need to checkout the main branch first
           if [[ "${{ github.ref }}" == refs/tags/* ]]; then
@@ -45,9 +45,21 @@ jobs:
             # Get current date and time
             CURRENT_DATE=$(date "+%Y-%m-%d %H:%M:%S %Z")
             
-            # Update the first line with the tag and date
+            # Update .zshrc (at the top)
             sed -i "1s|.*|# Kent Martin's Zsh Modular Configuration $TAG_NAME - A comprehensive modular Zsh setup|" .zshrc
             sed -i "2s|.*|# Version: $TAG_NAME (https://github.com/kentmartin73/zshrc/releases/tag/$TAG_NAME) - Updated: $CURRENT_DATE|" .zshrc
+            
+            # Update .zsh/README.md (at the bottom)
+            # First, find the line number of the version info
+            VERSION_LINE=$(grep -n "Kent Martin's Zsh Modular Configuration" .zsh/README.md | cut -d: -f1)
+            if [ -n "$VERSION_LINE" ]; then
+              # If version info exists, update it
+              sed -i "${VERSION_LINE}s|.*|# Kent Martin's Zsh Modular Configuration $TAG_NAME - A comprehensive modular Zsh setup|" .zsh/README.md
+              sed -i "$((VERSION_LINE+1))s|.*|# Version: $TAG_NAME (https://github.com/kentmartin73/zshrc/releases/tag/$TAG_NAME) - Updated: $CURRENT_DATE|" .zsh/README.md
+            else
+              # If version info doesn't exist, add it at the bottom
+              echo -e "\n---\n\n# Kent Martin's Zsh Modular Configuration $TAG_NAME - A comprehensive modular Zsh setup\n# Version: $TAG_NAME (https://github.com/kentmartin73/zshrc/releases/tag/$TAG_NAME) - Updated: $CURRENT_DATE" >> .zsh/README.md
+            fi
           else
             # Get the commit SHA
             COMMIT_SHA=$(git rev-parse --short HEAD)
@@ -56,9 +68,21 @@ jobs:
             # Get current date and time
             CURRENT_DATE=$(date "+%Y-%m-%d %H:%M:%S %Z")
             
-            # Update the first line with the commit SHA and date
+            # Update .zshrc (at the top)
             sed -i "1s|.*|# Kent Martin's Zsh Modular Configuration (commit $COMMIT_SHA) - A comprehensive modular Zsh setup|" .zshrc
             sed -i "2s|.*|# Version: commit $COMMIT_SHA (https://github.com/kentmartin73/zshrc/commit/$COMMIT_SHA) - Updated: $CURRENT_DATE|" .zshrc
+            
+            # Update .zsh/README.md (at the bottom)
+            # First, find the line number of the version info
+            VERSION_LINE=$(grep -n "Kent Martin's Zsh Modular Configuration" .zsh/README.md | cut -d: -f1)
+            if [ -n "$VERSION_LINE" ]; then
+              # If version info exists, update it
+              sed -i "${VERSION_LINE}s|.*|# Kent Martin's Zsh Modular Configuration (commit $COMMIT_SHA) - A comprehensive modular Zsh setup|" .zsh/README.md
+              sed -i "$((VERSION_LINE+1))s|.*|# Version: commit $COMMIT_SHA (https://github.com/kentmartin73/zshrc/commit/$COMMIT_SHA) - Updated: $CURRENT_DATE|" .zsh/README.md
+            else
+              # If version info doesn't exist, add it at the bottom
+              echo -e "\n---\n\n# Kent Martin's Zsh Modular Configuration (commit $COMMIT_SHA) - A comprehensive modular Zsh setup\n# Version: commit $COMMIT_SHA (https://github.com/kentmartin73/zshrc/commit/$COMMIT_SHA) - Updated: $CURRENT_DATE" >> .zsh/README.md
+            fi
           fi
           
           # Get the original committer name
@@ -68,14 +92,14 @@ jobs:
           sed -i '/Last updated by/d' .zshrc
           
           # Check if there are changes
-          if git diff --quiet .zshrc; then
+          if git diff --quiet .zshrc .zsh/README.md; then
             echo "No changes to commit"
             exit 0
           fi
           
           # Commit and push changes
-          git add .zshrc
-          git commit -m "Update version info in .zshrc [skip ci]"
+          git add .zshrc .zsh/README.md
+          git commit -m "Update version info in .zshrc and .zsh/README.md [skip ci]"
           
           # Push using the built-in GITHUB_TOKEN
           git push origin main
@@ -83,7 +107,7 @@ jobs:
           # Note: If you encounter issues with pushing, you might need to use:
           # git push https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:${GITHUB_REF#refs/heads/}
       
-      # This step has been removed as we only need to update .zshrc
+      # This step has been removed as we handle version updates in the step above
           
       - name: Update latest tag and README.md
         if: startsWith(github.ref, 'refs/tags/')

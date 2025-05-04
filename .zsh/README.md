@@ -133,3 +133,8 @@ If you encounter issues with your Zsh configuration:
 ### Powerlevel10k Issues
 - Run `p10k configure` to set up the theme
 - Verify that the theme is properly loaded in `~/.zsh/conf.d/20-plugins.zsh`
+
+---
+
+# Kent Martin's Zsh Modular Configuration v1.1.0 - A comprehensive modular Zsh setup
+# Version: v1.1.0 (https://github.com/kentmartin73/zshrc/releases/tag/v1.1.0) - Updated: 2025-05-03 21:36:30 UTC
