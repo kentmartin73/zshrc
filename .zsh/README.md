@@ -136,5 +136,5 @@ If you encounter issues with your Zsh configuration:
 
 ---
 
-Kent Martin's Zsh Modular Configuration (commit ba9f262) - A comprehensive modular Zsh setup
-Version: commit ba9f262 (https://github.com/kentmartin73/zshrc/commit/ba9f262) - Updated: 2025-05-04 13:10:29 UTC
+Kent Martin's Zsh Modular Configuration (commit a8d448e) - A comprehensive modular Zsh setup
+Version: commit a8d448e (https://github.com/kentmartin73/zshrc/commit/a8d448e) - Updated: 2025-05-04 14:02:11 UTC
