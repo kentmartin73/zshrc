@@ -47,8 +47,7 @@ else
     gcloud                  # google cloud cli account and project
   )
   
-  # Ensure status segment shows the exit code
-  typeset -g POWERLEVEL9K_STATUS_SHOW_PIPESTATUS=true
+  # Status settings are defined below in the status segment configuration section
 
   # Show Node.js version only when package.json or node_modules exists
   typeset -g POWERLEVEL9K_NODE_VERSION_PROJECT_ONLY=true
@@ -174,14 +173,12 @@ fi
 # This is done outside the if block so it works regardless of p10k.zsh existence
 # The exitcode segment provides a more reliable way to show exit codes than the built-in status segment
 # This is especially important for non-zero exit codes, which should always be visible
-# Check if POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS is defined and doesn't contain exitcode
-if typeset -p POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS &>/dev/null; then
-  if ! typeset -p POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS 2>/dev/null | grep -q exitcode; then
-    # Get the current right prompt elements
-    eval "current_elements=(\${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]})"
-    # Add exitcode to the beginning
-    typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(exitcode "${current_elements[@]}")
-  fi
+# Add exitcode segment to right prompt elements if it's not already there
+if typeset -p POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS &>/dev/null &&
+   ! typeset -p POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS 2>/dev/null | grep -q exitcode; then
+  # Get the current right prompt elements and add exitcode to the beginning
+  eval "current_elements=(\${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]})"
+  typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(exitcode "${current_elements[@]}")
 fi
 
 # Add a function to run p10k configure and ensure it works with our setup
@@ -227,27 +224,20 @@ p10k-setup() {
   echo "These settings will take precedence over any settings in ~/.zsh/conf.d/30-theme.zsh"
 }
 
-# Create a hook to intercept p10k configure command
+# Create a hook to intercept p10k configure command and use our custom setup function
 p10k() {
-  if [[ "$1" == "configure" ]]; then
-    echo "Using p10k-setup to ensure proper configuration with our modular setup..."
-    p10k-setup
-  else
-    command p10k "$@"
-  fi
+  [[ "$1" == "configure" ]] && p10k-setup || command p10k "$@"
 }
 
-# Check if p10k.zsh exists in home directory but is not a symlink to our version
-if [[ -f ~/.p10k.zsh && ! -L ~/.p10k.zsh && ! -f ~/.zsh/p10k.zsh ]]; then
-  # User ran p10k configure directly, copy the file to our directory
-  echo "Detected p10k.zsh in home directory, copying to ~/.zsh/p10k.zsh"
-  cp ~/.p10k.zsh ~/.zsh/p10k.zsh
-  # Create symlink back to ensure future updates work properly
-  mv ~/.p10k.zsh ~/.p10k.zsh.original
-  ln -s ~/.zsh/p10k.zsh ~/.p10k.zsh
-  echo "Created symlink from ~/.p10k.zsh to ~/.zsh/p10k.zsh for better organization"
-elif [[ -f ~/.zsh/p10k.zsh && ! -L ~/.p10k.zsh ]]; then
-  # We have our version but no symlink in home directory
+# Handle p10k.zsh file location and symlinks
+if [[ -f ~/.p10k.zsh && ! -L ~/.p10k.zsh ]]; then
+  if [[ ! -f ~/.zsh/p10k.zsh ]]; then
+    # User ran p10k configure directly, copy to our directory
+    echo "Detected p10k.zsh in home directory, copying to ~/.zsh/p10k.zsh"
+    cp ~/.p10k.zsh ~/.zsh/p10k.zsh
+    mv ~/.p10k.zsh ~/.p10k.zsh.original
+  fi
+  # Create symlink to ensure future updates work properly
   echo "Creating symlink from ~/.p10k.zsh to ~/.zsh/p10k.zsh"
   ln -s ~/.zsh/p10k.zsh ~/.p10k.zsh
 fi
