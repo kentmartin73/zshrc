@@ -159,27 +159,31 @@ fi
 # The status segment is configured to always show error codes
 # This is done by setting POWERLEVEL9K_STATUS_ALWAYS_SHOW=true and other critical settings
 
-# Add a function to run p10k configure and ensure it works with our modular setup
-p10k-setup() {
-  echo "Setting up Powerlevel10k configuration..."
+# Function to ensure proper symlinks for p10k.zsh
+ensure_p10k_symlinks() {
+  # Create ~/.zsh directory if it doesn't exist
+  mkdir -p ~/.zsh
   
-  # Handle existing configuration - ensure proper symlinks
+  # Handle existing configuration
   if [[ -f ~/.p10k.zsh && ! -L ~/.p10k.zsh ]]; then
-    # Regular file exists but is not a symlink - back it up and create symlink
-    echo "Backing up existing ~/.p10k.zsh to ~/.p10k.zsh.backup"
-    cp ~/.p10k.zsh ~/.p10k.zsh.backup
-    cp ~/.p10k.zsh ~/.zsh/p10k.zsh
-    rm ~/.p10k.zsh
-    ln -s ~/.zsh/p10k.zsh ~/.p10k.zsh
+    # Regular file exists but is not a symlink
+    [[ ! -f ~/.zsh/p10k.zsh ]] && cp ~/.p10k.zsh ~/.zsh/p10k.zsh
+    mv ~/.p10k.zsh ~/.p10k.zsh.backup
+    ln -sf ~/.zsh/p10k.zsh ~/.p10k.zsh
   elif [[ ! -f ~/.zsh/p10k.zsh ]]; then
-    # No configuration exists yet - create empty file and symlink
-    mkdir -p ~/.zsh
+    # No configuration exists yet
     touch ~/.zsh/p10k.zsh
-    [[ ! -L ~/.p10k.zsh ]] && ln -s ~/.zsh/p10k.zsh ~/.p10k.zsh
+    [[ ! -L ~/.p10k.zsh ]] && ln -sf ~/.zsh/p10k.zsh ~/.p10k.zsh
   elif [[ ! -L ~/.p10k.zsh ]]; then
     # We have a configuration in our directory but no symlink
-    ln -s ~/.zsh/p10k.zsh ~/.p10k.zsh
+    ln -sf ~/.zsh/p10k.zsh ~/.p10k.zsh
   fi
+}
+
+# Add a function to run p10k configure and ensure it works with our modular setup
+p10k-setup() {
+  # Ensure proper symlinks before running configure
+  ensure_p10k_symlinks
   
   # Run the p10k configuration wizard
   command p10k configure
@@ -194,13 +198,8 @@ p10k() {
   [[ "$1" == "configure" ]] && p10k-setup || command p10k "$@"
 }
 
-# Handle p10k.zsh file location and symlinks - simplified version
-# This ensures that ~/.p10k.zsh is always a symlink to ~/.zsh/p10k.zsh
-if [[ -f ~/.p10k.zsh && ! -L ~/.p10k.zsh ]]; then
-  # Regular file exists but is not a symlink
-  [[ ! -f ~/.zsh/p10k.zsh ]] && cp ~/.p10k.zsh ~/.zsh/p10k.zsh && mv ~/.p10k.zsh ~/.p10k.zsh.original
-  ln -sf ~/.zsh/p10k.zsh ~/.p10k.zsh
-fi
+# Ensure proper symlinks on startup
+ensure_p10k_symlinks
 
 # Add an alias for p10k configure to ensure it works with our setup
 alias p10k-configure="p10k-setup"
