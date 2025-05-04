@@ -1,5 +1,5 @@
 #!/bin/bash
-# Setup script for modular zsh configuration
+# Simplified setup script for modular zsh configuration
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -24,67 +24,39 @@ if ! command -v zsh &> /dev/null; then
     exit 1
 fi
 
-# Backup existing configuration
+# Create backup directory
 echo -e "${YELLOW}Backing up existing configuration...${NC}"
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 BACKUP_DIR="$HOME/.zsh_backup_$TIMESTAMP"
 mkdir -p "$BACKUP_DIR"
+BACKED_UP_FILES=()
 
-if [ -f "$HOME/.zshrc" ]; then
-    cp "$HOME/.zshrc" "$BACKUP_DIR/"
-    echo -e "  - Backed up .zshrc to $BACKUP_DIR/.zshrc"
-fi
-
-if [ -f "$HOME/.p10k.zsh" ]; then
-    cp "$HOME/.p10k.zsh" "$BACKUP_DIR/"
-    echo -e "  - Backed up .p10k.zsh to $BACKUP_DIR/.p10k.zsh"
-fi
-
-# Create lib directory if it doesn't exist
-mkdir -p "$USER_ZSH_DIR/lib"
-
-# Copy the p10k_setup.sh script to the lib directory
-cp "$SCRIPT_DIR/lib/p10k_setup.sh" "$USER_ZSH_DIR/lib/"
-
-# Source and use the shared function
-source "$USER_ZSH_DIR/lib/p10k_setup.sh"
-setup_p10k_symlinks "quiet" "backup"
-echo -e "  - Handled Powerlevel10k configuration"
-
-# Handle existing .aliases file
-if [ -f "$HOME/.aliases" ] && [ ! -L "$HOME/.aliases" ]; then
-    # Backup existing .aliases file
-    cp "$HOME/.aliases" "$BACKUP_DIR/"
-    echo -e "  - Backed up .aliases to $BACKUP_DIR/.aliases"
-    
-    # If it has content, integrate it first
-    if [ -s "$HOME/.aliases" ]; then
-        echo -e "${YELLOW}Integrating existing .aliases content with modular setup...${NC}"
-        echo -e "\n# Content integrated from ~/.aliases on $TIMESTAMP\n" >> "$USER_ZSH_DIR/aliases.zsh"
-        cat "$HOME/.aliases" >> "$USER_ZSH_DIR/aliases.zsh"
-        echo -e "  - Integrated .aliases content into ~/.zsh/aliases.zsh"
+# Backup existing files
+backup_file() {
+    local file="$1"
+    if [ -e "$file" ]; then
+        local basename=$(basename "$file")
+        cp -r "$file" "$BACKUP_DIR/"
+        BACKED_UP_FILES+=("$basename")
+        echo -e "  - Backed up $basename"
     fi
-    
-    # Remove the original file
-    rm "$HOME/.aliases"
-fi
+}
 
-# Always create the symlink, even if there was no existing .aliases file
-echo -e "${YELLOW}Creating symlink from ~/.aliases to ~/.zsh/aliases.zsh...${NC}"
-ln -sf "$USER_ZSH_DIR/aliases.zsh" "$HOME/.aliases"
-echo -e "  - Created symlink: ~/.aliases -> ~/.zsh/aliases.zsh"
+# Backup key files
+backup_file "$HOME/.zshrc"
+backup_file "$HOME/.p10k.zsh"
+backup_file "$HOME/.aliases"
+[ -d "$HOME/.zsh" ] && backup_file "$HOME/.zsh"
 
-# Create .zsh directory if it doesn't exist
+# Create .zsh directory structure
 echo -e "${YELLOW}Setting up .zsh directory...${NC}"
+mkdir -p "$USER_ZSH_DIR/conf.d"
 mkdir -p "$USER_ZSH_DIR/lazy"
 mkdir -p "$USER_ZSH_DIR/cache"
 
-# Create .antigen directory and log file if they don't exist
+# Create .antigen directory
 echo -e "${YELLOW}Setting up .antigen directory...${NC}"
 mkdir -p "$HOME/.antigen"
-echo -e "${YELLOW}Touching .antigen logfiles...${NC}"
-touch "$HOME/.antigen/debug.log"
-touch "$HOME/.antigen/antigen.log"
 
 # Copy configuration files
 echo -e "${YELLOW}Copying configuration files...${NC}"
@@ -92,10 +64,16 @@ cp -r "$ZSH_CONFIG_DIR"/* "$USER_ZSH_DIR/"
 cp "$ZSH_CONFIG_DIR/.gitignore" "$USER_ZSH_DIR/" 2>/dev/null || true
 
 # Copy the top-level .zshrc to the user's home directory
-# The .zshrc file is one directory up from the script directory
 cp "$(dirname "$ZSH_CONFIG_DIR")/.zshrc" "$HOME/.zshrc"
 echo -e "  - Copied configuration files to $USER_ZSH_DIR"
 echo -e "  - Copied top-level .zshrc to $HOME/.zshrc"
+
+# Create symlinks
+echo -e "${YELLOW}Creating symlinks...${NC}"
+ln -sf "$USER_ZSH_DIR/conf.d/30-theme.zsh" "$HOME/.p10k.zsh"
+ln -sf "$USER_ZSH_DIR/aliases.zsh" "$HOME/.aliases"
+echo -e "  - Created symlink: ~/.p10k.zsh -> ~/.zsh/conf.d/30-theme.zsh"
+echo -e "  - Created symlink: ~/.aliases -> ~/.zsh/aliases.zsh"
 
 # Create local.zsh from template if it doesn't exist
 if [ ! -f "$USER_ZSH_DIR/local.zsh" ]; then
@@ -103,11 +81,6 @@ if [ ! -f "$USER_ZSH_DIR/local.zsh" ]; then
     cp "$USER_ZSH_DIR/local.zsh.template" "$USER_ZSH_DIR/local.zsh"
     echo -e "  - Created local.zsh from template"
 fi
-
-# Note: Git repository initialization removed to keep the installation minimal
-
-# Note: We're intentionally NOT creating the .setup_complete marker file here
-# so that the first-run installation will happen when the user starts a new shell
 
 # Final instructions
 echo
@@ -119,7 +92,15 @@ echo -e "To start using your new zsh configuration:"
 echo -e "  1. Start a new zsh session: ${YELLOW}exec zsh${NC}"
 echo -e "  2. Customize your local settings in: ${YELLOW}~/.zsh/local.zsh${NC}"
 echo
-echo -e "Your previous configuration has been backed up to: ${YELLOW}$BACKUP_DIR${NC}"
-echo
+
+# Show backup information if files were backed up
+if [ ${#BACKED_UP_FILES[@]} -gt 0 ]; then
+    echo -e "${YELLOW}The following files were backed up to: ${BACKUP_DIR}${NC}"
+    for file in "${BACKED_UP_FILES[@]}"; do
+        echo -e "  - $file"
+    done
+    echo
+fi
+
 echo -e "${YELLOW}Note: In any application that you use a shell (e.g. VS Code), you should change the font to \"MesloLGS Nerd Font\"${NC}"
 echo
