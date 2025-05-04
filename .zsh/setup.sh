@@ -38,20 +38,18 @@ fi
 if [ -f "$HOME/.p10k.zsh" ]; then
     cp "$HOME/.p10k.zsh" "$BACKUP_DIR/"
     echo -e "  - Backed up .p10k.zsh to $BACKUP_DIR/.p10k.zsh"
-    
-    # If it's not a symlink, integrate it with our setup
-    if [ ! -L "$HOME/.p10k.zsh" ]; then
-        echo -e "${YELLOW}Integrating existing Powerlevel10k configuration...${NC}"
-        # Copy to our directory
-        mkdir -p "$USER_ZSH_DIR"
-        cp "$HOME/.p10k.zsh" "$USER_ZSH_DIR/p10k.zsh"
-        # Remove original
-        rm "$HOME/.p10k.zsh"
-        # Create symlink
-        ln -sf "$USER_ZSH_DIR/p10k.zsh" "$HOME/.p10k.zsh"
-        echo -e "  - Integrated Powerlevel10k configuration with modular setup"
-    fi
 fi
+
+# Create lib directory if it doesn't exist
+mkdir -p "$USER_ZSH_DIR/lib"
+
+# Copy the p10k_setup.sh script to the lib directory
+cp "$SCRIPT_DIR/lib/p10k_setup.sh" "$USER_ZSH_DIR/lib/"
+
+# Source and use the shared function
+source "$USER_ZSH_DIR/lib/p10k_setup.sh"
+setup_p10k_symlinks "quiet" "backup"
+echo -e "  - Handled Powerlevel10k configuration"
 
 # Handle existing .aliases file
 if [ -f "$HOME/.aliases" ] && [ ! -L "$HOME/.aliases" ]; then

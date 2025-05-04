@@ -84,21 +84,14 @@ touch ~/.zsh/.setup_complete
 
 # Handle existing p10k.zsh file
 echo -e "${YELLOW}Checking for existing Powerlevel10k configuration...${NC}"
-if [[ -f ~/.p10k.zsh && ! -L ~/.p10k.zsh ]]; then
-    echo -e "${YELLOW}Found existing p10k.zsh file. Integrating with modular setup...${NC}"
-    # Copy to our directory
-    cp ~/.p10k.zsh ~/.zsh/p10k.zsh
-    # Backup original
-    mv ~/.p10k.zsh ~/.p10k.zsh.backup
-    # Create symlink
-    ln -sf ~/.zsh/p10k.zsh ~/.p10k.zsh
-    echo -e "${GREEN}Successfully integrated existing Powerlevel10k configuration.${NC}"
-    echo -e "${GREEN}Original file backed up to ~/.p10k.zsh.backup${NC}"
-elif [[ -f ~/.zsh/p10k.zsh && ! -e ~/.p10k.zsh ]]; then
-    # Our version exists but symlink is missing
-    echo -e "${YELLOW}Creating symlink for Powerlevel10k configuration...${NC}"
-    ln -sf ~/.zsh/p10k.zsh ~/.p10k.zsh
-fi
+# Copy the shared p10k setup script to the destination
+mkdir -p ~/.zsh/lib
+cp "$TEMP_DIR/.zsh/lib/p10k_setup.sh" ~/.zsh/lib/
+
+# Source and use the shared function
+source ~/.zsh/lib/p10k_setup.sh
+setup_p10k_symlinks
+echo -e "${GREEN}Successfully handled Powerlevel10k configuration.${NC}"
 
 # Handle existing .aliases file
 echo -e "${YELLOW}Checking for existing .aliases file...${NC}"
