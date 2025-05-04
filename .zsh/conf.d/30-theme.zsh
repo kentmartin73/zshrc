@@ -62,7 +62,7 @@ typeset -g POWERLEVEL9K_AWS_DEFAULT_FOREGROUND=white
 
 # Status segment configuration - optimized to always show error codes
 
-# Success status
+# Success status - always show
 typeset -g POWERLEVEL9K_STATUS_OK=true
 typeset -g POWERLEVEL9K_STATUS_OK_VISUAL_IDENTIFIER_EXPANSION='✔'
 typeset -g POWERLEVEL9K_STATUS_OK_FOREGROUND=2
@@ -82,6 +82,10 @@ typeset -g POWERLEVEL9K_STATUS_HIDE_SIGNAME=false
 typeset -g POWERLEVEL9K_STATUS_EXTENDED_STATES=true
 typeset -g POWERLEVEL9K_STATUS_CROSS=true
 typeset -g POWERLEVEL9K_STATUS_ALWAYS_SHOW=true
+
+# Force status segment to always show
+typeset -g POWERLEVEL9K_STATUS_OK_PIPE_CONTENT_EXPANSION='%F{2}0%f'
+typeset -g POWERLEVEL9K_STATUS_ERROR_CONTENT_EXPANSION='%F{1}${P9K_CONTENT}%f'
 
 # Pipe status configuration
 typeset -g POWERLEVEL9K_STATUS_OK_PIPE=true
