@@ -31,6 +31,14 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         brew tap homebrew/cask-fonts
         brew install --cask font-meslo-lg-nerd-font
         
+        # Install iTerm2 if not already installed
+        if ! brew list --cask iterm2 &>/dev/null; then
+            echo -e "${YELLOW}Installing iTerm2...${NC}"
+            brew install --cask iterm2
+        else
+            echo -e "${GREEN}iTerm2 already installed.${NC}"
+        fi
+        
         # Configure iTerm2
         echo -e "${YELLOW}Configuring iTerm2...${NC}"
         SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
