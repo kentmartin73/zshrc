@@ -2,6 +2,15 @@
 # Note: These settings will be used as fallback if ~/.p10k.zsh doesn't exist
 # When using p10k configure, settings will be saved to ~/.p10k.zsh and take precedence
 
+# Define a custom segment to show exit code
+# This is defined outside the if block so it's always available
+function prompt_exitcode() {
+  local exit_code=$?
+  if [[ $exit_code -ne 0 ]]; then
+    p10k segment -f red -t "↵ $exit_code"
+  fi
+}
+
 # Check if p10k.zsh exists and source it, otherwise use these default settings
 if [[ -f ~/.p10k.zsh ]]; then
   # p10k.zsh exists and is already sourced in the main .zshrc
@@ -9,14 +18,6 @@ if [[ -f ~/.p10k.zsh ]]; then
   :
 else
   # Default Powerlevel10k settings if p10k.zsh doesn't exist
-  
-  # Define a custom segment to show exit code
-  function prompt_exitcode() {
-    local exit_code=$?
-    if [[ $exit_code -ne 0 ]]; then
-      p10k segment -f red -t "↵ $exit_code"
-    fi
-  }
 
   # Context-aware prompt
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir vcs)
@@ -73,7 +74,6 @@ else
 
   # Status segment configuration
   # Always show status
-  typeset -g POWERLEVEL9K_STATUS_VERBOSE=true
   
   # Success status
   typeset -g POWERLEVEL9K_STATUS_OK=true
@@ -164,6 +164,21 @@ else
   typeset -g POWERLEVEL9K_EMPTY_LINE_LEFT_PROMPT_LAST_SEGMENT_END_SYMBOL=
 fi
 
+# Ensure exitcode segment is in the right prompt elements
+# This is done outside the if block so it works even if the user has a custom p10k.zsh file
+if [[ -f ~/.p10k.zsh ]]; then
+  # Check if exitcode is already in POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS
+  if ! typeset -p POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS 2>/dev/null | grep -q exitcode; then
+    # Add exitcode to the beginning of the right prompt elements
+    if typeset -p POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS &>/dev/null; then
+      # Get the current right prompt elements
+      eval "current_elements=(\${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]})"
+      # Add exitcode to the beginning
+      typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(exitcode "${current_elements[@]}")
+    fi
+  fi
+fi
+
 # Add a function to run p10k configure and ensure it works with our setup
 p10k-setup() {
   echo "Setting up Powerlevel10k configuration..."
@@ -204,7 +219,7 @@ p10k-setup() {
   # After configuration, remind the user about the symlink
   echo "Configuration complete! Your Powerlevel10k settings are in ~/.zsh/p10k.zsh"
   echo "(symlinked from ~/.p10k.zsh for compatibility)"
-  echo "These settings will take precedence over any settings in ~/.zsh/theme.zsh"
+  echo "These settings will take precedence over any settings in ~/.zsh/conf.d/30-theme.zsh"
 }
 
 # Create a hook to intercept p10k configure command
