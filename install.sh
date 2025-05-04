@@ -26,13 +26,33 @@ echo
 
 # Check if git is installed
 if ! command -v git &> /dev/null; then
-    echo -e "${RED}Error: Git is not installed. Please install Git first.${NC}"
+    echo -e "${RED}Error: Git is not installed.${NC}"
+    echo -e "${YELLOW}Please install Git using your package manager:${NC}"
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo -e "  ${GREEN}brew install git${NC}"
+    elif [[ -f /etc/debian_version ]]; then
+        echo -e "  ${GREEN}sudo apt-get install git${NC}"
+    elif [[ -f /etc/redhat-release ]]; then
+        echo -e "  ${GREEN}sudo yum install git${NC}"
+    else
+        echo -e "  Please install Git using your system's package manager"
+    fi
     exit 1
 fi
 
 # Check if zsh is installed
 if ! command -v zsh &> /dev/null; then
-    echo -e "${RED}Error: Zsh is not installed. Please install Zsh first.${NC}"
+    echo -e "${RED}Error: Zsh is not installed.${NC}"
+    echo -e "${YELLOW}Please install Zsh using your package manager:${NC}"
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo -e "  ${GREEN}brew install zsh${NC}"
+    elif [[ -f /etc/debian_version ]]; then
+        echo -e "  ${GREEN}sudo apt-get install zsh${NC}"
+    elif [[ -f /etc/redhat-release ]]; then
+        echo -e "  ${GREEN}sudo yum install zsh${NC}"
+    else
+        echo -e "  Please install Zsh using your system's package manager"
+    fi
     exit 1
 fi
 
@@ -42,89 +62,100 @@ echo -e "${YELLOW}Creating temporary directory...${NC}"
 
 # Clone the repository (shallow clone for faster installation)
 echo -e "${YELLOW}Cloning the repository...${NC}"
-git clone --depth 1 --single-branch https://github.com/kentmartin73/zshrc.git "$TEMP_DIR" || {
+if ! git clone --depth 1 --single-branch https://github.com/kentmartin73/zshrc.git "$TEMP_DIR"; then
     echo -e "${RED}Error: Failed to clone the repository.${NC}"
+    echo -e "${YELLOW}Possible reasons:${NC}"
+    echo -e "  - No internet connection"
+    echo -e "  - GitHub is unreachable"
+    echo -e "  - Repository URL has changed"
+    echo -e "${YELLOW}Please check your internet connection and try again.${NC}"
     rm -rf "$TEMP_DIR"
     exit 1
-}
+fi
 
 # Install required tools
 echo -e "${YELLOW}Installing required tools...${NC}"
-cd "$TEMP_DIR" || {
-    echo -e "${RED}Error: Failed to navigate to the cloned repository.${NC}"
+if ! cd "$TEMP_DIR"; then
+    echo -e "${RED}Error: Failed to navigate to the cloned repository at $TEMP_DIR.${NC}"
+    echo -e "${YELLOW}This could be due to:${NC}"
+    echo -e "  - Insufficient permissions"
+    echo -e "  - The directory was not created properly"
     rm -rf "$TEMP_DIR"
     exit 1
-}
+fi
 
-./install_tools.sh || {
+if [ ! -f ./install_tools.sh ]; then
+    echo -e "${RED}Error: install_tools.sh script not found in the cloned repository.${NC}"
+    echo -e "${YELLOW}This could be due to:${NC}"
+    echo -e "  - Repository structure has changed"
+    echo -e "  - Clone was incomplete"
+    rm -rf "$TEMP_DIR"
+    exit 1
+fi
+
+chmod +x ./install_tools.sh
+if ! ./install_tools.sh; then
     echo -e "${RED}Error: Failed to install required tools.${NC}"
+    echo -e "${YELLOW}Please check the error messages above for more details.${NC}"
+    echo -e "${YELLOW}You may need to install some dependencies manually.${NC}"
     rm -rf "$TEMP_DIR"
     exit 1
-}
+fi
 
-# Run the setup script
+# Run the simplified setup script
 echo -e "${YELLOW}Running the setup script...${NC}"
-cd "$TEMP_DIR/.zsh" || {
+if ! cd "$TEMP_DIR/.zsh"; then
     echo -e "${RED}Error: Failed to navigate to the .zsh directory.${NC}"
     rm -rf "$TEMP_DIR"
     exit 1
+fi
+
+# Copy the simplified setup script
+cp "$TEMP_DIR/.zsh/simple_setup.sh" ./setup.sh 2>/dev/null || {
+    echo -e "${RED}Error: Failed to find simple_setup.sh.${NC}"
+    echo -e "${YELLOW}Using the standard setup script instead...${NC}"
 }
 
 # Make the setup script executable
 chmod +x ./setup.sh
 
-./setup.sh || {
+if ! ./setup.sh; then
     echo -e "${RED}Error: Failed to run the setup script.${NC}"
     rm -rf "$TEMP_DIR"
     exit 1
-}
+fi
 
 # Create marker file to indicate setup is complete
 touch ~/.zsh/.setup_complete
 
-# Handle existing p10k.zsh file
-echo -e "${YELLOW}Checking for existing Powerlevel10k configuration...${NC}"
-# Copy the shared p10k setup script to the destination
-mkdir -p ~/.zsh/lib
-cp "$TEMP_DIR/.zsh/lib/p10k_setup.sh" ~/.zsh/lib/
-
-# Source and use the shared function
-source ~/.zsh/lib/p10k_setup.sh
-setup_p10k_symlinks
-echo -e "${GREEN}Successfully handled Powerlevel10k configuration.${NC}"
-
-# Handle existing .aliases file
-echo -e "${YELLOW}Checking for existing .aliases file...${NC}"
-if [[ -f ~/.aliases && ! -L ~/.aliases ]]; then
-    # Backup existing .aliases file
-    cp ~/.aliases ~/.aliases.backup
-    echo -e "${GREEN}Backed up existing .aliases to ~/.aliases.backup${NC}"
-    
-    # If it has content, integrate it first
-    if [[ -s ~/.aliases ]]; then
-        echo -e "${YELLOW}Integrating existing .aliases content with modular setup...${NC}"
-        echo -e "\n# Content integrated from ~/.aliases during installation\n" >> ~/.zsh/aliases.zsh
-        cat ~/.aliases >> ~/.zsh/aliases.zsh
-        echo -e "${GREEN}Integrated .aliases content into ~/.zsh/aliases.zsh${NC}"
-    fi
-    
-    # Remove the original file
-    rm ~/.aliases
-fi
-
-# Create symlink (always do this, even if there was no existing .aliases file)
-echo -e "${YELLOW}Creating symlink from ~/.aliases to ~/.zsh/aliases.zsh...${NC}"
-ln -sf ~/.zsh/aliases.zsh ~/.aliases
-echo -e "${GREEN}Created symlink: ~/.aliases -> ~/.zsh/aliases.zsh${NC}"
-
 # Run cleanup script to remove unnecessary files
 echo -e "${YELLOW}Running cleanup script to remove unnecessary files...${NC}"
-chmod +x "$TEMP_DIR/cleanup.sh"
-(cd "$TEMP_DIR" && ./cleanup.sh)
+if [[ ! -f "$TEMP_DIR/cleanup.sh" ]]; then
+    echo -e "${RED}Error: cleanup.sh script not found in the cloned repository.${NC}"
+    echo -e "${YELLOW}This could be due to:${NC}"
+    echo -e "  - Repository structure has changed"
+    echo -e "  - Clone was incomplete"
+    echo -e "${YELLOW}Skipping cleanup step...${NC}"
+else
+    chmod +x "$TEMP_DIR/cleanup.sh"
+    if ! (cd "$TEMP_DIR" && ./cleanup.sh); then
+        echo -e "${RED}Error: Failed to run cleanup script.${NC}"
+        echo -e "${YELLOW}This could be due to:${NC}"
+        echo -e "  - Script errors"
+        echo -e "  - Insufficient permissions"
+        echo -e "${YELLOW}Continuing with installation...${NC}"
+    fi
+fi
 
 # Clean up temporary directory
 echo -e "${YELLOW}Cleaning up temporary directory...${NC}"
-rm -rf "$TEMP_DIR"
+if ! rm -rf "$TEMP_DIR" 2>/dev/null; then
+    echo -e "${RED}Error: Failed to remove temporary directory.${NC}"
+    echo -e "${YELLOW}This could be due to:${NC}"
+    echo -e "  - Insufficient permissions"
+    echo -e "  - Files in use"
+    echo -e "${YELLOW}You may need to remove it manually: ${TEMP_DIR}${NC}"
+fi
 
 # Print success message
 echo

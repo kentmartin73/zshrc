@@ -1,10 +1,10 @@
 # Powerlevel10k theme configuration
-# Note: These settings will be used as fallback if ~/.p10k.zsh doesn't exist
-# When using p10k configure, settings will be saved to ~/.p10k.zsh and take precedence
+# This file is symlinked from ~/.p10k.zsh for compatibility with Powerlevel10k
+# When using p10k configure, settings will be saved to this file
 #
 # This file provides comprehensive default styling to ensure a consistent look
 # We configure the built-in status segment to always show error codes
-# Users can still customize their prompt using p10k configure which will take precedence
+# Users can customize their prompt using p10k configure
 
 # Check if p10k.zsh exists and source it, otherwise use these default settings
 if [[ -f ~/.p10k.zsh ]]; then
@@ -160,10 +160,7 @@ fi
 # This is done by setting POWERLEVEL9K_STATUS_ALWAYS_SHOW=true and other critical settings
 
 # Function to run p10k configure with our modular setup - required for compatibility
-p10k-setup() {
-  # Create ~/.zsh directory if needed
-  mkdir -p ~/.zsh 2>/dev/null
-  
+p10k-setup() { 
   # Handle regular file vs symlink situation
   if [[ -f ~/.p10k.zsh && ! -L ~/.p10k.zsh ]]; then
     # Backup existing file if needed
