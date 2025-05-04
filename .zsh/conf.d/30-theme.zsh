@@ -2,9 +2,9 @@
 # Note: These settings will be used as fallback if ~/.p10k.zsh doesn't exist
 # When using p10k configure, settings will be saved to ~/.p10k.zsh and take precedence
 #
-# This file provides minimal default settings and lets p10k configure handle most customizations
-# We only define what's necessary for our custom exitcode segment and critical functionality
-# This approach allows users to customize their prompt using p10k configure without conflicts
+# This file provides comprehensive default styling to ensure a consistent look
+# We include our custom exitcode segment to ensure error codes are always displayed
+# Users can still customize their prompt using p10k configure which will take precedence
 
 # Define a custom segment to show exit code
 # This is defined outside the if block so it's always available
@@ -50,30 +50,124 @@ else
   # Ensure status segment shows the exit code
   typeset -g POWERLEVEL9K_STATUS_SHOW_PIPESTATUS=true
 
-  # Let p10k handle Node.js and Python version settings
-  # These will be configured by the user when they run p10k configure
+  # Show Node.js version only when package.json or node_modules exists
+  typeset -g POWERLEVEL9K_NODE_VERSION_PROJECT_ONLY=true
 
-  # Let p10k handle Kubernetes and AWS context settings
-  # These will be configured by the user when they run p10k configure
+  # Show Python version only when .py files or virtual environment exists
+  typeset -g POWERLEVEL9K_VIRTUALENV_SHOW_PYTHON_VERSION=true
+  typeset -g POWERLEVEL9K_VIRTUALENV_GENERIC_NAMES=(virtualenv venv .venv env)
+
+  # Kubernetes context settings
+  typeset -g POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND='kubectl|helm|kubens|kubectx|oc|istioctl|kogito|k9s|helmfile|flux|fluxctl|stern|kubeseal|skaffold'
+  typeset -g POWERLEVEL9K_KUBECONTEXT_CLASSES=(
+    '*prod*'  PROD
+    '*'       DEFAULT
+  )
+  typeset -g POWERLEVEL9K_KUBECONTEXT_PROD_BACKGROUND=red
+  typeset -g POWERLEVEL9K_KUBECONTEXT_PROD_FOREGROUND=white
+  typeset -g POWERLEVEL9K_KUBECONTEXT_DEFAULT_BACKGROUND=blue
+  typeset -g POWERLEVEL9K_KUBECONTEXT_DEFAULT_FOREGROUND=white
+
+  # AWS context settings
+  typeset -g POWERLEVEL9K_AWS_SHOW_ON_COMMAND='aws|awless|terraform|pulumi|terragrunt'
+  typeset -g POWERLEVEL9K_AWS_CLASSES=(
+    '*prod*'  PROD
+    '*'       DEFAULT
+  )
+  typeset -g POWERLEVEL9K_AWS_PROD_BACKGROUND=red
+  typeset -g POWERLEVEL9K_AWS_PROD_FOREGROUND=white
+  typeset -g POWERLEVEL9K_AWS_DEFAULT_BACKGROUND=208
+  typeset -g POWERLEVEL9K_AWS_DEFAULT_FOREGROUND=white
 
   # Status segment configuration
-  # Let p10k handle most of the status configuration
-  # We only set the critical settings needed for our use case
+  
+  # Success status
+  typeset -g POWERLEVEL9K_STATUS_OK=true
+  typeset -g POWERLEVEL9K_STATUS_OK_VISUAL_IDENTIFIER_EXPANSION='✔'
+  typeset -g POWERLEVEL9K_STATUS_OK_FOREGROUND=2
+  typeset -g POWERLEVEL9K_STATUS_OK_BACKGROUND=0
+  
+  # Error status - always show the error code
+  typeset -g POWERLEVEL9K_STATUS_ERROR=true
+  typeset -g POWERLEVEL9K_STATUS_ERROR_VISUAL_IDENTIFIER_EXPANSION='✘'
+  typeset -g POWERLEVEL9K_STATUS_ERROR_FOREGROUND=3
+  typeset -g POWERLEVEL9K_STATUS_ERROR_BACKGROUND=1
+  typeset -g POWERLEVEL9K_STATUS_ERROR_CONTENT_EXPANSION='%F{1}${P9K_CONTENT}%f'
   
   # Critical settings to ensure error codes are shown
   typeset -g POWERLEVEL9K_STATUS_VERBOSE=true
   typeset -g POWERLEVEL9K_STATUS_SHOW_PIPESTATUS=true
+  typeset -g POWERLEVEL9K_STATUS_HIDE_SIGNAME=false
+  typeset -g POWERLEVEL9K_STATUS_EXTENDED_STATES=true
+  typeset -g POWERLEVEL9K_STATUS_CROSS=true
   typeset -g POWERLEVEL9K_STATUS_ALWAYS_SHOW=true
+  
+  # Pipe status configuration
+  typeset -g POWERLEVEL9K_STATUS_OK_PIPE=true
+  typeset -g POWERLEVEL9K_STATUS_OK_PIPE_VISUAL_IDENTIFIER_EXPANSION='✘'
+  typeset -g POWERLEVEL9K_STATUS_OK_PIPE_FOREGROUND=3
+  typeset -g POWERLEVEL9K_STATUS_OK_PIPE_BACKGROUND=1
+  typeset -g POWERLEVEL9K_STATUS_OK_PIPE_CONTENT_EXPANSION='%F{1}${P9K_CONTENT}%f'
+  
+  typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE=true
+  typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_VISUAL_IDENTIFIER_EXPANSION='✘'
+  typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_FOREGROUND=3
+  typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_BACKGROUND=1
+  typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_CONTENT_EXPANSION='%F{1}${P9K_CONTENT}%f'
 
-  # Let p10k handle background jobs and command execution time settings
-  # These will be configured by the user when they run p10k configure
+  # Background jobs settings
+  typeset -g POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND=6
+  typeset -g POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND=0
+  typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VERBOSE=false
 
-  # Let p10k handle prompt appearance settings
-  # Only set the font mode to ensure proper icon display
+  # Command execution time settings
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND=0
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND=3
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=3
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_PRECISION=0
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FORMAT='d h m s'
+
+  # Customize prompt appearance
   typeset -g POWERLEVEL9K_MODE=nerdfont-complete
+  typeset -g POWERLEVEL9K_PROMPT_ON_NEWLINE=false
+  typeset -g POWERLEVEL9K_PROMPT_ADD_NEWLINE=false
+  typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=''
+  typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX='%F{blue}❯%f '
 
-  # Let p10k handle directory, VCS, and segment separator settings
-  # These will be configured by the user when they run p10k configure
+  # OS icon settings
+  typeset -g POWERLEVEL9K_OS_ICON_FOREGROUND=232
+  typeset -g POWERLEVEL9K_OS_ICON_BACKGROUND=7
+
+  # Directory settings
+  typeset -g POWERLEVEL9K_DIR_BACKGROUND=4
+  typeset -g POWERLEVEL9K_DIR_FOREGROUND=254
+  typeset -g POWERLEVEL9K_SHORTEN_STRATEGY=truncate_to_unique
+  typeset -g POWERLEVEL9K_SHORTEN_DELIMITER=
+  typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=250
+  typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=255
+  typeset -g POWERLEVEL9K_DIR_ANCHOR_BOLD=true
+
+  # VCS settings
+  typeset -g POWERLEVEL9K_VCS_CLEAN_BACKGROUND=2
+  typeset -g POWERLEVEL9K_VCS_MODIFIED_BACKGROUND=3
+  typeset -g POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND=2
+  typeset -g POWERLEVEL9K_VCS_CONFLICTED_BACKGROUND=3
+  typeset -g POWERLEVEL9K_VCS_LOADING_BACKGROUND=8
+  typeset -g POWERLEVEL9K_VCS_BRANCH_ICON='\uF126 '
+  typeset -g POWERLEVEL9K_VCS_UNTRACKED_ICON='?'
+  typeset -g POWERLEVEL9K_VCS_SHOW_SUBMODULE_DIRTY=false
+  typeset -g POWERLEVEL9K_VCS_GIT_HOOKS=(vcs-detect-changes git-untracked git-aheadbehind git-stash git-remotebranch git-tagname)
+
+  # Segment separator settings
+  typeset -g POWERLEVEL9K_LEFT_SUBSEGMENT_SEPARATOR='\uE0B1'
+  typeset -g POWERLEVEL9K_RIGHT_SUBSEGMENT_SEPARATOR='\uE0B3'
+  typeset -g POWERLEVEL9K_LEFT_SEGMENT_SEPARATOR='\uE0B0'
+  typeset -g POWERLEVEL9K_RIGHT_SEGMENT_SEPARATOR='\uE0B2'
+  typeset -g POWERLEVEL9K_LEFT_PROMPT_LAST_SEGMENT_END_SYMBOL='\uE0B4'
+  typeset -g POWERLEVEL9K_RIGHT_PROMPT_FIRST_SEGMENT_START_SYMBOL='\uE0B6'
+  typeset -g POWERLEVEL9K_LEFT_PROMPT_FIRST_SEGMENT_START_SYMBOL='\uE0B6'
+  typeset -g POWERLEVEL9K_RIGHT_PROMPT_LAST_SEGMENT_END_SYMBOL='\uE0B4'
+  typeset -g POWERLEVEL9K_EMPTY_LINE_LEFT_PROMPT_LAST_SEGMENT_END_SYMBOL=
 fi
 
 # Ensure exitcode segment is in the right prompt elements
