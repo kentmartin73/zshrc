@@ -30,6 +30,16 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         echo -e "${YELLOW}Installing Meslo Nerd Font...${NC}"
         brew tap homebrew/cask-fonts
         brew install --cask font-meslo-lg-nerd-font
+        
+        # Configure iTerm2
+        echo -e "${YELLOW}Configuring iTerm2...${NC}"
+        SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+        if [ -f "$SCRIPT_DIR/configure_iterm2.sh" ]; then
+            chmod +x "$SCRIPT_DIR/configure_iterm2.sh"
+            "$SCRIPT_DIR/configure_iterm2.sh"
+        else
+            echo -e "${YELLOW}iTerm2 configuration script not found, skipping...${NC}"
+        fi
     else
         echo -e "${YELLOW}Homebrew not found. Consider installing it:${NC}"
         echo -e "  /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
