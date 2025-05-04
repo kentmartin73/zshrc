@@ -117,7 +117,25 @@ brew install coreutils findutils gnu-tar gnu-sed gawk gnutls gnu-indent gnu-geto
 
 ## Uninstallation
 
-If you need to revert to your previous Zsh configuration or completely uninstall this setup, please refer to the [REVERT.md](REVERT.md) file for detailed instructions.
+To uninstall and revert to your previous Zsh configuration:
+
+1. Restore your backup files (created during installation):
+   ```bash
+   # Find your backup directory
+   ls -la ~/.zsh_backup_*
+   
+   # Restore your previous .zshrc (replace TIMESTAMP with the actual timestamp)
+   cp ~/.zsh_backup_TIMESTAMP/.zshrc ~/
+   ```
+
+2. Remove the modular configuration:
+   ```bash
+   # Remove the .zsh directory
+   rm -rf ~/.zsh
+   
+   # Remove Antigen if you don't need it
+   rm -rf ~/.antigen
+   ```
 
 ## Testing and Troubleshooting
 
