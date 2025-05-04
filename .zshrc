@@ -5,11 +5,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Ensure p10k.zsh symlink is properly set up before sourcing anything
-if [[ -f ~/.zsh/lib/p10k_setup.sh ]]; then
-  source ~/.zsh/lib/p10k_setup.sh
-  setup_p10k_symlinks "" "user"
-fi
+# p10k.zsh is now a symlink to ~/.zsh/conf.d/30-theme.zsh
+# No need for additional setup
 
 # Source the main configuration file
 source ~/.zsh/zshrc
