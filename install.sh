@@ -110,11 +110,16 @@ cd "$TEMP_DIR/.zsh" || {
     exit 1
 }
 
-# Use the setup script
-cp "$TEMP_DIR/.zsh/setup.sh" ./setup.sh 2>/dev/null || {
-    echo -e "${RED}Error: setup.sh not found.${NC}"
+# Use the setup script (check for both names for backward compatibility)
+if [ -f "$TEMP_DIR/.zsh/setup.sh" ]; then
+    cp "$TEMP_DIR/.zsh/setup.sh" ./setup.sh
+elif [ -f "$TEMP_DIR/.zsh/simple_setup.sh" ]; then
+    cp "$TEMP_DIR/.zsh/simple_setup.sh" ./setup.sh
+    echo -e "${YELLOW}Using simple_setup.sh as setup.sh${NC}"
+else
+    echo -e "${RED}Error: Neither setup.sh nor simple_setup.sh found.${NC}"
     exit 1
-}
+fi
 
 # Make the setup script executable and run it
 chmod +x ./setup.sh
