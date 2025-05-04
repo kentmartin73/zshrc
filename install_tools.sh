@@ -24,6 +24,10 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     echo -e "${YELLOW}Installing utilities with Homebrew...${NC}"
     brew install dust lsd neovim bat fd duf pyenv zoxide
     
+    # Install GNU coreutils and other GNU tools for better Linux compatibility
+    echo -e "${YELLOW}Installing GNU coreutils and tools for better Linux compatibility...${NC}"
+    brew install coreutils findutils gnu-tar gnu-sed gawk gnutls gnu-indent gnu-getopt grep
+    
     # Install Antigen if not already installed
     if ! brew list antigen &>/dev/null; then
       echo -e "${YELLOW}Installing Antigen...${NC}"
@@ -48,7 +52,15 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     "$SCRIPT_DIR/configure_iterm2.sh"
     
   else
-    echo -e "${RED}Homebrew not found. Please install manually: dust, lsd, neovim, bat, fd, duf, iTerm2, Meslo Nerd Font, pyenv, zoxide, and antigen${NC}"
+    echo -e "${RED}Homebrew not found. Please install manually: dust, lsd, neovim, bat, fd, duf, iTerm2, Meslo Nerd Font, pyenv, and zoxide${NC}"
+    
+    # Install Antigen manually
+    echo -e "${YELLOW}Installing Antigen manually...${NC}"
+    mkdir -p "$HOME/.antigen"
+    curl -L git.io/antigen > "$HOME/.antigen/antigen.zsh"
+    echo -e "${GREEN}Antigen installed to $HOME/.antigen/antigen.zsh${NC}"
+    echo -e "${YELLOW}Add this to your .zshrc to use Antigen:${NC}"
+    echo -e "  source $HOME/.antigen/antigen.zsh"
   fi
 elif [[ -f /etc/debian_version ]]; then
   # Debian/Ubuntu
@@ -73,7 +85,15 @@ elif [[ -f /etc/debian_version ]]; then
     curl https://pyenv.run | bash
     
   else
-    echo -e "${RED}Cannot install with apt. Please install manually: dust, lsd, neovim, bat, fd-find, duf, pyenv, zoxide, and antigen${NC}"
+    echo -e "${RED}Cannot install with apt. Please install manually: dust, lsd, neovim, bat, fd-find, duf, pyenv, and zoxide${NC}"
+    
+    # Install Antigen manually
+    echo -e "${YELLOW}Installing Antigen manually...${NC}"
+    mkdir -p "$HOME/.antigen"
+    curl -L git.io/antigen > "$HOME/.antigen/antigen.zsh"
+    echo -e "${GREEN}Antigen installed to $HOME/.antigen/antigen.zsh${NC}"
+    echo -e "${YELLOW}Add this to your .zshrc to use Antigen:${NC}"
+    echo -e "  source $HOME/.antigen/antigen.zsh"
   fi
 elif [[ -f /etc/fedora-release ]]; then
   # Fedora
@@ -96,7 +116,15 @@ elif [[ -f /etc/fedora-release ]]; then
     curl https://pyenv.run | bash
     
   else
-    echo -e "${RED}Cannot install with dnf. Please install manually: dust, lsd, neovim, bat, fd, duf, pyenv, zoxide, and antigen${NC}"
+    echo -e "${RED}Cannot install with dnf. Please install manually: dust, lsd, neovim, bat, fd, duf, pyenv, and zoxide${NC}"
+    
+    # Install Antigen manually
+    echo -e "${YELLOW}Installing Antigen manually...${NC}"
+    mkdir -p "$HOME/.antigen"
+    curl -L git.io/antigen > "$HOME/.antigen/antigen.zsh"
+    echo -e "${GREEN}Antigen installed to $HOME/.antigen/antigen.zsh${NC}"
+    echo -e "${YELLOW}Add this to your .zshrc to use Antigen:${NC}"
+    echo -e "  source $HOME/.antigen/antigen.zsh"
   fi
 elif [[ -f /etc/arch-release ]]; then
   # Arch Linux
@@ -118,13 +146,26 @@ elif [[ -f /etc/arch-release ]]; then
     curl https://pyenv.run | bash
     
   else
-    echo -e "${RED}Cannot install with pacman. Please install manually: dust, lsd, neovim, bat, fd, duf, pyenv, zoxide, and antigen${NC}"
+    echo -e "${RED}Cannot install with pacman. Please install manually: dust, lsd, neovim, bat, fd, duf, pyenv, and zoxide${NC}"
+    
+    # Install Antigen manually
+    echo -e "${YELLOW}Installing Antigen manually...${NC}"
+    mkdir -p "$HOME/.antigen"
+    curl -L git.io/antigen > "$HOME/.antigen/antigen.zsh"
+    echo -e "${GREEN}Antigen installed to $HOME/.antigen/antigen.zsh${NC}"
+    echo -e "${YELLOW}Add this to your .zshrc to use Antigen:${NC}"
+    echo -e "  source $HOME/.antigen/antigen.zsh"
   fi
 else
-  echo -e "${RED}Unknown OS. Please install manually: dust, lsd, neovim, bat, fd, duf, pyenv, zoxide, and antigen${NC}"
-  echo -e "${YELLOW}For antigen, you can install it with:${NC}"
-  echo -e "  mkdir -p /usr/local/share/antigen"
-  echo -e "  curl -L git.io/antigen > /usr/local/share/antigen/antigen.zsh"
+  echo -e "${RED}Unknown OS. Please install manually: dust, lsd, neovim, bat, fd, duf, pyenv, and zoxide${NC}"
+  
+  # Install Antigen manually
+  echo -e "${YELLOW}Installing Antigen manually...${NC}"
+  mkdir -p "$HOME/.antigen"
+  curl -L git.io/antigen > "$HOME/.antigen/antigen.zsh"
+  echo -e "${GREEN}Antigen installed to $HOME/.antigen/antigen.zsh${NC}"
+  echo -e "${YELLOW}Add this to your .zshrc to use Antigen:${NC}"
+  echo -e "  source $HOME/.antigen/antigen.zsh"
 fi
 
 echo

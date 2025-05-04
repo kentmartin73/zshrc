@@ -1,10 +1,7 @@
 #!/bin/bash
 # Zsh Modular Configuration - A comprehensive modular Zsh setup for improved performance and maintainability
-# Version: https://github.com/kentmartin73/zshrc/commit/84264bd
 
 # Zsh Modular Configuration Installer
-# Version: GitHub Actions (895f170)
-# Version: GitHub Actions (7ccce6b)
 # This script installs the modular zsh configuration from GitHub
 
 # Colors for output
@@ -43,9 +40,9 @@ fi
 TEMP_DIR=$(mktemp -d)
 echo -e "${YELLOW}Creating temporary directory...${NC}"
 
-# Clone the repository
+# Clone the repository (shallow clone for faster installation)
 echo -e "${YELLOW}Cloning the repository...${NC}"
-git clone https://github.com/kentmartin73/zshrc.git "$TEMP_DIR" || {
+git clone --depth 1 --single-branch https://github.com/kentmartin73/zshrc.git "$TEMP_DIR" || {
     echo -e "${RED}Error: Failed to clone the repository.${NC}"
     rm -rf "$TEMP_DIR"
     exit 1
@@ -127,9 +124,13 @@ echo -e "${YELLOW}Creating symlink from ~/.aliases to ~/.zsh/aliases.zsh...${NC}
 ln -sf ~/.zsh/aliases.zsh ~/.aliases
 echo -e "${GREEN}Created symlink: ~/.aliases -> ~/.zsh/aliases.zsh${NC}"
 
-# Clean up
-echo -e "${YELLOW}Cleaning up...${NC}"
-cd
+# Run cleanup script to remove unnecessary files
+echo -e "${YELLOW}Running cleanup script to remove unnecessary files...${NC}"
+chmod +x "$TEMP_DIR/cleanup.sh"
+(cd "$TEMP_DIR" && ./cleanup.sh)
+
+# Clean up temporary directory
+echo -e "${YELLOW}Cleaning up temporary directory...${NC}"
 rm -rf "$TEMP_DIR"
 
 # Print success message
@@ -141,4 +142,19 @@ echo
 echo -e "To start using your new zsh configuration:"
 echo -e "  1. Start a new zsh session: ${YELLOW}exec zsh${NC}"
 echo -e "  2. Customize your local settings in: ${YELLOW}~/.zsh/local.zsh${NC}"
+echo
+echo -e "${YELLOW}Important:${NC} If you are connecting from another system (e.g., via SSH),"
+echo -e "you will need to install the ${YELLOW}MesloLGS Nerd Font${NC} on that system"
+echo -e "to properly display all Powerlevel10k icons."
+echo
+
+# Add note about GNU tools for macOS users
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  echo -e "${YELLOW}macOS Users:${NC} For better compatibility with Linux, consider installing GNU tools:"
+  echo -e "  ${YELLOW}brew install coreutils findutils gnu-tar gnu-sed gawk gnutls gnu-indent gnu-getopt grep${NC}"
+  echo
+fi
+
+echo -e "For more detailed information and customization options, refer to:"
+echo -e "  ${YELLOW}~/.zsh/README.md${NC}"
 echo

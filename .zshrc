@@ -26,7 +26,7 @@ elif [[ -f ~/.zsh/p10k.zsh && ! -e ~/.p10k.zsh ]]; then
 fi
 
 # Source the main configuration file
-source ~/.zsh/.zshrc
+source ~/.zsh/zshrc
 
 # Source p10k configuration if it exists
 # This line is needed for p10k configure to work properly

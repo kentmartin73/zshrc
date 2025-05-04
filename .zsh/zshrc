@@ -1,0 +1,42 @@
+# Main configuration file for Zsh Modular Configuration
+# This file is copied to ~/.zsh/zshrc during installation
+
+# Configuration files are organized in the conf.d directory with a numbered prefix scheme:
+# - 01-09: Core system variables and early initialization
+# - 10-19: Basic shell options and settings
+# - 20-29: Plugin management and completions
+# - 30-39: UI/Theme and aliases
+# - 40-49: Functions and OS-specific configurations
+# - 50+: User customizations and local settings
+
+# Load all configuration files from conf.d in numerical order
+for config_file in ~/.zsh/conf.d/[0-9]*-*.zsh; do
+  # Skip macOS setup on non-macOS systems
+  if [[ "$config_file" == *"macos_setup"* && "$OSTYPE" != "darwin"* ]]; then
+    continue
+  fi
+  
+  # Skip local.zsh.template (it's just a template)
+  if [[ "$config_file" == *"local.zsh.template" ]]; then
+    continue
+  fi
+  
+  # Source the configuration file
+  source "$config_file"
+done
+
+# Load local configuration if it exists
+if [[ -f ~/.zsh/local.zsh ]]; then
+  source ~/.zsh/local.zsh
+fi
+
+# Initialize zoxide (not an Antigen plugin)
+if command -v zoxide &> /dev/null; then
+  eval "$(zoxide init zsh)"
+fi
+
+# Create first run marker if it doesn't exist
+if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+  touch "$FIRST_RUN_MARKER"
+  echo "First-time setup complete. Enjoy your Zsh Modular Configuration!"
+fi

@@ -1,9 +1,6 @@
 # Plugin management with Antigen
 
-# Source common variables if not already sourced
-if [[ -z "$FIRST_RUN_MARKER" ]]; then
-  source ~/.zsh/common.zsh
-fi
+# Note: FIRST_RUN_MARKER is defined in 01-common.zsh and available to all files
 
 # Only show initialization message on first run
 if [[ ! -f "$FIRST_RUN_MARKER" ]]; then

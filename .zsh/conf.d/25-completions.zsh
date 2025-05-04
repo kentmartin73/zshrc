@@ -1,7 +1,6 @@
 # Completion system configuration
 
-# Check if this is the first run (marker file defined in performance.zsh)
-FIRST_RUN_MARKER="$HOME/.zsh/.first_run_complete"
+# Note: FIRST_RUN_MARKER is defined in 01-common.zsh
 
 # Note: compinit is now initialized in performance.zsh
 # We don't need to initialize it again here
