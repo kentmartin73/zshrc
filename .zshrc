@@ -11,5 +11,5 @@ fi
 # Source the main configuration file
 source ~/.zsh/zshrc
 
-# Source p10k configuration (symlinked to ~/.zsh/conf.d/30-theme.zsh)
-source ~/.p10k.zsh
+# p10k.zsh is already sourced by ~/.zsh/zshrc as ~/.zsh/conf.d/30-theme.zsh
+# No need to source it again
