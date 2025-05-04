@@ -4,6 +4,9 @@
 
 # Define a custom segment to show exit code
 # This is defined outside the if block so it's always available
+# Note: This function captures the exit code of the last command run
+# Powerlevel10k will call this at the right time to capture the exit code
+# of the command you just ran, before any other commands are executed
 function prompt_exitcode() {
   local exit_code=$?
   if [[ $exit_code -ne 0 ]]; then
@@ -22,8 +25,8 @@ else
   # Context-aware prompt
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir vcs)
   typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
-    exitcode                # custom segment to show exit code
-    status                  # exit code of the last command
+    exitcode                # custom segment to show exit code (our custom implementation)
+    status                  # built-in status segment (kept as backup)
     command_execution_time  # duration of the last command
     background_jobs         # presence of background jobs
     direnv                  # direnv status
@@ -165,17 +168,16 @@ else
 fi
 
 # Ensure exitcode segment is in the right prompt elements
-# This is done outside the if block so it works even if the user has a custom p10k.zsh file
-if [[ -f ~/.p10k.zsh ]]; then
-  # Check if exitcode is already in POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS
+# This is done outside the if block so it works regardless of p10k.zsh existence
+# The exitcode segment provides a more reliable way to show exit codes than the built-in status segment
+# This is especially important for non-zero exit codes, which should always be visible
+# Check if POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS is defined and doesn't contain exitcode
+if typeset -p POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS &>/dev/null; then
   if ! typeset -p POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS 2>/dev/null | grep -q exitcode; then
-    # Add exitcode to the beginning of the right prompt elements
-    if typeset -p POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS &>/dev/null; then
-      # Get the current right prompt elements
-      eval "current_elements=(\${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]})"
-      # Add exitcode to the beginning
-      typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(exitcode "${current_elements[@]}")
-    fi
+    # Get the current right prompt elements
+    eval "current_elements=(\${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]})"
+    # Add exitcode to the beginning
+    typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(exitcode "${current_elements[@]}")
   fi
 fi
 
