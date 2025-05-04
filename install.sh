@@ -102,22 +102,20 @@ if ! ./install_tools.sh; then
     exit 1
 fi
 
-# Run the simplified setup script
+# Run the setup script
 echo -e "${YELLOW}Running the setup script...${NC}"
-cd "$TEMP_DIR/.zsh" || {
-    echo -e "${RED}Error: Failed to navigate to the .zsh directory.${NC}"
-    rm -rf "$TEMP_DIR"
-    exit 1
-}
 
 # Use the setup script (check for both names for backward compatibility)
-if [ -f "$TEMP_DIR/.zsh/setup.sh" ]; then
+if [ -f "$TEMP_DIR/setup.sh" ]; then
+    cp "$TEMP_DIR/setup.sh" ./setup.sh
+elif [ -f "$TEMP_DIR/.zsh/setup.sh" ]; then
     cp "$TEMP_DIR/.zsh/setup.sh" ./setup.sh
+    echo -e "${YELLOW}Using .zsh/setup.sh${NC}"
 elif [ -f "$TEMP_DIR/.zsh/simple_setup.sh" ]; then
     cp "$TEMP_DIR/.zsh/simple_setup.sh" ./setup.sh
-    echo -e "${YELLOW}Using simple_setup.sh as setup.sh${NC}"
+    echo -e "${YELLOW}Using .zsh/simple_setup.sh as setup.sh${NC}"
 else
-    echo -e "${RED}Error: Neither setup.sh nor simple_setup.sh found.${NC}"
+    echo -e "${RED}Error: No setup script found.${NC}"
     exit 1
 fi
 
