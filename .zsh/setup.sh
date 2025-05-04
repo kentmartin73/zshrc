@@ -92,9 +92,12 @@ touch "$HOME/.antigen/antigen.log"
 echo -e "${YELLOW}Copying configuration files...${NC}"
 cp -r "$ZSH_CONFIG_DIR"/* "$USER_ZSH_DIR/"
 cp "$ZSH_CONFIG_DIR/.gitignore" "$USER_ZSH_DIR/" 2>/dev/null || true
-cp "$ZSH_CONFIG_DIR/.zshrc" "$HOME/.zshrc"
+
+# Copy the top-level .zshrc to the user's home directory
+# The .zshrc file is one directory up from the script directory
+cp "$(dirname "$ZSH_CONFIG_DIR")/.zshrc" "$HOME/.zshrc"
 echo -e "  - Copied configuration files to $USER_ZSH_DIR"
-echo -e "  - Copied .zshrc to $HOME/.zshrc"
+echo -e "  - Copied top-level .zshrc to $HOME/.zshrc"
 
 # Create local.zsh from template if it doesn't exist
 if [ ! -f "$USER_ZSH_DIR/local.zsh" ]; then
