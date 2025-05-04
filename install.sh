@@ -105,19 +105,11 @@ fi
 # Run the setup script
 echo -e "${YELLOW}Running the setup script...${NC}"
 
-# Use the setup script (check for both names for backward compatibility)
-if [ -f "$TEMP_DIR/setup.sh" ]; then
-    cp "$TEMP_DIR/setup.sh" ./setup.sh
-elif [ -f "$TEMP_DIR/.zsh/setup.sh" ]; then
-    cp "$TEMP_DIR/.zsh/setup.sh" ./setup.sh
-    echo -e "${YELLOW}Using .zsh/setup.sh${NC}"
-elif [ -f "$TEMP_DIR/.zsh/simple_setup.sh" ]; then
-    cp "$TEMP_DIR/.zsh/simple_setup.sh" ./setup.sh
-    echo -e "${YELLOW}Using .zsh/simple_setup.sh as setup.sh${NC}"
-else
-    echo -e "${RED}Error: No setup script found.${NC}"
+# Copy and run the setup script
+cp "$TEMP_DIR/setup.sh" ./setup.sh || {
+    echo -e "${RED}Error: setup.sh not found.${NC}"
     exit 1
-fi
+}
 
 # Make the setup script executable and run it
 chmod +x ./setup.sh
