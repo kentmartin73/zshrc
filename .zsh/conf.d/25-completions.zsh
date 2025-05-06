@@ -179,10 +179,11 @@ if command -v kubectx &>/dev/null; then
   if [[ ! -f ~/.zsh/lazy/_kubectx ]]; then
     if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
       # Show errors during first run
-      kubectx --zsh-completion > ~/.zsh/lazy/_kubectx
+      echo "Downloading completion for kubectx..."
+      curl -L "https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubectx.zsh" > ~/.zsh/lazy/_kubectx
     else
       # Suppress errors after first run
-      kubectx --zsh-completion > ~/.zsh/lazy/_kubectx 2>/dev/null
+      curl -L "https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubectx.zsh" > ~/.zsh/lazy/_kubectx 2>/dev/null
     fi
   fi
   lazy_load_completion kubectx "~/.zsh/lazy/_kubectx"
@@ -194,10 +195,11 @@ if command -v kubens &>/dev/null; then
   if [[ ! -f ~/.zsh/lazy/_kubens ]]; then
     if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
       # Show errors during first run
-      kubens --zsh-completion > ~/.zsh/lazy/_kubens
+      echo "Downloading completion for kubens..."
+      curl -L "https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubens.zsh" > ~/.zsh/lazy/_kubens
     else
       # Suppress errors after first run
-      kubens --zsh-completion > ~/.zsh/lazy/_kubens 2>/dev/null
+      curl -L "https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubens.zsh" > ~/.zsh/lazy/_kubens 2>/dev/null
     fi
   fi
   lazy_load_completion kubens "~/.zsh/lazy/_kubens"
