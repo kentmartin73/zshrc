@@ -173,80 +173,37 @@ if command -v kubectl &>/dev/null; then
   lazy_load_completion kubectl "~/.zsh/lazy/_kubectl"
 fi
 
-# Kubectx completions
+# Kubectx and kubens completions - direct approach without lazy loading
 if command -v kubectx &>/dev/null; then
-  mkdir -p ~/.zsh/lazy
-  if [[ ! -f ~/.zsh/lazy/_kubectx ]]; then
-    if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
-      # Show errors during first run
-      echo "Creating completion for kubectx..."
-      cat > ~/.zsh/lazy/_kubectx << 'EOF'
-#compdef kubectx kctx=kubectx
-_kubectx() {
-  local -a contexts
-  contexts=( $(kubectl config get-contexts --output='name' 2>/dev/null) )
-  if [ $? -eq 0 ]; then
-    _describe "context" contexts
-  fi
-}
-
-_kubectx "$@"
-EOF
-    else
-      # Suppress errors after first run
-      cat > ~/.zsh/lazy/_kubectx << 'EOF' 2>/dev/null
-#compdef kubectx kctx=kubectx
-_kubectx() {
-  local -a contexts
-  contexts=( $(kubectl config get-contexts --output='name' 2>/dev/null) )
-  if [ $? -eq 0 ]; then
-    _describe "context" contexts
-  fi
-}
-
-_kubectx "$@"
-EOF
+  # Define the completion function directly
+  _kubectx() {
+    local -a contexts
+    contexts=( $(kubectl config get-contexts --output='name' 2>/dev/null) )
+    if [ $? -eq 0 ]; then
+      _describe "context" contexts
     fi
-  fi
-  lazy_load_completion kubectx "~/.zsh/lazy/_kubectx"
+  }
+  
+  # Register the completion function
+  compdef _kubectx kubectx
+  # Also register for the common alias
+  compdef _kubectx kctx
 fi
 
-# Kubens completions
 if command -v kubens &>/dev/null; then
-  mkdir -p ~/.zsh/lazy
-  if [[ ! -f ~/.zsh/lazy/_kubens ]]; then
-    if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
-      # Show errors during first run
-      echo "Creating completion for kubens..."
-      cat > ~/.zsh/lazy/_kubens << 'EOF'
-#compdef kubens kns=kubens
-_kubens() {
-  local -a namespaces
-  namespaces=( $(kubectl get namespaces -o name 2>/dev/null | cut -d/ -f2) )
-  if [ $? -eq 0 ]; then
-    _describe "namespace" namespaces
-  fi
-}
-
-_kubens "$@"
-EOF
-    else
-      # Suppress errors after first run
-      cat > ~/.zsh/lazy/_kubens << 'EOF' 2>/dev/null
-#compdef kubens kns=kubens
-_kubens() {
-  local -a namespaces
-  namespaces=( $(kubectl get namespaces -o name 2>/dev/null | cut -d/ -f2) )
-  if [ $? -eq 0 ]; then
-    _describe "namespace" namespaces
-  fi
-}
-
-_kubens "$@"
-EOF
+  # Define the completion function directly
+  _kubens() {
+    local -a namespaces
+    namespaces=( $(kubectl get namespaces -o name 2>/dev/null | cut -d/ -f2) )
+    if [ $? -eq 0 ]; then
+      _describe "namespace" namespaces
     fi
-  fi
-  lazy_load_completion kubens "~/.zsh/lazy/_kubens"
+  }
+  
+  # Register the completion function
+  compdef _kubens kubens
+  # Also register for the common alias
+  compdef _kubens kns
 fi
 
 # AWS CLI completions
