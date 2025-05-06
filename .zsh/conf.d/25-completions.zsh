@@ -56,45 +56,63 @@ if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
   echo "Setting up ZSH completions system..."
 fi
 
-# Note: Moved to a function to avoid duplication and improve maintainability
-function setup_completion() {
-  local command=$1
-  local url=$2
-  local output_file=~/.zsh/lazy/_$command
-  
-  if command -v $command &>/dev/null; then
-    mkdir -p ~/.zsh/lazy
-    if [[ ! -f $output_file ]]; then
-      if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
-        echo "Downloading completion for $command..."
-      fi
-      if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
-        # Show errors during first run
-        curl -L "$url" > "$output_file"
-      else
-        # Suppress errors after first run
-        curl -L "$url" > "$output_file" 2>/dev/null
-      fi
-    else
-      if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
-        echo "Using existing completion for $command"
-      fi
-    fi
-    if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
-      echo "Setting up lazy loading for $command"
-    fi
-    lazy_load_completion $command "$output_file"
-  fi
-}
-
 # Git completions
-setup_completion git "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.zsh"
+if command -v git &>/dev/null; then
+  mkdir -p ~/.zsh/lazy
+  if [[ ! -f ~/.zsh/lazy/_git ]]; then
+    if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+      echo "Downloading git completions..."
+      # First download the bash completion
+      curl -L "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash" > ~/.zsh/lazy/git-completion.bash
+      # Then download the zsh wrapper
+      curl -L "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.zsh" > ~/.zsh/lazy/_git
+      # Modify the _git file to source the bash completion from the correct location
+      # Use sed with space after -i for macOS compatibility
+      sed -i .bak "s|^zstyle -s ':completion:*:*:git:*' script script$|script=~/.zsh/lazy/git-completion.bash|" ~/.zsh/lazy/_git
+      rm -f ~/.zsh/lazy/_git.bak
+    else
+      # Suppress errors after first run
+      curl -L "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash" > ~/.zsh/lazy/git-completion.bash 2>/dev/null
+      curl -L "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.zsh" > ~/.zsh/lazy/_git 2>/dev/null
+      # Use sed with space after -i for macOS compatibility
+      sed -i .bak "s|^zstyle -s ':completion:*:*:git:*' script script$|script=~/.zsh/lazy/git-completion.bash|" ~/.zsh/lazy/_git 2>/dev/null
+      rm -f ~/.zsh/lazy/_git.bak 2>/dev/null
+    fi
+  fi
+  lazy_load_completion git "~/.zsh/lazy/_git"
+fi
 
 # Docker completions
-setup_completion docker "https://raw.githubusercontent.com/docker/cli/master/contrib/completion/zsh/_docker"
+if command -v docker &>/dev/null; then
+  mkdir -p ~/.zsh/lazy
+  if [[ ! -f ~/.zsh/lazy/_docker ]]; then
+    if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+      # Show errors during first run
+      echo "Downloading completion for docker..."
+      curl -L "https://raw.githubusercontent.com/docker/cli/master/contrib/completion/zsh/_docker" > ~/.zsh/lazy/_docker
+    else
+      # Suppress errors after first run
+      curl -L "https://raw.githubusercontent.com/docker/cli/master/contrib/completion/zsh/_docker" > ~/.zsh/lazy/_docker 2>/dev/null
+    fi
+  fi
+  lazy_load_completion docker "~/.zsh/lazy/_docker"
+fi
 
 # Docker Compose completions
-setup_completion docker-compose "https://raw.githubusercontent.com/docker/compose/master/contrib/completion/zsh/_docker-compose"
+if command -v docker-compose &>/dev/null; then
+  mkdir -p ~/.zsh/lazy
+  if [[ ! -f ~/.zsh/lazy/_docker-compose ]]; then
+    if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+      # Show errors during first run
+      echo "Downloading completion for docker-compose..."
+      curl -L "https://raw.githubusercontent.com/docker/compose/master/contrib/completion/zsh/_docker-compose" > ~/.zsh/lazy/_docker-compose
+    else
+      # Suppress errors after first run
+      curl -L "https://raw.githubusercontent.com/docker/compose/master/contrib/completion/zsh/_docker-compose" > ~/.zsh/lazy/_docker-compose 2>/dev/null
+    fi
+  fi
+  lazy_load_completion docker-compose "~/.zsh/lazy/_docker-compose"
+fi
 
 # npm completions
 if command -v npm &>/dev/null; then
@@ -153,6 +171,36 @@ if command -v kubectl &>/dev/null; then
     fi
   fi
   lazy_load_completion kubectl "~/.zsh/lazy/_kubectl"
+fi
+
+# Kubectx completions
+if command -v kubectx &>/dev/null; then
+  mkdir -p ~/.zsh/lazy
+  if [[ ! -f ~/.zsh/lazy/_kubectx ]]; then
+    if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+      # Show errors during first run
+      kubectx --zsh-completion > ~/.zsh/lazy/_kubectx
+    else
+      # Suppress errors after first run
+      kubectx --zsh-completion > ~/.zsh/lazy/_kubectx 2>/dev/null
+    fi
+  fi
+  lazy_load_completion kubectx "~/.zsh/lazy/_kubectx"
+fi
+
+# Kubens completions
+if command -v kubens &>/dev/null; then
+  mkdir -p ~/.zsh/lazy
+  if [[ ! -f ~/.zsh/lazy/_kubens ]]; then
+    if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+      # Show errors during first run
+      kubens --zsh-completion > ~/.zsh/lazy/_kubens
+    else
+      # Suppress errors after first run
+      kubens --zsh-completion > ~/.zsh/lazy/_kubens 2>/dev/null
+    fi
+  fi
+  lazy_load_completion kubens "~/.zsh/lazy/_kubens"
 fi
 
 # AWS CLI completions
