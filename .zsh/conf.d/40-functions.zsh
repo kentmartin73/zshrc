@@ -72,12 +72,7 @@ setup_kubeconfig() {
     # If we found any config files, set KUBECONFIG
     if [ ${#kube_configs[@]} -gt 0 ]; then
       export KUBECONFIG=$(IFS=:; echo "${kube_configs[*]}")
-      echo "KUBECONFIG set to include ${#kube_configs[@]} files from ~/.kube"
-    else
-      echo "No Kubernetes config files found in ~/.kube"
     fi
-  else
-    echo "~/.kube directory not found"
   fi
   
   # Restore nullglob to its previous state
