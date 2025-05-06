@@ -47,8 +47,11 @@ fif() {
 
 # Function to set KUBECONFIG to include all YAML files in ~/.kube
 setup_kubeconfig() {
-  # Save current options and set nullglob to handle no matches gracefully
-  local old_options=$(setopt)
+  # Check if nullglob is already set
+  local had_nullglob=0
+  setopt | grep -q "nullglob" && had_nullglob=1
+  
+  # Set nullglob to handle no matches gracefully
   setopt nullglob
   
   if [ -d "$HOME/.kube" ]; then
@@ -77,11 +80,13 @@ setup_kubeconfig() {
     echo "~/.kube directory not found"
   fi
   
-  # Restore original options
-  eval "$old_options"
+  # Restore nullglob to its previous state
+  if [ $had_nullglob -eq 0 ]; then
+    unsetopt nullglob
+  fi
 }
 
-# Automatically set up KUBECONFIG on shell startup if not in a non-interactive shell
+# Automatically set up KUBECONFIG on shell startup if in an interactive shell
 if [[ -o interactive ]]; then
   setup_kubeconfig
 fi
