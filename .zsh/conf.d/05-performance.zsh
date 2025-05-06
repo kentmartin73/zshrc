@@ -49,26 +49,26 @@ if [ -d "$HOME/.rvm" ]; then
   lazy_load 'source ~/.rvm/scripts/rvm' rvm
 fi
 
-# Function to lazy load completions
-function lazy_load_completion() {
+# Function to load completions directly
+function load_completion() {
   local command=$1
   local completion_file=$2
   
-  # Only load completion when the command is first used
-  eval "
-  function $command() {
-    # Remove this function
-    unfunction $command
+  # Load completion directly if file exists
+  if [[ -f $completion_file ]]; then
+    # Add completion file directory to fpath
+    fpath=($(dirname $completion_file) $fpath)
     
-    # Load completion
-    if [[ -f $completion_file ]]; then
-      source $completion_file
-    fi
-    
-    # Execute the command
-    $command \"\$@\"
-  }
-  "
+    # Ensure compinit is loaded
+    autoload -Uz compinit
+    compinit -i
+  fi
+}
+
+# Old lazy_load_completion function is deprecated
+# This is a compatibility wrapper that just calls load_completion
+function lazy_load_completion() {
+  load_completion "$1" "$2"
 }
 
 # Create directory for lazy-loaded completions
