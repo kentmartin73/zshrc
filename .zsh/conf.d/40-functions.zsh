@@ -44,3 +44,30 @@ fif() {
   fi
   rg --files-with-matches --no-messages "$1" | fzf --preview "highlight -O ansi -l {} 2> /dev/null | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || rg --ignore-case --pretty --context 10 '$1' {}"
 }
+
+# Function to set KUBECONFIG to include all YAML files in ~/.kube
+setup_kubeconfig() {
+  if [ -d "$HOME/.kube" ]; then
+    # Find all YAML files in ~/.kube
+    local kube_configs=()
+    for config in "$HOME/.kube"/*.y{a,}ml; do
+      # Check if file exists and is readable
+      if [ -f "$config" ] && [ -r "$config" ]; then
+        kube_configs+=("$config")
+      fi
+    done
+    
+    # If we found any config files, set KUBECONFIG
+    if [ ${#kube_configs[@]} -gt 0 ]; then
+      export KUBECONFIG=$(IFS=:; echo "${kube_configs[*]}")
+      echo "KUBECONFIG set to include ${#kube_configs[@]} files from ~/.kube"
+    else
+      echo "No Kubernetes config files found in ~/.kube"
+    fi
+  else
+    echo "~/.kube directory not found"
+  fi
+}
+
+# Automatically set up KUBECONFIG on shell startup
+setup_kubeconfig
