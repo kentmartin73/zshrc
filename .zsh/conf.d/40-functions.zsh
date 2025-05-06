@@ -47,11 +47,20 @@ fif() {
 
 # Function to set KUBECONFIG to include all YAML files in ~/.kube
 setup_kubeconfig() {
+  # Save current options and set nullglob to handle no matches gracefully
+  local old_options=$(setopt)
+  setopt nullglob
+  
   if [ -d "$HOME/.kube" ]; then
     # Find all YAML files in ~/.kube
     local kube_configs=()
-    for config in "$HOME/.kube"/*.y{a,}ml; do
-      # Check if file exists and is readable
+    
+    # Handle both .yaml and .yml files
+    local yaml_files=("$HOME/.kube"/*.yaml)
+    local yml_files=("$HOME/.kube"/*.yml)
+    
+    # Add existing files to our array
+    for config in "${yaml_files[@]}" "${yml_files[@]}"; do
       if [ -f "$config" ] && [ -r "$config" ]; then
         kube_configs+=("$config")
       fi
@@ -67,7 +76,12 @@ setup_kubeconfig() {
   else
     echo "~/.kube directory not found"
   fi
+  
+  # Restore original options
+  eval "$old_options"
 }
 
-# Automatically set up KUBECONFIG on shell startup
-setup_kubeconfig
+# Automatically set up KUBECONFIG on shell startup if not in a non-interactive shell
+if [[ -o interactive ]]; then
+  setup_kubeconfig
+fi
